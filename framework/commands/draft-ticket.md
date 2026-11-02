@@ -73,6 +73,9 @@ terms: a decision already taken must not be reopened by the draft.
 
 - Concrete, verifiable criteria: an endpoint returns a given shape, a screen
   shows a given state, an input produces a given output.
+- Each criterion names how it is verified — a command from the profile's
+  verification matrix, a scenario, or a reference value. The tester runs
+  exactly these.
 - Where the ticket implements a client formula or rule, quote it verbatim and
   implement it literally — divergence from data goes to
   `SPEC-DISCREPANCIES.md`, not into a "corrected" criterion.

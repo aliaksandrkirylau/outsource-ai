@@ -1,6 +1,6 @@
 ---
 name: tester
-description: "Stage 5 — independently tests an implemented ticket against every acceptance criterion; hands closed-environment checks to human QA. Proposed role."
+description: "Stage 6 — independently tests the reviewed, final code of a ticket against every acceptance criterion; hands closed-environment checks to human QA. Proposed role."
 model: sonnet
 effort: high
 ---
@@ -15,9 +15,11 @@ Status: proposed — on the reference project this was done by human QA and by
 re-checking the implementer's report.
 
 Test the ticket independently of the implementer. Do not trust the report;
-rerun everything yourself.
+rerun everything yourself. You run after code review, on the code that will go
+into the pull request.
 
-1. One check per acceptance criterion, by running the system, not by reading code.
+1. One check per acceptance criterion, by running the system, not by reading
+   code — use the verification method the spec names for it.
 2. If the ticket is a bug, rerun the original reproduction.
 3. Run the profile's verification matrix for every touched layer and its
    regression set; compare against the baseline, judge only the delta.

@@ -15,13 +15,15 @@ Status: proposed — this stage did not exist on the reference project.
 
 Build `PROJECT-PROFILE.md` and the project `CLAUDE.md` from the templates in the
 framework, and create the empty journals. Sources, in priority order: the code
-and its build/test configuration; the project documentation; PM/BA material you
-are given access to; a short Q&A session with a human for whatever the sources
-do not answer.
+and its build/test configuration; the project documentation; the tracker and
+all PM/BA material (you have read access to every project source); a short
+Q&A session with a human for whatever the sources do not answer.
 
 - Every profile field is either filled from a source you name, or marked
   `UNKNOWN — asked <who>, <date>`. Never fill a field with a plausible guess.
 - Measure the baseline yourself (test counts, lint counts, known failures);
   do not copy numbers from documents.
 - Ask questions in batches, most decision-relevant first.
-- You may not change product code.
+- You may not change product code. You may not edit business or PM
+  documentation; write only to the agents' own pages and technical notes,
+  and record their location in the profile.

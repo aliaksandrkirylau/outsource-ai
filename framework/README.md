@@ -17,9 +17,9 @@ project.
 | `agents/implementer-*.md` | 4 | proven as roles (Sonnet worker agents) |
 | `agents/lookup.md` | any | proven (Haiku lookup agent) |
 | `agents/project-analyst.md` | 0 — project onboarding | **proposed** |
-| `agents/tester.md` | 5 — testing | **proposed** |
-| `agents/code-reviewer.md` | 6 — cleanup & review | **proposed** |
-| dispatcher | 1, 7, hand-offs | **not written** — agent vs. deterministic pipeline is open (`docs/08-open-questions.md` #7) |
+| `agents/code-reviewer.md` | 5 — code review & cleanup (before testing) | **proposed** |
+| `agents/tester.md` | 6 — testing the final, reviewed code | **proposed** |
+| dispatcher | 1, 7, hand-offs | **not written** — decided: an Opus agent with a narrow mandate (`docs/decisions.md` D19) |
 | `project-templates/*` | knowledge layer | generalized from ADAPT's documents |
 
 Not yet written: commands for the proposed stages (onboard project, review
@@ -27,6 +27,11 @@ spec, test ticket, clean up, package PR) — their mandate currently lives in
 the agent definitions.
 
 ## Installing into a target project
+
+`<project>` is our private **workspace repository** for the client project: it
+holds the knowledge layer, and the client's repositories are working copies
+inside it, so none of these files land in client code. Install into a client
+repository only if the profile says the client agreed.
 
 | From | To |
 |---|---|

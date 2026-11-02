@@ -49,5 +49,9 @@ two or three commands every session needs.
   `SPEC-DISCREPANCIES.md`.
 - Evidence before claims (`verification-before-completion`).
 - Root cause before fixes (`systematic-debugging`).
-- Git and tracker writes: dispatcher only.
+- Git and tracker writes: dispatcher only. No AI markers in comments,
+  commits or pull requests.
+- Documentation: read any source you need; write only to the agents' own
+  pages and technical notes (`PROJECT-PROFILE.md` §5). Never edit business or
+  PM documentation.
 - Forbidden actions: `PROJECT-PROFILE.md` §7.

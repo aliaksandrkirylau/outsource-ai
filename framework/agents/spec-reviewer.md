@@ -15,6 +15,10 @@ Review `tickets/<KEY>.md` (Status: DRAFT) against the actual code and the
 project profile. Treat every claim in the draft as a hypothesis: confirm it with
 a file path and line, or a command and its output, or refute it.
 
+Check that every acceptance criterion is testable and names how it is verified
+(command, scenario, reference value). A criterion with no workable
+verification method is a `REVISE` defect.
+
 Return exactly one verdict:
 - `APPROVED` — set `Status: CONFIRMED` in the spec, list what you checked.
 - `REVISE` — list each defect with its evidence; the researcher redrafts.

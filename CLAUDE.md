@@ -73,5 +73,5 @@ Do not move them into `.claude/` here.
   for this project is written into the ADAPT folder.
 - **No economics yet** — no hour, token or cost estimates in any document
   until the owner asks for them.
-- **No git write commands** (commit, branch, push) unless the owner asks. The
-  folder is a local git repository on `main`, no remote yet.
+- **No git write commands** (commit, branch, push) unless the owner asks. Repo:
+  private `github.com/aliaksandrkirylau/outsource-ai`, branch `main`.

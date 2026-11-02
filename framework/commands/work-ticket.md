@@ -118,6 +118,8 @@ and name it in the report).
 Apply the `verification-before-completion` skill: no "done / fixed / works"
 claim without a fresh command output read in this session.
 
+- Add or update unit tests for the code you changed, in the project's
+  existing test style.
 - Run the profile's verification-matrix row for every component you touched.
 - If the ticket changes behaviour or data, exercise it for real (request,
   screen, CLI run) and read the actual output, not the status code.
