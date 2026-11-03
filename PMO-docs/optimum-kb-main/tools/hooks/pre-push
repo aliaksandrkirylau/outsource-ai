@@ -1,0 +1,14 @@
+#!/bin/sh
+# Refuse force pushes and branch deletion from this clone: a local stand-in for branch protection
+# when the Git host plan has none. Active once per clone (kb-sync.sh setup sets core.hooksPath).
+# Bypassable with --no-verify, so it stops accidents, not someone determined.
+while read -r lref lsha rref rsha; do
+  case "$lsha" in *[!0]*) ;; *) echo "kb: deleting $rref is not allowed from this clone - refused" >&2; exit 1 ;; esac
+  case "$rsha" in *[!0]*) ;; *) continue ;; esac   # a new branch on the server: fine
+  if ! git merge-base --is-ancestor "$rsha" "$lsha" 2>/dev/null; then
+    echo "kb: this push would overwrite commits on $rref that are not in your copy (a force push) - refused" >&2
+    echo "kb: run bash tools/kb-sync.sh instead; it merges their work with yours" >&2
+    exit 1
+  fi
+done
+exit 0

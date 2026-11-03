@@ -1,0 +1,23 @@
+# Money screen, shared by tools/kb-lint.mjs (the whole repo) and tools/kb-money.pl (the commit
+# gate in kb-sync.sh and the pre-commit hook). One rule per line: LEVEL <tab> name <tab> regex.
+# ERROR blocks a commit: a figure tied to money. WARN is printed: a figure that may be money, a
+# person looks. Matching is case-insensitive.
+# Before matching, link targets, bare URLs, wikilinks and inline code without spaces (Drive and chat
+# IDs) are blanked, and each line is also tried joined to the next line, because PDFs and chats
+# split "USD" from the figure.
+# Write each regex in the subset JavaScript and Perl read alike: [0-9] not \d, explicit letter ranges
+# not \w, literal Cyrillic and Arabic characters, no \u escapes.
+# Known trap: inline math like "$0.5$" reads as a dollar amount. Write formulas in a $$ block or as
+# plain text.
+# To check a change: every line of tools/money-samples.txt must land where it says
+# (perl tools/kb-money.pl --samples), and node tools/kb-lint.mjs must stay clean.
+ERROR	currency	(?<![A-Za-z])(?:USD|EUR|SAR|PLN|BYN|RUB|GBP|AED|US\$|dollars?|euros?|riyals?|zlot[yi]|долл[а-яё]*|руб(?:л[а-яё]*)?|евро|риял[а-яё]*|злот[а-яё]*)(?![A-Za-zа-яё])\.?\s?[0-9]
+ERROR	currency	[0-9][0-9\s,.]*\s?(?:(?:k|к|тыс\.?|тысяч[а-яё]*|млн\.?|mln|million|thousand)\s?)?(?:USD|EUR|SAR|PLN|BYN|RUB|GBP|AED|dollars?|euros?|riyals?|zlot[yi]|долл[а-яё]*|руб(?:л[а-яё]*)?|евро|риял[а-яё]*|злот[а-яё]*)(?![A-Za-zа-яё])
+ERROR	symbol	[$€£₽]\s?[0-9]|[0-9](?:k|к)?\s?[$€£₽]
+ERROR	per hour	(?<![A-Za-z0-9.,])[0-9][0-9,.]*\s?(?:/\s?(?:h|hr|hour|ч|час)(?![A-Za-zа-яё])|per hour|в час|за час)|(?:per hour|в час|за час)[^0-9]{0,5}[0-9]
+ERROR	pay word	(?:salary|salaries|wage|hourly rate|rate card|day rate|зарплат[а-яё]*|оклад[а-яё]*)[^0-9]{0,20}[0-9]
+ERROR	amount in words	(?:hundred|thousand|million|тысяч[а-яё]*|миллион[а-яё]*)[^.;]{0,30}(?:dollars?|riyals?|euros?|zlot[yi]|долл[а-яё]*|руб(?:л[а-яё]*)?|евро)
+ERROR	arabic amount	[٠-٩][٠-٩,.٫٬]*.{0,20}(?:دولار|ريال|يورو)|(?:دولار|ريال|يورو).{0,20}[٠-٩]
+WARN	k / thousand	(?<![A-Za-z])[0-9][0-9,.]*\s?(?:k|к|тыс\.?|тысяч[а-яё]*|млн\.?|mln|million|thousand)(?![A-Za-z0-9а-яё])
+WARN	rate word	(?:ставк[а-яё]*|рейт[а-яё]*)[^0-9]{0,20}[0-9]
+WARN	percent near money	(?:margin|маржин[а-яё]*|discount|скидк[а-яё]*|рентаб[а-яё]*|profit[a-z]*|прибыл[а-яё]*|advance|аванс[а-яё]*|payment|оплат[а-яё]*|плат[её]ж[а-яё]*|price|цен[аыуе][а-яё]*|стоимост[а-яё]*|budget|бюджет[а-яё]*|invoice)[^0-9]{0,40}[0-9][0-9,.]*\s?%|[0-9][0-9,.]*\s?%[^0-9]{0,40}(?:margin|маржин[а-яё]*|discount|скидк[а-яё]*|рентаб[а-яё]*|profit[a-z]*|прибыл[а-яё]*|price|стоимост[а-яё]*|budget|бюджет[а-яё]*|of the (?:total )?contract)

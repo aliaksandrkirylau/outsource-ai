@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo walkthrough - an engineer's shift</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0">
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle}
+</style>
+</helmet>
+<div style="width: 1440px; min-height: 2600px; box-sizing: border-box; padding: 56px 64px; background: #FFF8F6; color: #241914; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; display: flex; flex-direction: column; gap: 28px">
+
+<header style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; border-bottom: 4px solid #ED712E; padding-bottom: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 13px; font-weight: 600; letter-spacing: 0.08em; color: #A14000">OES DESKTOP APP · CLICKABLE PROTOTYPE · INTERNAL DEMO SCRIPT</div>
+<h1 style="margin: 0; font-size: 36px; font-weight: 600">An engineer's shift, end to end</h1>
+<div style="color: #574238; font-size: 15px">About 20 minutes. Ali Hassan, day shift on OES Rig 07, well DW-217. Press Play and start at step 1; each step's button opens its screen.</div>
+</div>
+<a href="SignIn.dc.html" style="display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 28px; border-radius: 24px; background: #A14000; color: #FFFFFF; font-weight: 600; font-size: 16px; text-decoration: none"><span class="ms" aria-hidden="true">play_arrow</span>Start the demo</a>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Say at the start</h2>
+<div style="line-height: 1.5">This is a clickable prototype to agree what the app does, screen by screen. Data is invented. Calculations use your formula sheets but are not verified yet; we want your worked examples to check them.</div>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">How we agree</h2>
+<div style="line-height: 1.5">We note every comment on the screen. After the demo we send a written summary and the open questions. Each area is agreed by a written OK by email from the named contact; a nod in the call is not acceptance.</div>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Keep in mind</h2>
+<div style="line-height: 1.5">What the prototype shows, the client may read as in scope. Do not promise items marked "not yet" below; log them as questions or change requests. The HQ web app has its own script on the page "Web demo walkthrough".</div>
+</section>
+</div>
+
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="11">
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 20px 24px; display: grid; grid-template-columns: 56px minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px; align-items: start">
+<div style="width: 44px; height: 44px; border-radius: 22px; background: #F6CD96; color: #521D00; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700">{{s.n}}</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap"><h2 style="margin: 0; font-size: 18px; font-weight: 600">{{s.title}}</h2><span style="color: #574238">{{s.time}}</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{s.links}}" as="l" hint-placeholder-count="2"><a href="{{l.href}}" style="display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #8B7267; color: #A14000; font-weight: 600; text-decoration: none"><span class="ms" aria-hidden="true" style="font-size: 18px">open_in_new</span>{{l.label}}</a></sc-for>
+</div>
+<div style="line-height: 1.5"><b>Do:</b> {{s.doIt}}</div>
+<div style="line-height: 1.5; color: #574238"><b style="color: #241914">Say:</b> {{s.say}}</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; background: #FFF1EC; border-radius: 8px; padding: 14px 16px">
+<div style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: #A14000">ASK THE CLIENT</div>
+<sc-for list="{{s.ask}}" as="q" hint-placeholder-count="2"><div style="display: flex; gap: 8px; line-height: 1.45"><span class="ms" aria-hidden="true" style="font-size: 18px; color: #A14000">help</span><span>{{q}}</span></div></sc-for>
+<sc-if value="{{s.hasNot}}" hint-placeholder-val="{{ false }}"><div style="font-size: 12px; color: #574238; line-height: 1.45; border-top: 1px solid #F4DED5; padding-top: 8px"><b>Not yet:</b> {{s.notYet}}</div></sc-if>
+</div>
+</section>
+</sc-for>
+
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">After the demo</h2>
+<div style="line-height: 1.5">Send within a day: what was shown, the comments per screen, the answers given, the open questions with the person who owns each, and what we ask them to send (parameter list per mud system, worked calculation examples, 2-3 real daily reports, one section and one well report, unit sets in use). Ask for a written OK per area once the comments are in.</div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2600}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const L = (label, href) => ({ label, href });
+    const S = (n, title, time, links, doIt, say, ask, notYet) => ({ n, title, time, links, doIt, say, ask, notYet: notYet || '', hasNot: !!notYet });
+    return {
+      steps: [
+        S(1, 'Sign in on the rig computer', '1 min', [L('1.1 Pick user', 'SignIn.dc.html'), L('1.3 Wrong password', 'SignInError.dc.html')],
+          'Pick Ali Hassan, type the password, Sign in. Show the wrong-password state.',
+          'One shared computer per rig, each engineer has his own account. Works offline; HQ adds people and resets passwords.',
+          ['Is a personal account per engineer right, or is a Windows login enough?', 'Who adds engineers and resets passwords at HQ?']),
+        S(2, 'The dashboard', '2 min', [L('6.1 Dashboard', 'Dashboard.dc.html')],
+          'Walk the tiles, the "needs attention" list, then switch product use between section and whole well.',
+          'Everything here comes from what the engineer entered: checks, stock, calculations. Each item opens its screen.',
+          ['Which of your five KPIs does the engineer need on the rig, and which only HQ?', 'Where do targets come from: mud program, planned depth by day?'],
+          'offset-well comparison, volume and loss trend, calibration alerts.'),
+        S(3, 'The well', '2 min', [L('1.6 View / edit well', 'WellForm.dc.html'), L('1.5 New well', 'WellNew.dc.html'), L('1.4 No well yet', 'NoWell.dc.html')],
+          'Open the well switcher in the top bar, the pencil on DW-217; then New well.',
+          'A rig drills one well after another on the same computer. The engineer can open a new well offline; HQ can too.',
+          ['Who usually opens a new well, HQ or the engineer? Which fields come from HQ?', 'Are engineers assigned to a rig for a period, or to each well?', 'What are "order details" and "quality requirements" on a well?']),
+        S(4, 'A mud check with an out-of-range value', '3 min', [L('2.1 Mud checks', 'Measure.dc.html'), L('2.2 New mud check', 'MudCheckNew.dc.html')],
+          'New mud check. PV 41 is red; type 19 in pH to show it is blocked, set it back; Save, give the reason, Save as flagged.',
+          'Ranges show under each field. Out of range needs a reason and is flagged for HQ; impossible values cannot be saved. Solids and n, K are calculated as you type.',
+          ['Is this the right parameter list? Does it change with water- or oil-based mud?', 'Are ranges set per customer or per well? Which alerts block and which only flag?'],
+          'volumes and pits, pumps, bit, solids control entry.'),
+        S(5, 'Correcting a saved check', '1 min', [L('2.3 Mud check', 'MudCheck.dc.html')],
+          'Edit, change PV 41 to 34, Send for approval.',
+          'Saved checks change only with a reason and HQ approval; until then reports keep the original.',
+          ['Can an engineer fix his own check in the same shift without approval?', 'Who approves: operations manager, admin, supervisor?']),
+        S(6, 'Inventory for the day', '2 min', [L('3.1 Inventory', 'Inventory.dc.html'), L('3.2 Today’s use', 'InventoryUse.dc.html'), L('3.3 Movement', 'InventoryMove.dc.html')],
+          'Show the alerts, Record today’s use (type 1000 for OES-BAR), then a Received movement with an expiry date.',
+          'Same columns as your daily report. Products, unit sizes and minimum levels come from HQ.',
+          ['Is stock kept per well, or does it carry over to the next well on the rig?', 'Is concentration typed in or calculated? Where are expiry dates entered?']),
+        S(7, 'Calculator', '2 min', [L('4.1 Calculator', 'Calculate.dc.html')],
+          'Weight up from 10.4 to 11.0 ppg; change the target and watch the result.',
+          'Uses the formula on your OES-BAR data sheet. Live, but to be checked against your examples.',
+          ['Which calculations do engineers use daily besides weight up and oil/water ratio?', 'Can you send worked examples with expected results?']),
+        S(8, 'Hydraulics simulation', '3 min', [L('4.2 Hydraulics', 'Hydraulics.dc.html')],
+          'Results tab: pick flow rates; then Drilling fluid tab, set density to 12.6 and go back to Results.',
+          'Your Figures 2-1 to 2-5, power law. Pressures, ECD against pore and fracture, hole cleaning, surge and swab.',
+          ['Power law, or Herschel-Bulkley like your current program?', 'Figure 2-2 seems to miss a factor 100: can you confirm? Can you send Figure 3-1?', 'Which outputs are needed for the first release?']),
+        S(9, 'End-of-day report', '2 min', [L('5.1 Reports', 'Reports.dc.html'), L('5.2 End of day', 'ReportDaily.dc.html')],
+          'Open 13 Oct, untick a block, Export PDF.',
+          'Built from the day’s data in your report’s order; PDF, Excel, CSV; sent by email as today.',
+          ['Is this your full daily report, or a subset? Which blocks are must-have?', 'Does each operator need its own template or logo?'],
+          'volumes, pumps, bit, solids control, costs in the daily report.'),
+        S(10, 'Section report and approval', '1 min', [L('5.3 Section, well, inventory', 'ReportSummary.dc.html')],
+          'Submit the 12¼ in section for approval; show the approved 17½ in section; switch to inventory.',
+          'Only section and well reports need sign-off, as you told us. Approved means locked.',
+          ['What must a section and a well report contain? Can you share one of each?', 'Who signs them off?']),
+        S(11, 'Settings and sync', '1 min', [L('7.1 Settings', 'Settings.dc.html')],
+          'Switch units API, SI, Mixed; then Sync now.',
+          'Units change everywhere, ranges too. Nothing is lost offline; sync sends the queue and brings back approvals.',
+          ['Which unit sets do you use, and is it per computer, per user or company-wide?', 'If HQ and the rig change the same thing offline, which one wins?'])
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

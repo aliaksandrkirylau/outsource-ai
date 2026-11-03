@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OES UI Kit options</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #1d2229; --muted: #5c6672;
+    --line: #dde1e6; --accent: #0b6bcb; --accent-soft: #e6f0fb;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif; }
+  main { max-width: 1200px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 32px 0 12px; }
+  p { margin: 0 0 8px; }
+  .muted { color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: 16px 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 10px;
+    border-bottom: 1px solid var(--line); }
+  th { font-weight: 600; }
+  td:first-child { color: var(--muted); white-space: nowrap; }
+  .scroll { overflow-x: auto; }
+  ul { margin: 0; padding-left: 20px; }
+  li { margin-bottom: 4px; }
+  [role=tablist] { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;
+    position: sticky; top: 0; background: var(--bg); padding: 8px 0; z-index: 1; }
+  [role=tab] { font: inherit; text-align: left; cursor: pointer; padding: 8px 14px;
+    border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--text); }
+  [role=tab] span { display: block; font-size: 12px; color: var(--muted); }
+  [role=tab][aria-selected=true] { border-color: var(--accent); background: var(--accent-soft); }
+  figure { margin: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+    background: var(--card); }
+  figure img { display: block; width: 100%; height: auto; }
+  code { font-size: 13px; background: #eceff3; padding: 1px 4px; border-radius: 4px; }
+  section[hidden] { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>OES UI Kit options</h1>
+  <p class="muted">Three UI kit options for the rig desktop app and the managers' web app, shown on one
+    component gallery. Sample values are mock data.</p>
+  <p class="muted">Flutter, Material 3 standard widgets only; charts with fl_chart (MIT). No paid libraries.</p>
+  <p class="muted">Font: the screenshots show Roboto (web version); the Windows app uses Segoe UI, the Windows system font.</p>
+  <p class="muted">Sample screens and values are illustrations of the components, not agreed features.</p>
+
+  <h2>Gallery</h2>
+  <div role="tablist" aria-label="UI kit option">
+<button role="tab" data-tab="A" aria-selected="true"><b>A</b> OES Brand - Warm<span>Branded, familiar Material</span></button>
+<button role="tab" data-tab="B" aria-selected="false"><b>B</b> Crisp<span>Precise, data-dense, tool-like</span></button>
+<button role="tab" data-tab="C" aria-selected="false"><b>C</b> Calm<span>Soft, spacious, approachable</span></button>
+  </div>
+<section id="panel-A"><figure ><img src="option-A.png" alt="Option A: OES Brand - Warm - full component gallery" width="1440"></figure></section>
+<section id="panel-B" hidden><figure><img src="option-B.png" alt="Option B: Crisp - full component gallery" width="1440"></figure></section>
+<section id="panel-C" hidden><figure><img src="option-C.png" alt="Option C: Calm - full component gallery" width="1440"></figure></section>
+</main>
+<script>
+  const tabs = document.querySelectorAll('[role=tab]');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(o => {
+      const on = o === t;
+      o.setAttribute('aria-selected', on);
+      document.getElementById('panel-' + o.dataset.tab).hidden = !on;
+    });
+  }));
+</script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hydraulics simulation</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0">
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle}
+th,td{white-space:nowrap}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 1500px; box-sizing: border-box; background: #FFF8F6; color: #241914; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; display: flex; flex-direction: column">
+<dc-import name="TopBar" well-name="DW-217" well-sub="12¼ in section · Day shift" hint-size="100%,68px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; flex: 1; align-items: stretch">
+<div style="flex: 0 0 96px; display: flex"><dc-import name="Rail" sel="calc" hint-size="96px,836px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; padding: 24px 32px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; max-width: 1280px">
+
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<a href="Calculate.dc.html" aria-label="Back to Calculate" style="display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; color: #574238; text-decoration: none"><span class="ms" aria-hidden="true">arrow_back</span></a>
+<h1 style="margin: 0; font-size: 24px; font-weight: 400">Hydraulics simulation</h1>
+<span style="color: #574238">DW-217 · inputs kept with the well, fluid from the 14:00 mud check</span>
+</div>
+
+<div role="tablist" style="display: flex; flex-wrap: wrap; border-bottom: 1px solid #DFC0B3">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="7">
+<button type="button" role="tab" onClick="{{t.pick}}" style="display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px; border: 0; background: transparent; font: inherit; cursor: pointer; font-weight: {{t.weight}}; color: {{t.color}}; border-bottom: 3px solid {{t.line}}"><span class="ms" aria-hidden="true" style="font-size: 20px">{{t.icon}}</span>{{t.label}}</button>
+</sc-for>
+</div>
+
+<sc-if value="{{isInputs}}" hint-placeholder-val="{{ false }}">
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+<div style="color: #574238">{{cur.note}}</div>
+<sc-if value="{{cur.isString}}" hint-placeholder-val="{{ false }}">
+<div style="border: 1px solid #F4DED5; border-radius: 8px; overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse">
+<thead><tr style="height: 44px; text-align: left; color: #574238; background: #FFF1EC"><th style="padding: 0 12px; font-weight: 600">Component (top to bottom)</th><th style="padding: 0 12px; font-weight: 600">Length, ft</th><th style="padding: 0 12px; font-weight: 600">OD, in</th><th style="padding: 0 12px; font-weight: 600">ID, in</th></tr></thead>
+<tbody>
+<sc-for list="{{stringRows}}" as="r" hint-placeholder-count="4">
+<tr style="height: 56px; border-top: 1px solid #F4DED5">
+<td style="padding: 0 12px; font-weight: 600">{{r.name}}</td>
+<td style="padding: 0 12px"><sc-if value="{{r.auto}}" hint-placeholder-val="{{ false }}"><span style="color: #574238">{{r.lenTxt}} (to MD)</span></sc-if><sc-if value="{{r.manual}}" hint-placeholder-val="{{ true }}"><input aria-label="Length {{r.name}}" value="{{r.len}}" onChange="{{r.setLen}}" style="width: 110px; height: 40px; box-sizing: border-box; border: 1px solid #8B7267; border-radius: 4px; padding: 0 10px; font: inherit; font-size: 15px"></sc-if></td>
+<td style="padding: 0 12px"><input aria-label="OD {{r.name}}" value="{{r.od}}" onChange="{{r.setOd}}" style="width: 110px; height: 40px; box-sizing: border-box; border: 1px solid #8B7267; border-radius: 4px; padding: 0 10px; font: inherit; font-size: 15px"></td>
+<td style="padding: 0 12px"><input aria-label="ID {{r.name}}" value="{{r.id}}" onChange="{{r.setId}}" style="width: 110px; height: 40px; box-sizing: border-box; border: 1px solid #8B7267; border-radius: 4px; padding: 0 10px; font: inherit; font-size: 15px"></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</sc-if>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+<sc-for list="{{cur.fields}}" as="f" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="{{f.id}}" style="font-size: 12px; color: #574238">{{f.label}}</label>
+<div style="display: flex; align-items: center; gap: 8px; height: 52px; border: 1px solid #8B7267; border-radius: 4px; padding: 0 12px; background: #FFFFFF"><input id="{{f.id}}" value="{{f.v}}" onChange="{{f.set}}" style="flex: 1; border: 0; outline: 0; font: inherit; font-size: 16px; background: transparent; min-width: 0"><span style="color: #574238; white-space: nowrap">{{f.unit}}</span></div>
+<span style="font-size: 12px; color: #574238; min-height: 16px">{{f.hint}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+<div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px; flex-wrap: wrap">
+<span style="color: #574238; flex: 1; min-width: 280px">Runs on this computer, offline. Results update as soon as any input changes.</span>
+<button type="button" onClick="{{showResults}}" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 24px; border-radius: 20px; border: 0; background: #A14000; color: #FFFFFF; font: inherit; font-weight: 600; cursor: pointer"><span class="ms" aria-hidden="true" style="font-size: 20px">play_arrow</span>Run simulation</button>
+</div>
+</sc-if>
+
+<sc-if value="{{isResults}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; gap: 12px; align-items: flex-start; padding: 12px 16px; background: #FFFFFF; border: 1px solid #00658B; border-radius: 8px; line-height: 1.5"><span class="ms" aria-hidden="true" style="color: #00658B">science</span><span style="flex: 1"><b>Not verified - for discussion.</b> Calculated live with the client's formula sheets (power law, Figures 2-1 to 2-5). Our assumptions: bit and surface-equipment pressure losses use standard formulas; no cuttings effect on ECD; ×100 added in the critical-velocity formula to match Figure 2-1.</span></div>
+
+<sc-if value="{{bad}}" hint-placeholder-val="{{ false }}"><div style="padding: 12px 16px; background: #FFDAD6; color: #93000A; border-radius: 8px">Some inputs are not numbers or are out of range. Check the input tabs.</div></sc-if>
+
+<sc-if value="{{ok}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<span style="color: #574238">Flow rate, USgal/min:</span>
+<div role="group" aria-label="Flow rate" style="display: inline-flex; border: 1px solid #8B7267; border-radius: 20px; overflow: hidden; flex-wrap: wrap">
+<sc-for list="{{rates}}" as="r" hint-placeholder-count="8">
+<button type="button" onClick="{{r.pick}}" style="height: 40px; padding: 0 12px; border: 0; border-left: {{r.sep}}; background: {{r.bg}}; color: {{r.fg}}; font: inherit; font-weight: {{r.weight}}; cursor: pointer">{{r.q}}</button>
+</sc-for>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px">
+<sc-for list="{{cards}}" as="c" hint-placeholder-count="5">
+<div style="background: #FFFFFF; border: {{c.border}}; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="color: #574238; font-size: 13px">{{c.k}}</span>
+<span style="font-size: 28px; font-weight: 600; color: {{c.color}}">{{c.v}} <span style="font-size: 14px; font-weight: 400; color: #574238">{{c.unit}}</span></span>
+<span style="font-size: 12px; color: {{c.noteColor}}">{{c.note}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 16px">
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 16px 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Operating window: standpipe pressure</h2>
+<svg viewBox="0 0 560 270" role="img" aria-label="Standpipe pressure against flow rate" style="width: 100%; height: auto">
+<sc-for list="{{g1.grid}}" as="t" hint-placeholder-count="6"><line x1="56" x2="544" y1="{{t.y}}" y2="{{t.y}}" stroke="#F4DED5"></line><text x="48" y="{{t.ty}}" font-size="11" fill="#574238" text-anchor="end">{{t.label}}</text></sc-for>
+<sc-for list="{{xt}}" as="t" hint-placeholder-count="8"><text x="{{t.x}}" y="244" font-size="11" fill="#574238" text-anchor="middle">{{t.label}}</text></sc-for>
+<line x1="56" x2="544" y1="{{g1.maxY}}" y2="{{g1.maxY}}" stroke="#BA1A1A" stroke-width="1.5" stroke-dasharray="6 4"></line>
+<text x="540" y="{{g1.maxTY}}" font-size="11" fill="#BA1A1A" text-anchor="end">{{g1.maxLabel}}</text>
+<line x1="{{selX}}" x2="{{selX}}" y1="16" y2="220" stroke="#8B7267" stroke-dasharray="2 3"></line>
+<polyline points="{{g1.line}}" fill="none" stroke="#A14000" stroke-width="2.5"></polyline>
+<circle cx="{{selX}}" cy="{{g1.selY}}" r="5" fill="#A14000"></circle>
+<text x="300" y="264" font-size="11" fill="#574238" text-anchor="middle">Flow rate, USgal/min</text>
+</svg>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 16px 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">ECD against pore and fracture pressure</h2>
+<svg viewBox="0 0 560 270" role="img" aria-label="ECD at bit and shoe against flow rate" style="width: 100%; height: auto">
+<sc-for list="{{g2.grid}}" as="t" hint-placeholder-count="5"><line x1="56" x2="544" y1="{{t.y}}" y2="{{t.y}}" stroke="#F4DED5"></line><text x="48" y="{{t.ty}}" font-size="11" fill="#574238" text-anchor="end">{{t.label}}</text></sc-for>
+<sc-for list="{{xt}}" as="t" hint-placeholder-count="8"><text x="{{t.x}}" y="244" font-size="11" fill="#574238" text-anchor="middle">{{t.label}}</text></sc-for>
+<line x1="56" x2="544" y1="{{g2.fracY}}" y2="{{g2.fracY}}" stroke="#BA1A1A" stroke-width="1.5" stroke-dasharray="6 4"></line>
+<text x="540" y="{{g2.fracTY}}" font-size="11" fill="#BA1A1A" text-anchor="end">{{g2.fracLabel}}</text>
+<line x1="56" x2="544" y1="{{g2.poreY}}" y2="{{g2.poreY}}" stroke="#00658B" stroke-width="1.5" stroke-dasharray="6 4"></line>
+<text x="540" y="{{g2.poreTY}}" font-size="11" fill="#00658B" text-anchor="end">{{g2.poreLabel}}</text>
+<line x1="{{selX}}" x2="{{selX}}" y1="16" y2="220" stroke="#8B7267" stroke-dasharray="2 3"></line>
+<polyline points="{{g2.bit}}" fill="none" stroke="#A14000" stroke-width="2.5"></polyline>
+<polyline points="{{g2.shoe}}" fill="none" stroke="#ED712E" stroke-width="2.5"></polyline>
+<text x="300" y="264" font-size="11" fill="#574238" text-anchor="middle">Flow rate, USgal/min</text>
+</svg>
+<div style="display: flex; gap: 16px; font-size: 12px; color: #574238"><span><span style="display: inline-block; width: 16px; height: 3px; background: #A14000; vertical-align: middle"></span> ECD at bit</span><span><span style="display: inline-block; width: 16px; height: 3px; background: #ED712E; vertical-align: middle"></span> ECD at shoe</span></div>
+</section>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; align-items: start">
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Hole cleaning (Figure 2-5, 2-2)</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="color: #574238; font-size: 12px">Slowest annular velocity</span><span style="font-size: 20px">{{hc.va}} <span style="font-size: 13px; color: #574238">ft/min</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="color: #574238; font-size: 12px">Cuttings slip velocity</span><span style="font-size: 20px">{{hc.vs}} <span style="font-size: 13px; color: #574238">ft/min</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="color: #574238; font-size: 12px">Transport efficiency</span><span style="font-size: 20px">{{hc.eff}} <span style="font-size: 13px; color: #574238">%</span></span></div>
+</div>
+<div style="color: #574238; line-height: 1.5">Flow in the annulus stays laminar up to {{hc.qc}} USgal/min (critical rate, lowest interval: {{hc.qcAt}}).</div>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Surge and swab at the bit (Figure 2-4)</h2>
+<div style="display: flex; gap: 12px; flex-wrap: wrap">
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #574238">Stand length, ft<input value="{{stand}}" onChange="{{setStand}}" style="width: 120px; height: 40px; box-sizing: border-box; border: 1px solid #8B7267; border-radius: 4px; padding: 0 10px; font: inherit; font-size: 15px; color: #241914"></label>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #574238">Seconds per stand<input value="{{secs}}" onChange="{{setSecs}}" style="width: 120px; height: 40px; box-sizing: border-box; border: 1px solid #8B7267; border-radius: 4px; padding: 0 10px; font: inherit; font-size: 15px; color: #241914"></label>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="color: #574238; font-size: 12px">Pipe speed</span><span style="font-size: 20px">{{sw.vpm}} <span style="font-size: 13px; color: #574238">ft/min</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="color: #574238; font-size: 12px">Surge EMW</span><span style="font-size: 20px; color: {{sw.surgeColor}}">{{sw.surge}} <span style="font-size: 13px; color: #574238">ppg</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="color: #574238; font-size: 12px">Swab EMW</span><span style="font-size: 20px; color: {{sw.swabColor}}">{{sw.swab}} <span style="font-size: 13px; color: #574238">ppg</span></span></div>
+</div>
+<div style="color: {{sw.noteColor}}; line-height: 1.5">{{sw.note}}</div>
+</section>
+</div>
+
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; min-width: 960px">
+<thead><tr style="height: 48px; color: #574238"><th style="padding: 0 16px; text-align: left; font-weight: 600">By flow rate</th><th style="padding: 0 12px; text-align: left; font-weight: 600">Unit</th><sc-for list="{{rates}}" as="r" hint-placeholder-count="8"><th style="padding: 0 12px; text-align: right; font-weight: 700; background: {{r.colBg}}; color: {{r.colFg}}">{{r.q}}</th></sc-for></tr></thead>
+<tbody>
+<sc-for list="{{table}}" as="row" hint-placeholder-count="10">
+<tr style="height: 44px; border-top: 1px solid #F4DED5"><td style="padding: 0 16px">{{row.k}}</td><td style="padding: 0 12px; color: #574238">{{row.unit}}</td><sc-for list="{{row.cells}}" as="c" hint-placeholder-count="8"><td style="padding: 0 12px; text-align: right; background: {{c.bg}}; font-weight: {{c.weight}}; color: {{c.color}}">{{c.v}}</td></sc-for></tr>
+</sc-for>
+</tbody>
+</table>
+</section>
+</sc-if>
+</sc-if>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      tab: 'results', qi: 5, stand: '93', secs: '60',
+      v: { md: '8450', tvd: '8120', csgId: '12.347', shoeMd: '5271', shoeTvd: '5240', hole: '12.25',
+        rho: '10.4', t600: '104', t300: '63', t200: '49', t100: '34', t6: '9', t3: '7',
+        maxSpp: '4500', qFrom: '400', qTo: '750', qStep: '50',
+        bit: '12.25', noz: '6 x 12', pore: '9.2', frac: '12.8', cd: '0.25', ct: '0.1' },
+      str: [
+        { name: 'Drill pipe', len: '', od: '5.5', id: '4.67' },
+        { name: 'HWDP', len: '496', od: '5.5', id: '3.25' },
+        { name: 'Jar', len: '33', od: '6.75', id: '2.5' },
+        { name: 'Drill collars', len: '270', od: '8', id: '2.813' }
+      ]
+    };
+    this.E = this.engine();
+  }
+  engine() {
+    const log10 = Math.log10;
+    const rheology = (t600, t300, t6, t3) => {
+      const np = 3.32 * log10(t600 / t300), Kp = 5.11 * t600 / Math.pow(1022, np);
+      const na = 0.5 * log10(t300 / t3), Ka = 5.11 * t300 / Math.pow(511, na);
+      const nLow = 3.32 * log10(t6 / t3), KLow = t3 / Math.pow(5.11, nLow);
+      return { np, Kp, na, Ka, nLow, KLow, pv: t600 - t300, yp: 2 * t300 - t600 };
+    };
+    const friction = (Re, n, lam) => {
+      const ReL = 3470 - 1370 * n, ReT = 4270 - 1370 * n, a = (log10(n) + 3.93) / 50, b = (1.75 - log10(n)) / 7;
+      if (Re < ReL) return lam / Re;
+      if (Re > ReT) return a / Math.pow(Re, b);
+      return ((Re - ReL) / 800) * (a / Math.pow(ReT, b) - lam / ReL) + lam / ReL;
+    };
+    const pipeLoss = (Q, D, L, rho, r) => {
+      const V = 0.408 * Q / (D * D), mu = 100 * r.Kp * Math.pow(96 * V / D, r.np - 1);
+      const Re = 928 * V * D * rho / (mu * Math.pow((3 * r.np + 1) / (4 * r.np), r.np));
+      return friction(Re, r.np, 16) * V * V * rho / (25.81 * D) * L;
+    };
+    const annLoss = (V, D2, D1, L, rho, r) => {
+      const d = D2 - D1, mu = 100 * r.Ka * Math.pow(144 * V / d, r.na - 1);
+      const Re = 928 * V * d * rho / (mu * Math.pow((2 * r.na + 1) / (3 * r.na), r.na));
+      return friction(Re, r.na, 24) * V * V * rho / (25.81 * d) * L;
+    };
+    const intervals = (w) => {
+      const out = []; let top = 0;
+      w.string.forEach((c) => {
+        const bot = top + c.len;
+        w.holes.forEach((h) => { const a = Math.max(top, h.top), b = Math.min(bot, h.bottom); if (b > a) out.push({ comp: c.name, od: c.od, hole: h.name, holeId: h.id, bottom: b, len: b - a }); });
+        top = bot;
+      });
+      return out;
+    };
+    const slip = (Va, rho, r, Dc, T) => {
+      const gB = 186 / (Dc * Math.sqrt(rho)), tp = 7.9 * Math.sqrt(T * (20.8 - rho)), gp = Math.pow(tp / r.KLow, 1 / r.nLow);
+      const Vs = gp < gB ? 1.22 * tp * Math.sqrt(gp * Dc / Math.sqrt(rho)) : 16.62 * tp / Math.sqrt(rho);
+      return { Vs, eff: (1 - Vs / Va) * 100 };
+    };
+    const simulate = (p, Q) => {
+      const r = rheology(p.t600, p.t300, p.t6, p.t3), ivs = intervals(p.well);
+      let pString = 0; p.well.string.forEach((c) => { pString += pipeLoss(Q, c.id, c.len, p.rho, r); });
+      let pAnn = 0, pShoe = 0, eff = 999, va = 0, vs = 0;
+      ivs.forEach((iv) => {
+        const V = 0.408 * Q / (iv.holeId * iv.holeId - iv.od * iv.od), P = annLoss(V, iv.holeId, iv.od, iv.len, p.rho, r);
+        pAnn += P; if (iv.bottom <= p.well.shoeMd + 1e-6) pShoe += P;
+        const s = slip(V * 60, p.rho, r, p.cd, p.ct); if (s.eff < eff) { eff = s.eff; va = V * 60; vs = s.Vs; }
+      });
+      const sum = p.noz.reduce((s, d) => s + d * d, 0), tfa = p.noz.reduce((s, d) => s + Math.PI / 4 * Math.pow(d / 32, 2), 0);
+      const pBit = 156 * p.rho * Q * Q / (sum * sum), jet = 0.3208 * Q / tfa, hsi = (pBit * Q / 1714) / (Math.PI / 4 * p.bit * p.bit);
+      const pSurf = 4.2e-5 * Math.pow(p.rho, 0.8) * Math.pow(Q, 1.8) * Math.pow(r.pv, 0.2);
+      const spp = pSurf + pString + pBit + pAnn;
+      return { Q, spp, pSurf, pString, pBit, pAnn, pct: pBit / spp * 100, jet, hsi, ecdBit: pAnn / (0.052 * p.well.tvd) + p.rho, ecdShoe: pShoe / (0.052 * p.well.shoeTvd) + p.rho, va, vs, eff };
+    };
+    const critical = (p) => {
+      const r = rheology(p.t600, p.t300, p.t6, p.t3); let best = null;
+      intervals(p.well).forEach((iv) => {
+        const d = iv.holeId - iv.od, ReL = 3470 - 1370 * r.na;
+        const Vc = Math.pow((ReL * 100 * r.Ka * Math.pow((2 * r.na + 1) / (3 * r.na), r.na)) / (928 * p.rho * d * Math.pow(144 / d, 1 - r.na)), 1 / (2 - r.na));
+        const Qc = 2.45 * Vc * (iv.holeId * iv.holeId - iv.od * iv.od);
+        if (!best || Qc < best.Qc) best = { Qc, at: iv.comp + ' in ' + iv.hole.toLowerCase() };
+      });
+      return best;
+    };
+    const surgeSwab = (p, Ls, t) => {
+      const r = rheology(p.t600, p.t300, p.t6, p.t3), Vpm = 60 * Ls / t; let P = 0;
+      intervals(p.well).forEach((iv) => { const Vm = (0.45 + iv.od * iv.od / (iv.holeId * iv.holeId - iv.od * iv.od)) * Vpm; P += annLoss(Vm / 60, iv.holeId, iv.od, iv.len, p.rho, r); });
+      return { Vpm, surge: p.rho + P / (0.052 * p.well.tvd), swab: p.rho - P / (0.052 * p.well.tvd) };
+    };
+    return { rheology, simulate, critical, surgeSwab };
+  }
+  parse() {
+    const v = this.state.v, n = (x) => Number(String(x).replace(/,/g, ''));
+    const s = this.state.str.map((c) => ({ name: c.name, len: n(c.len), od: n(c.od), id: n(c.id) }));
+    const md = n(v.md), fixed = s.slice(1).reduce((a, c) => a + c.len, 0);
+    s[0].len = md - fixed;
+    const nz = String(v.noz).toLowerCase();
+    const noz = nz.includes('x') ? Array(Math.round(n(nz.split('x')[0]))).fill(n(nz.split('x')[1])) : nz.split(/[ ,;]+/).filter(Boolean).map(n);
+    const p = { rho: n(v.rho), t600: n(v.t600), t300: n(v.t300), t6: n(v.t6), t3: n(v.t3), bit: n(v.bit), noz, cd: n(v.cd), ct: n(v.ct),
+      maxSpp: n(v.maxSpp), pore: n(v.pore), frac: n(v.frac), qFrom: n(v.qFrom), qTo: n(v.qTo), qStep: n(v.qStep),
+      well: { md, tvd: n(v.tvd), shoeMd: n(v.shoeMd), shoeTvd: n(v.shoeTvd), string: s,
+        holes: [{ name: 'Casing', id: n(v.csgId), top: 0, bottom: n(v.shoeMd) }, { name: 'Open hole', id: n(v.hole), top: n(v.shoeMd), bottom: md }] } };
+    const nums = [p.rho, p.t600, p.t300, p.t6, p.t3, p.bit, p.cd, p.ct, p.maxSpp, p.pore, p.frac, p.qFrom, p.qTo, p.qStep, md, p.well.tvd, p.well.shoeMd, p.well.shoeTvd, n(v.csgId), n(v.hole)].concat(noz).concat(s.map((c) => c.len), s.map((c) => c.od), s.map((c) => c.id));
+    const ok = nums.every((x) => isFinite(x) && x > 0) && p.t600 > p.t300 && p.t300 > p.t6 && p.t6 > p.t3 && p.qTo > p.qFrom && (p.qTo - p.qFrom) / p.qStep <= 20 && s[0].len > 0 && p.well.shoeMd < md && s.every((c) => c.od < n(v.hole) && c.id < c.od);
+    return { p, ok };
+  }
+  renderVals() {
+    const S = this.state, set = (k) => (e) => this.setState({ v: { ...this.state.v, [k]: e.target.value } });
+    const F = (id, label, unit, hint) => ({ id: 'hy-' + id, label, unit: unit || '', hint: hint || '', v: S.v[id], set: set(id) });
+    const defs = [
+      { key: 'well', label: 'Well', icon: 'vertical_align_bottom', note: 'Hole geometry down to the current depth.', fields: [F('md', 'Measured depth', 'ft'), F('tvd', 'True vertical depth', 'ft'), F('hole', 'Open hole size', 'in'), F('csgId', 'Casing ID (13 3/8 in)', 'in'), F('shoeMd', 'Casing shoe MD', 'ft'), F('shoeTvd', 'Casing shoe TVD', 'ft')] },
+      { key: 'string', label: 'Drill string', icon: 'linear_scale', note: 'From the top down to the bit. Drill pipe length fills the rest to MD.', isString: true, fields: [] },
+      { key: 'fluid', label: 'Drilling fluid', icon: 'water_drop', note: 'From the 14:00 mud check. Change to try another mud. Model: power law.', fields: [F('rho', 'Mud density', 'ppg'), F('t600', 'Dial 600 rpm'), F('t300', 'Dial 300 rpm'), F('t6', 'Dial 6 rpm'), F('t3', 'Dial 3 rpm')] },
+      { key: 'pumps', label: 'Pumps', icon: 'water_pump', note: 'The simulation steps through this flow-rate range.', fields: [F('maxSpp', 'Max allowed SPP', 'psi'), F('qFrom', 'Flow rate from', 'USgal/min'), F('qTo', 'Flow rate to', 'USgal/min'), F('qStep', 'Step', 'USgal/min')] },
+      { key: 'bit', label: 'Bit', icon: 'settings', note: 'Current bit run.', fields: [F('bit', 'Bit size', 'in'), F('noz', 'Nozzles', '1/32 in', 'e.g. 6 x 12, or 12, 12, 13')] },
+      { key: 'formation', label: 'Formation', icon: 'layers', note: 'Limits for the operating window, and cuttings size for hole cleaning.', fields: [F('pore', 'Pore pressure', 'ppg EMW'), F('frac', 'Fracture pressure at shoe', 'ppg EMW'), F('cd', 'Cuttings diameter', 'in'), F('ct', 'Cuttings thickness', 'in')] },
+      { key: 'results', label: 'Results', icon: 'monitoring', note: '' }
+    ];
+    const tabs = defs.map((d) => ({ ...d, weight: d.key === S.tab ? '700' : '400', color: d.key === S.tab ? '#A14000' : '#574238', line: d.key === S.tab ? '#A14000' : 'transparent', pick: () => this.setState({ tab: d.key }) }));
+    const cur = defs.find((d) => d.key === S.tab);
+    const { p, ok } = this.parse();
+    const setRow = (i, k) => (e) => this.setState({ str: this.state.str.map((r, j) => (j === i ? { ...r, [k]: e.target.value } : r)) });
+    const stringRows = S.str.map((r, i) => ({ ...r, auto: i === 0, manual: i !== 0, lenTxt: ok ? Math.round(p.well.string[0].len).toLocaleString('en-US') : '-', setLen: setRow(i, 'len'), setOd: setRow(i, 'od'), setId: setRow(i, 'id') }));
+    const base = { tabs, cur: { ...cur, isString: !!cur.isString, fields: cur.fields || [] }, stringRows, isInputs: S.tab !== 'results', isResults: S.tab === 'results', showResults: () => this.setState({ tab: 'results' }), ok, bad: !ok,
+      stand: S.stand, secs: S.secs, setStand: (e) => this.setState({ stand: e.target.value }), setSecs: (e) => this.setState({ secs: e.target.value }) };
+    if (!ok) return { ...base, rates: [], cards: [], table: [], xt: [], g1: { grid: [] }, g2: { grid: [] }, hc: {}, sw: {} };
+    const Q = []; for (let q = p.qFrom; q <= p.qTo + 1e-9; q += p.qStep) Q.push(q);
+    const R = Q.map((q) => this.E.simulate(p, q));
+    const qi = Math.min(S.qi, Q.length - 1), sel = R[qi];
+    const fmt = (v, d) => Number(v).toLocaleString('en-US', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+    const X = (q) => 56 + (Q.length > 1 ? (q - Q[0]) / (Q[Q.length - 1] - Q[0]) : 0.5) * 488;
+    const yMax1 = Math.ceil(Math.max(p.maxSpp, ...R.map((r) => r.spp)) * 1.1 / 1000) * 1000;
+    const Y1 = (v) => 16 + (1 - v / yMax1) * 204;
+    const lo = Math.floor(Math.min(p.pore, ...R.map((r) => r.ecdShoe)) - 0.5), hi = Math.ceil(Math.max(p.frac, ...R.map((r) => r.ecdBit)) + 0.5);
+    const Y2 = (v) => 16 + (1 - (v - lo) / (hi - lo)) * 204;
+    const pts = (key, Y) => R.map((r) => X(r.Q).toFixed(1) + ',' + Y(r[key]).toFixed(1)).join(' ');
+    const rates = Q.map((q, k) => ({ q, pick: () => this.setState({ qi: k }), sep: k === 0 ? '0' : '1px solid #8B7267', bg: k === qi ? '#F6CD96' : 'transparent', fg: k === qi ? '#521D00' : '#241914', weight: k === qi ? '700' : '400', colBg: k === qi ? '#F6CD96' : 'transparent', colFg: k === qi ? '#521D00' : '#574238' }));
+    const row = (k, unit, key, d, warn) => ({ k, unit, cells: R.map((r, j) => ({ v: fmt(r[key], d), bg: j === qi ? '#FFF1EC' : 'transparent', weight: j === qi ? '700' : '400', color: warn && warn(r) ? '#BA1A1A' : '#241914' })) });
+    const over = sel.spp > p.maxSpp, ecdOver = sel.ecdBit > p.frac || sel.ecdShoe > p.frac;
+    const cr = this.E.critical(p), sw = this.E.surgeSwab(p, Number(S.stand), Number(S.secs));
+    const swOk = isFinite(sw.surge) && Number(S.secs) > 0;
+    const surgeBad = swOk && sw.surge > p.frac, swabBad = swOk && sw.swab < p.pore;
+    return {
+      ...base, rates, selX: X(sel.Q).toFixed(1), xt: Q.map((q) => ({ x: X(q).toFixed(1), label: q })),
+      g1: { grid: [0, 1, 2, 3, 4, 5].map((k) => yMax1 * k / 5).map((v) => ({ y: Y1(v).toFixed(1), ty: (Y1(v) + 4).toFixed(1), label: fmt(v) })), line: pts('spp', Y1), maxY: Y1(p.maxSpp).toFixed(1), maxTY: (Y1(p.maxSpp) - 6).toFixed(1), maxLabel: 'Max SPP ' + fmt(p.maxSpp) + ' psi', selY: Y1(sel.spp).toFixed(1) },
+      g2: { grid: Array.from({ length: hi - lo + 1 }, (_, k) => lo + k).map((v) => ({ y: Y2(v).toFixed(1), ty: (Y2(v) + 4).toFixed(1), label: v.toFixed(1) })), bit: pts('ecdBit', Y2), shoe: pts('ecdShoe', Y2), fracY: Y2(p.frac).toFixed(1), fracTY: (Y2(p.frac) - 6).toFixed(1), fracLabel: 'Fracture ' + p.frac + ' ppg', poreY: Y2(p.pore).toFixed(1), poreTY: (Y2(p.pore) - 6).toFixed(1), poreLabel: 'Pore ' + p.pore + ' ppg' },
+      cards: [
+        { k: 'Standpipe pressure', v: fmt(sel.spp), unit: 'psi', note: over ? 'Above max SPP' : fmt(p.maxSpp - sel.spp) + ' psi below max', color: over ? '#BA1A1A' : '#241914', noteColor: over ? '#BA1A1A' : '#574238', border: over ? '2px solid #BA1A1A' : '1px solid #DFC0B3' },
+        { k: 'ECD at bit', v: fmt(sel.ecdBit, 2), unit: 'ppg', note: ecdOver ? 'Above fracture pressure' : fmt(p.frac - sel.ecdBit, 2) + ' ppg below fracture', color: ecdOver ? '#BA1A1A' : '#241914', noteColor: ecdOver ? '#BA1A1A' : '#574238', border: ecdOver ? '2px solid #BA1A1A' : '1px solid #DFC0B3' },
+        { k: 'ECD at shoe', v: fmt(sel.ecdShoe, 2), unit: 'ppg', note: 'Mud weight ' + p.rho + ' ppg', color: '#241914', noteColor: '#574238', border: '1px solid #DFC0B3' },
+        { k: 'Bit pressure drop', v: fmt(sel.pBit), unit: 'psi', note: fmt(sel.pct, 1) + '% of SPP', color: '#241914', noteColor: '#574238', border: '1px solid #DFC0B3' },
+        { k: 'HSI', v: fmt(sel.hsi, 2), unit: 'HP/in²', note: 'Jet velocity ' + fmt(sel.jet) + ' ft/s', color: '#241914', noteColor: '#574238', border: '1px solid #DFC0B3' }
+      ],
+      hc: { va: fmt(sel.va), vs: fmt(sel.vs, 1), eff: fmt(sel.eff, 0), qc: cr ? fmt(cr.Qc) : '-', qcAt: cr ? cr.at : '' },
+      sw: swOk ? { vpm: fmt(sw.Vpm), surge: fmt(sw.surge, 2), swab: fmt(sw.swab, 2), surgeColor: surgeBad ? '#BA1A1A' : '#241914', swabColor: swabBad ? '#BA1A1A' : '#241914',
+        note: surgeBad ? 'Surge is above the fracture pressure: trip slower.' : swabBad ? 'Swab is below the pore pressure: trip slower.' : 'Within pore ' + p.pore + ' and fracture ' + p.frac + ' ppg.', noteColor: surgeBad || swabBad ? '#BA1A1A' : '#574238' }
+        : { vpm: '-', surge: '-', swab: '-', surgeColor: '#241914', swabColor: '#241914', note: 'Enter stand length and seconds per stand.', noteColor: '#574238' },
+      table: [
+        row('Standpipe pressure', 'psi', 'spp', 0, (r) => r.spp > p.maxSpp), row('Surface equipment loss', 'psi', 'pSurf'), row('Drill string loss', 'psi', 'pString'),
+        row('Bit pressure drop', 'psi', 'pBit'), row('Annular loss', 'psi', 'pAnn'), row('Bit drop, % of SPP', '%', 'pct', 1), row('Jet velocity', 'ft/s', 'jet'),
+        row('HSI', 'HP/in²', 'hsi', 2), row('ECD at shoe', 'ppg', 'ecdShoe', 2, (r) => r.ecdShoe > p.frac), row('ECD at bit', 'ppg', 'ecdBit', 2, (r) => r.ecdBit > p.frac),
+        row('Transport efficiency', '%', 'eff', 0)
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

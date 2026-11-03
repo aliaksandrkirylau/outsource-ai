@@ -42,7 +42,9 @@ tokens, money) at this stage, by owner decision.
 | `docs/06-adapt-case-study.md` | How the workflow ran on ADAPT, as-is → to-be mapping | RU |
 | `docs/07-roadmap.md` | Development stages of the system (no dates, no economics) | RU |
 | `docs/08-open-questions.md` | Open design questions, grill-session backlog | RU |
+| `docs/09-pmo-part.md` | PMO part: day zero, project knowledge base, BA/planning agents, bridge from scope to tickets | RU |
 | `docs/decisions.md` | Decision log (D1, D2, …) — append, never rewrite | RU |
+| `PMO-docs/` | PMO department material (methodology, Standard A, PM Copilot plugin, a project KB, Spec Framework) — read-only source, like ADAPT (D42) | mixed |
 | `framework/` | Reusable, stack-agnostic assets generalized from ADAPT; `framework/README.md` = index, proven/proposed status, install map | EN |
 | `framework/agents/` | Agent definitions (model/effort frontmatter + prompt) | EN |
 | `framework/commands/` | Slash-command prompts: draft, verify plan, implement | EN |

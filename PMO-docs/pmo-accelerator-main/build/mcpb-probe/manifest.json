@@ -1,0 +1,50 @@
+{
+  "manifest_version": "0.3",
+  "name": "pm-copilot-probe",
+  "display_name": "PM Copilot - Runtime Probe",
+  "version": "0.3.0",
+  "description": "Test extension. Reports how its own Python runtime was resolved, to find out whether a .mcpb can ship a Python MCP server with no prerequisites on the machine.",
+  "long_description": "Does nothing useful. It exists to answer one question: can an extension carry its own uv binary and bootstrap a Python MCP server without the machine having Python or uv already? Install it, run its one tool, then uninstall it.",
+  "author": {
+    "name": "Anton Oparienko"
+  },
+  "server": {
+    "type": "python",
+    "entry_point": "server.py",
+    "mcp_config": {
+      "command": "${__dirname}/bin/uv.exe",
+      "args": [
+        "run",
+        "--no-project",
+        "--python",
+        "3.12",
+        "--with",
+        "mcp<2.0.0",
+        "python",
+        "${__dirname}/server.py"
+      ],
+      "env": {
+        "UV_NO_MODIFY_PATH": "1",
+        "UV_PYTHON_PREFERENCE": "only-managed",
+        "PMC_PROBE_DIRNAME": "${__dirname}"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "pm_copilot_probe",
+      "description": "Report which Python and uv this extension actually used, and whether either came from the machine or from inside the bundle"
+    }
+  ],
+  "compatibility": {
+    "platforms": [
+      "win32"
+    ]
+  },
+  "keywords": [
+    "test",
+    "diagnostic",
+    "pm-copilot"
+  ],
+  "license": "MIT"
+}

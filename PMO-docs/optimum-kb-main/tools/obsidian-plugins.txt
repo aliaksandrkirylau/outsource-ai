@@ -1,0 +1,12 @@
+# Obsidian community plugins for the team KB. The repo never contains plugin code or plugin data:
+# each person installs these once from Obsidian (Settings > Community plugins > Browse), and
+# tools/kb-doctor.sh reports what is missing. The curator owns this list.
+#
+# Format: id | name | level | why
+#   level: recommended = needed to view team content; optional = useful, personal choice
+#
+# Empty on purpose: the curator picks the list with the BA. Prefer what renders with no plugin -
+# Mermaid and tables render in Obsidian, on the Git host and in IDE previews; Bases (.base) render
+# in Obsidian only, which everyone on this team has. Add a viewer only when team content needs it.
+# Example line:
+# bpmn-plugin | BPMN | recommended | view the BA's .bpmn process models in Obsidian

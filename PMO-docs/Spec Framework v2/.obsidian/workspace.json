@@ -1,0 +1,234 @@
+{
+  "main": {
+    "id": "9c289205e6d8c534",
+    "type": "split",
+    "children": [
+      {
+        "id": "a338b8bea4e4bd15",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "709fdf6f1076470e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "README"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b3f385fe5c3bc926",
+    "type": "split",
+    "children": [
+      {
+        "id": "16cff98acc07d169",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "fb019d125f20def4",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "6c9fb83562d7fda6",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "4d7de257b5b1f849",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "661aad6eeae954a8",
+    "type": "split",
+    "children": [
+      {
+        "id": "bdaeb51554ea1574",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b11715419bd916b1",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "BEST_PRACTICES.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for BEST_PRACTICES"
+            }
+          },
+          {
+            "id": "7d1797af4c9423e0",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "BEST_PRACTICES.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from BEST_PRACTICES"
+            }
+          },
+          {
+            "id": "b1aa95b2c247cf16",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "a853af35bc435b11",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "c284eca9ec5af75f",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "BEST_PRACTICES.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of BEST_PRACTICES"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "709fdf6f1076470e",
+  "lastOpenFiles": [
+    "CLAUDE.md",
+    "README.md",
+    "BEST_PRACTICES.md",
+    "PROMPT_GUIDE.md",
+    "00_Meta/Workflow_ProjectInitialization.md",
+    "CLAUDE.md.tmp.5.1775072130423",
+    "00_Meta/Project_Plan.md.tmp.5.1775072102195",
+    "00_Meta/Reports/README.md",
+    "00_Meta/Templates/Epic_Template.md",
+    "00_Meta/Troubleshooting.md.tmp.5.1775071673756",
+    "00_Meta/Templates/Meeting_Templates/Meeting_Notes_Template.md",
+    "04_Designs/README.md",
+    "03_Discussions/Open_Questions.md",
+    "03_Discussions/Decision_Log.md",
+    "03_Discussions/Meetings/README.md",
+    "00_Meta/Troubleshooting.md",
+    "00_Meta/Project_Plan.md",
+    "CLAUDE.md.tmp.5.1775062324822",
+    "00_Meta/Troubleshooting.md.tmp.5.1775062135663",
+    "README.md.tmp.5.1775062032594",
+    "CLAUDE.md.tmp.5.1775062020296",
+    "03_Discussions/Developer_Questions.md",
+    "PLAN.md",
+    "02_Epics/README.md",
+    "01_Context/Platform_Specification.md",
+    "01_Context/Client_Brief.md",
+    "00_Meta/Workflow_Validation.md",
+    "00_Meta/Workflow_Main.md",
+    "00_Meta/QuestionBanks/SaaS_Questions.md",
+    "00_Meta/QuestionBanks/Mobile_App_Questions.md",
+    "00_Meta/QuestionBanks/Integration_Questions.md",
+    "00_Meta/Quick_Validation_Card.md",
+    "04_Designs",
+    "03_Discussions/Meetings",
+    "03_Discussions",
+    "OLD for reference/Practice Perfect Spec/05_Discussions/UAT/Screenshots/04_Player_Adult/15_my_events_child_view.png",
+    "OLD for reference/Practice Perfect Spec/05_Discussions/UAT/Screenshots/04_Player_Adult/14_family_members_with_child.png",
+    "OLD for reference/Practice Perfect Spec/05_Discussions/UAT/Screenshots/04_Player_Adult/13_best_times.png",
+    "OLD for reference/Practice Perfect Spec/05_Discussions/UAT/Screenshots/04_Player_Adult/12_content_library_focus_areas.png",
+    "OLD for reference/Practice Perfect Spec/05_Discussions/UAT/Screenshots/04_Player_Adult/11_account_info_settings.png",
+    "OLD for reference/Practice Perfect Spec/05_Discussions/UAT/Screenshots/04_Player_Adult/10_account_info_levels.png",
+    "OLD for reference/Practice Perfect Spec/05_Discussions/UAT/Screenshots/04_Player_Adult/09_account_info.png",
+    "OLD for reference/Practice Perfect Spec/05_Discussions/UAT/Screenshots/04_Player_Adult/08_transactions.png",
+    "OLD for reference/Practice Perfect Spec/05_Discussions/UAT/Screenshots/04_Player_Adult/07_get_the_assist.png",
+    "OLD for reference/Practice Perfect Spec/05_Discussions/UAT/Screenshots/04_Player_Adult/06_tokens.png"
+  ]
+}

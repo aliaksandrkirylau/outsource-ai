@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PM Copilot Field Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F2F5F5;
+  --surface:#FFFFFF;
+  --surface-2:#E9EFEF;
+  --ink:#10191A;
+  --ink-soft:#4A5A5C;
+  --ink-faint:#7C8C8D;
+  --rule:#D3DCDC;
+  --rule-soft:#E4EAEA;
+  --accent:#0E5C60;
+  --accent-wash:#E2EFEF;
+  --gate:#A65E07;
+  --gate-wash:#FAF0E0;
+  --shadow:0 1px 2px rgba(16,25,26,.06);
+  --font-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --font-body:"Source Sans 3",system-ui,-apple-system,Segoe UI,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SF Mono",Consolas,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+.page{max-width:1180px;margin:0 auto;padding:40px 28px 72px}
+
+.masthead{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,380px);
+  gap:32px;align-items:start;
+  padding-bottom:24px;border-bottom:2px solid var(--ink);
+}
+h1{
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(30px,4.4vw,46px);line-height:1.02;
+  letter-spacing:-.022em;margin:0 0 10px;text-wrap:balance;
+}
+.standfirst{margin:0;font-size:17px;color:var(--ink-soft);max-width:52ch}
+.eyebrow{
+  font-family:var(--font-display);font-size:11px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.13em;color:var(--accent);
+  margin:0 0 14px;
+}
+.keynote{background:var(--accent);color:#fff;border-radius:3px;padding:18px 20px}
+.keynote h2{
+  font-family:var(--font-display);font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.12em;margin:0 0 8px;opacity:.85;
+}
+.keynote p{margin:0;font-size:15.5px;line-height:1.45}
+.keynote strong{font-weight:600}
+
+.shape{margin:38px 0 46px}
+.band{
+  display:grid;grid-template-columns:132px minmax(0,1fr);
+  gap:22px;align-items:start;padding:20px 0;
+  border-bottom:1px solid var(--rule-soft);
+}
+.band:last-child{border-bottom:0}
+.band-label{
+  font-family:var(--font-display);font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--ink);padding-top:7px;
+}
+.band-label span{
+  display:block;font-family:var(--font-body);font-size:12.5px;font-weight:400;
+  letter-spacing:0;text-transform:none;color:var(--ink-faint);margin-top:4px;line-height:1.35;
+}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.chip{
+  font-family:var(--font-mono);font-size:12.5px;
+  background:var(--surface);border:1px solid var(--rule);
+  border-radius:3px;padding:7px 11px;color:var(--ink);
+  box-shadow:var(--shadow);white-space:nowrap;
+}
+.chip.weekly{border-color:var(--accent);background:var(--accent-wash);color:var(--accent);font-weight:500}
+.chip.weekly::after{
+  content:"weekly";font-family:var(--font-body);font-size:10.5px;
+  text-transform:uppercase;letter-spacing:.08em;margin-left:8px;opacity:.75;
+}
+.arrow{align-self:center;color:var(--ink-faint);font-size:13px;padding:0 1px}
+.gate{
+  display:flex;align-items:center;gap:10px;
+  background:var(--gate-wash);border:1px solid var(--gate);
+  border-left:4px solid var(--gate);border-radius:3px;padding:7px 13px 7px 11px;
+}
+.gate-name{font-family:var(--font-mono);font-size:12.5px;color:var(--gate);font-weight:500}
+.gate-tag{
+  font-family:var(--font-display);font-size:10.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--gate);
+  border-left:1px solid var(--gate);padding-left:10px;opacity:.9;
+}
+.band-note{grid-column:2;margin:12px 0 0;font-size:13.5px;color:var(--ink-faint);max-width:70ch}
+.band-note em{font-style:italic;color:var(--ink-soft)}
+
+h2.section{
+  font-family:var(--font-display);font-weight:700;font-size:13px;
+  text-transform:uppercase;letter-spacing:.12em;
+  margin:0 0 4px;padding-bottom:10px;border-bottom:2px solid var(--ink);
+}
+.section-sub{margin:0;font-size:13.5px;color:var(--ink-faint);padding:10px 0 0}
+.grid{margin-top:6px}
+.grid-head,.row{
+  display:grid;
+  grid-template-columns:minmax(190px,1.05fr) minmax(0,1.55fr) minmax(0,1.3fr) minmax(0,1.6fr);
+  gap:20px;
+}
+.grid-head{
+  font-family:var(--font-display);font-size:10.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faint);
+  padding:14px 0 8px;border-bottom:1px solid var(--rule);
+}
+.row{padding:16px 0;border-bottom:1px solid var(--rule-soft);align-items:start}
+.row:last-child{border-bottom:0}
+.group-head{
+  font-family:var(--font-display);font-size:11.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--accent);
+  padding:26px 0 6px;border-bottom:1px solid var(--accent);margin:0;
+}
+.group-head:first-of-type{padding-top:14px}
+.row.is-gate{background:var(--gate-wash);border-radius:3px;padding:16px 14px;margin:4px -14px}
+.row.is-gate .sk{color:var(--gate)}
+.sk{font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--accent);word-break:break-word}
+.sk .step{
+  display:block;font-family:var(--font-display);font-size:10px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-top:5px;
+}
+.cell{font-size:13.5px;line-height:1.46;color:var(--ink-soft)}
+.cell.get{color:var(--ink)}
+.say{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.say li{
+  font-family:var(--font-mono);font-size:12px;line-height:1.4;
+  color:var(--ink);background:var(--surface-2);border-radius:3px;padding:6px 9px;
+}
+.lbl{display:none}
+
+.twocol{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:38px;margin-top:52px}
+.list{margin:14px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:11px}
+.list li{font-size:14px;line-height:1.45;color:var(--ink-soft);padding-left:16px;position:relative}
+.list li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:1.5px;background:var(--accent)}
+.list li b{color:var(--ink);font-weight:600}
+.list.warn li::before{background:var(--gate);width:6px;height:6px;border-radius:50%;top:.48em}
+
+footer{
+  margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);
+  display:flex;flex-wrap:wrap;gap:8px 22px;font-size:12.5px;color:var(--ink-faint);
+}
+footer .sep{color:var(--rule)}
+code{font-family:var(--font-mono);font-size:.92em;color:var(--accent)}
+
+.plays{margin:0 0 52px}
+.scenarios{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:16px}
+.scn{
+  background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+  padding:18px 20px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;
+}
+.scn h3{font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:-.01em;margin:0 0 3px}
+.scn .runs{font-size:12.5px;color:var(--ink-faint);margin:0 0 12px}
+.scn .runs code{font-size:12px}
+.scn .you{
+  font-family:var(--font-mono);font-size:12px;line-height:1.4;color:var(--ink);
+  background:var(--surface-2);border-radius:3px;padding:7px 10px;margin:0 0 12px;
+}
+.scn .you::before{
+  content:"You write";display:block;font-family:var(--font-display);font-size:9.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--ink-faint);margin-bottom:3px;
+}
+.scn ol{margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px}
+.scn li{font-size:13.5px;line-height:1.46;color:var(--ink-soft)}
+.scn li b{color:var(--ink);font-weight:600}
+.asks{
+  font-size:13px;line-height:1.42;color:var(--ink);margin:6px 0 2px;
+  border-left:3px solid var(--accent);padding:3px 0 3px 10px;
+}
+.asks.hard{border-left-color:var(--gate)}
+.asks .tag{
+  display:block;font-family:var(--font-display);font-size:9.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--accent);margin-bottom:2px;
+}
+.asks.hard .tag{color:var(--gate)}
+.metrics{display:flex;gap:8px;margin:7px 0 2px;flex-wrap:wrap}
+.metric{border:1px solid var(--rule);border-radius:3px;padding:5px 9px;font-size:12px;color:var(--ink-soft)}
+.metric strong{display:block;font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--accent)}
+.scn .after{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--rule-soft);font-size:12.5px;color:var(--ink-faint)}
+
+@media (max-width:900px){
+  .masthead{grid-template-columns:1fr}
+  .scenarios{grid-template-columns:1fr}
+  .band{grid-template-columns:1fr;gap:12px}
+  .band-label{padding-top:0}
+  .band-note{grid-column:1}
+  .grid-head{display:none}
+  .row{
+    grid-template-columns:1fr;gap:10px;background:var(--surface);
+    border:1px solid var(--rule);border-radius:3px;padding:16px;
+    margin-bottom:12px;box-shadow:var(--shadow);
+  }
+  .row.is-gate{margin:0 0 12px}
+  .lbl{
+    display:block;font-family:var(--font-display);font-size:9.5px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.11em;color:var(--ink-faint);margin-bottom:3px;
+  }
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- print: A4 portrait, nothing split across a page break ---------- */
+@page{size:A4 portrait;margin:12mm 11mm}
+@media print{
+  /* Print gets its own stack: web fonts are unreliable in a PDF renderer, so name
+     faces that are actually present. Condensed for display keeps the signage feel. */
+  :root{
+    --font-display:"DejaVu Sans Condensed","Archivo","Arial Narrow",sans-serif;
+    --font-body:"Carlito","Source Sans 3","Calibri",sans-serif;
+    --font-mono:"DejaVu Sans Mono","JetBrains Mono",monospace;
+  }
+  html,body{background:#fff}
+  body{font-size:9.6pt;line-height:1.4}
+  .page{max-width:none;padding:0}
+  h1{font-size:24pt}
+  .standfirst{font-size:10.5pt}
+  .masthead{grid-template-columns:1fr 1fr;gap:14px;padding-bottom:12px}
+  .keynote{
+    background:#fff!important;color:var(--ink)!important;
+    border:1.4pt solid var(--accent);padding:10px 12px;
+  }
+  .keynote h2{color:var(--accent);opacity:1;font-size:8.5pt}
+  .keynote p{font-size:10pt}
+  .shape{margin:16px 0 20px;break-inside:avoid}
+  .band{padding:11px 0;break-inside:avoid}
+  .chip,.gate{box-shadow:none;padding:4px 8px;font-size:8.6pt}
+  .chip.weekly::after{font-size:7pt}
+  .gate-name{font-size:8.6pt;white-space:nowrap}
+  .gate-tag{font-size:7.4pt;border-left:0;padding-left:0;white-space:nowrap}
+  .gate-tag::before{content:"\00B7\00A0"}
+  .band-note{font-size:8.8pt;margin-top:8px}
+  .grid-head{padding:9px 0 5px;font-size:8pt}
+  /* fr-only columns: a px minimum on the first column pushed the last one off the sheet */
+  .grid-head,.row{grid-template-columns:0.92fr 1.5fr 1.26fr 1.42fr;gap:9px}
+  .row{padding:9px 0;break-inside:avoid;page-break-inside:avoid}
+  .row.is-gate{margin:3px -8px;padding:9px 8px}
+  .group-head{
+    padding:15px 0 4px;font-size:9pt;
+    break-inside:avoid;break-after:avoid;page-break-after:avoid;
+  }
+  .cell{font-size:8.8pt;line-height:1.38}
+  .sk{font-size:8.8pt}
+  .sk .step{font-size:7.2pt}
+  .say li{font-size:8.2pt;padding:4px 6px;background:#F1F4F4;overflow-wrap:anywhere}
+  .twocol{
+    margin-top:22px;gap:22px;grid-template-columns:1fr 1fr;
+    break-inside:avoid;page-break-inside:avoid;
+  }
+  .list li{font-size:8.8pt}
+  .plays{margin:0 0 20px;break-before:page}
+  .scenarios{grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .scn{box-shadow:none;padding:9px 11px;break-inside:avoid;page-break-inside:avoid}
+  .scn h3{font-size:10.5pt}
+  .scn .runs{font-size:8pt;margin-bottom:6px}
+  .scn .you{font-size:8pt;padding:4px 7px;margin-bottom:6px;background:#F1F4F4}
+  .scn .you::before,.asks .tag{font-size:6.8pt}
+  .scn ol{gap:4px;padding-left:14px}
+  .scn li{font-size:8.6pt;line-height:1.36}
+  .asks{font-size:8.4pt;margin:3px 0 1px;padding:1px 0 1px 7px}
+  .metric{font-size:7.8pt;padding:3px 6px}
+  .metric strong{font-size:8.6pt}
+  .scn .after{font-size:8pt;margin-top:6px;padding-top:5px}
+  h2.section{font-size:9.5pt;break-after:avoid}
+  .section-sub{font-size:8.6pt}
+  footer{margin-top:20px;font-size:8pt;break-inside:avoid}
+  a{color:inherit;text-decoration:none}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="masthead">
+    <div>
+      <p class="eyebrow">Innowise PMO &middot; alpha</p>
+      <h1>PM Copilot Field Guide</h1>
+      <p class="standfirst">Twenty-one skills for running the PMO delivery standard. What each one gives you, when to reach for it, and what to type.</p>
+    </div>
+    <div class="keynote">
+      <h2>Read this first</h2>
+      <p><strong>You don't launch skills.</strong> You write to Claude in normal words, describe your situation, and it picks the right one. Nothing on this page is a command you have to memorise - the phrases in the last column are examples, not syntax.</p>
+    </div>
+  </header>
+
+  <section class="shape">
+    <div class="band">
+      <div class="band-label">Start here<span>Getting in, and getting unstuck</span></div>
+      <div class="chips">
+        <div class="chip">copilot-setup</div>
+        <div class="chip">map-existing-project</div>
+        <div class="chip">project-router</div>
+        <div class="chip">standards-sync</div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-label">The initiation arc<span>Standard A, once per project</span></div>
+      <div class="chips">
+        <div class="chip">a01-presale-handover</div>
+        <div class="chip">a02-a04-stakeholders</div>
+        <div class="chip">a03-contract</div>
+        <div class="chip">a05-a06-scope-and-risks</div>
+        <div class="chip">a07-a08-roadmap-and-economy</div>
+        <div class="gate">
+          <span class="gate-name">a09-baseline-gate</span>
+          <span class="gate-tag">go / no-go</span>
+        </div>
+        <span class="arrow">&rarr;</span>
+        <div class="chip">a10-staffing</div>
+        <div class="chip">a11-project-setup</div>
+        <div class="chip">a12-a14-kickoff</div>
+      </div>
+      <p class="band-note">Order is flexible <em>before</em> the gate - the copilot tracks what exists, not how far down a list you are. A09 is the one place sequence is fixed: nothing after it starts until the baseline is approved.</p>
+    </div>
+
+    <div class="band">
+      <div class="band-label">All project long<span>No place in the arc - reach for these any time</span></div>
+      <div class="chips">
+        <div class="chip weekly">prorep-card</div>
+        <div class="chip">risk-register</div>
+        <div class="chip">project-brain</div>
+        <div class="chip">correspondence-log</div>
+      </div>
+      <p class="band-note">These four outlive initiation, which also means nothing brings you to them. You never have to re-run an initiation step to log one risk or file one status. The correspondence log is the odd one out: no step owns it and no checklist scores it, so it only exists if you ask for it.</p>
+    </div>
+
+    <div class="band">
+      <div class="band-label">Whenever you ask or write<span>Not tied to a project stage</span></div>
+      <div class="chips">
+        <div class="chip">pmo-guide</div>
+        <div class="chip">pm-voice</div>
+        <div class="chip weekly">daily-digest</div>
+        <div class="chip">wrap-up</div>
+      </div>
+      <p class="band-note">One answers questions about how we do things, from the live standard. One is the pass every message you send goes through, whichever skill drafted it. The digest you set up once, and then it arrives by itself every day. The wrap-up closes a chat so the next one starts from your files, not from you.</p>
+    </div>
+  </section>
+
+  <section class="plays">
+    <h2 class="section">How it plays out</h2>
+    <p class="section-sub">Four ordinary weeks. What you type, what the copilot does, and every place it stops and waits for you.</p>
+
+    <div class="scenarios">
+
+      <article class="scn">
+        <h3>Sales hands you a new project</h3>
+        <p class="runs">Runs <code>a01-presale-handover</code> - six stages, and it stops after each one.</p>
+        <p class="you">&ldquo;I've been handed Beta, here's the pre-sale chat and the folder&rdquo;</p>
+        <ol>
+          <li>It reads the file list first, nothing deeper:
+            <p class="asks"><span class="tag">It asks</span>&ldquo;Found 14 sources. Is this the right handover material?&rdquo;</p></li>
+          <li>Then it reads properly and <b>leads with the client's problem</b>, not the feature list. If the material never says why the client came to us, it marks that UNCLEAR and makes it your first question for Sales.</li>
+          <li>Stage 3 gives you numbers, <b>calculated by a script, not eyeballed</b>:
+            <div class="metrics">
+              <div class="metric"><strong>&ge; 70%</strong>Handover Maturity Index</div>
+              <div class="metric"><strong>&le; 30%</strong>Critical Uncertainty Ratio</div>
+            </div>
+            Plus a Sheet of the 18 core checklist items, each linked to the exact slide or cell it came from. It doesn't send the Sheet. You send it to Sales to confirm line by line.</li>
+          <li>Stage 4 is the step's one hard gate:
+            <p class="asks hard"><span class="tag">Hard gate</span>&ldquo;I'll put these 9 documents in the project brain and hold back the budget Sheet and the SOW. OK?&rdquo;</p>
+            The notebook gets created only after a clear yes.</li>
+        </ol>
+        <p class="after">Afterwards it knows A01 is done, so &ldquo;what's next on Beta?&rdquo; picks up from there rather than starting over.</p>
+      </article>
+
+      <article class="scn">
+        <h3>Something worrying comes up on a call</h3>
+        <p class="runs">No initiation step here. <code>risk-register</code>, update mode.</p>
+        <p class="you">&ldquo;client said their DevOps is off for a month in November&rdquo;</p>
+        <ol>
+          <li>It answers what you actually asked, then <b>names the skill you just wandered into</b>:
+            <p class="asks"><span class="tag">It offers</span>&ldquo;That's a risk to the release. Want it in the Risk Register as K-7?&rdquo;</p></li>
+          <li>One row: severity, owner, response, and whether it's critical. <b>A risk with no owner isn't logged yet</b>, and it will tell you so.</li>
+          <li>It shows the row and what it does to the coverage number, then stops:
+            <p class="asks"><span class="tag">It asks</span>&ldquo;Adding K-7. That makes 3 of 4 critical risks owned. Filing it to Confluence - OK?&rdquo;</p>
+            It files wherever your register already lives, Jira or Confluence.</li>
+        </ol>
+        <p class="after">You never re-run initiation to log one risk. The new row is offered to the project brain in the same message.</p>
+      </article>
+
+      <article class="scn">
+        <h3>You inherit a project that's been running for months</h3>
+        <p class="runs">Runs <code>map-existing-project</code>, <b>not</b> the router.</p>
+        <p class="you">&ldquo;I took over Gamma, it's been running since March&rdquo;</p>
+        <ol>
+          <li>Why not the router: scanning a live project's folder finds almost nothing, and the router would read that as a project that never started and send it back to pre-sale handover.</li>
+          <li>A <b>read-only sweep</b> of Drive, Chat, mail, Jira, Confluence, Calendar and NotebookLM. You see the inventory before any conclusions, then a source register.</li>
+          <li>Then <b>what's on fire</b>, worst first: overdue promises, a CR agreed in chat and never processed, a card nobody has updated. Each one goes into your task list.</li>
+          <li>Last, a score against the mandatory PMO artifacts, and it asks rather than assumes:
+            <p class="asks"><span class="tag">It asks</span>&ldquo;12 confirmed. For the 6 I couldn't find, do they exist somewhere I didn't look?&rdquo;</p></li>
+        </ol>
+        <p class="after">Nothing reaches a shared system before Stage 6 - only your own task list. Not finding something is never reported as missing until you've answered that question.</p>
+      </article>
+
+      <article class="scn">
+        <h3>It's time for the weekly status</h3>
+        <p class="runs">Runs <code>prorep-card</code>, one card or your whole portfolio.</p>
+        <p class="you">&ldquo;do my weekly statuses&rdquo;</p>
+        <ol>
+          <li>It asks which projects and how you want to feed it. <b>Express</b>: you give it the week in a few lines. <b>Full sweep</b>: it gathers the evidence from chats, Jira and mail itself.</li>
+          <li>It drafts the eight-field status and puts the eight indicators next to what's on the card now. <b>Only the ones that should change get flagged</b>. Carrying a value forward is normal.
+            <p class="asks hard"><span class="tag">Hard gate</span>&ldquo;Two of the eight would change: Delivery Health to Yellow, Project Stage to UAT, and why. Post it?&rdquo;</p></li>
+          <li>After it posts, it gives you the same text ready to paste into the project's strategy chat, in the language that chat runs in.</li>
+        </ol>
+        <p class="after">The card is visible to leadership, so nothing goes on it without a clear yes. The chat post is always yours to send.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <h2 class="section">The twenty-one</h2>
+  <p class="section-sub">Grouped by when in a project's life you need them, not alphabetically.</p>
+
+  <div class="grid">
+    <div class="grid-head">
+      <div>Skill</div><div>What you get</div><div>When to reach for it</div><div>What to type</div>
+    </div>
+
+    <h3 class="group-head">Start here</h3>
+
+    <div class="row">
+      <div class="sk">copilot-setup</div>
+      <div class="cell get"><span class="lbl">What you get</span>Your connectors probed and repaired, the copilot's rules and its copy of the PMO standard installed, your profile drafted, a task list and a feedback log started.</div>
+      <div class="cell"><span class="lbl">When</span>First time you use the copilot - and again whenever something that worked last week has stopped answering.</div>
+      <ul class="say"><li>&ldquo;set up my copilot&rdquo;</li><li>&ldquo;Claude can't see my Drive any more&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">map-existing-project</div>
+      <div class="cell get"><span class="lbl">What you get</span>A sweep of Drive, Chat, Gmail, Jira, Confluence and Calendar into a source register, a takeover brief, what needs attention now, and a score against the mandatory PMO artifacts.</div>
+      <div class="cell"><span class="lbl">When</span>A project has been running for months and Claude has never seen a file from it. Also when you've just inherited one.</div>
+      <ul class="say"><li>&ldquo;get this project into Claude&rdquo;</li><li>&ldquo;I took over Philmore, catch me up&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">project-router</div>
+      <div class="cell get"><span class="lbl">What you get</span>Where the project stands against the standard, which outputs already exist, how ready it is for the gate, and which skill to run next.</div>
+      <div class="cell"><span class="lbl">When</span>A project that's genuinely new, or one already mapped, and you want to know what's next rather than guess.</div>
+      <ul class="say"><li>&ldquo;what should I do next on Alchemy?&rdquo;</li><li>&ldquo;what's left before we can start?&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">standards-sync</div>
+      <div class="cell get"><span class="lbl">What you get</span>A refreshed copy of the standard from live Confluence, separating what actually changed from what the copilot had wrong.</div>
+      <div class="cell"><span class="lbl">When</span>A Confluence page reads differently from what the copilot just told you. If you think it's out of date, you're probably right.</div>
+      <ul class="say"><li>&ldquo;sync the standards&rdquo;</li><li>&ldquo;Artem updated the standard&rdquo;</li></ul>
+    </div>
+
+    <h3 class="group-head">The initiation arc - before the gate</h3>
+
+    <div class="row">
+      <div class="sk">a01-presale-handover<span class="step">A01</span></div>
+      <div class="cell get"><span class="lbl">What you get</span>A handover brief, the commitments and assumptions Sales made, a scored checklist as a Sheet you can send them to fill the gaps, a source register and a first risk log.</div>
+      <div class="cell"><span class="lbl">When</span>Sales has handed a sold project over and nobody has worked out what was actually promised.</div>
+      <ul class="say"><li>&ldquo;I got a handover&rdquo;</li><li>&ldquo;what did pre-sale hand over?&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">a02-a04-stakeholders-and-description<span class="step">A02 &middot; A04</span></div>
+      <div class="cell get"><span class="lbl">What you get</span>A stakeholder and communication register with a decision-ownership table, and the project description.</div>
+      <div class="cell"><span class="lbl">When</span>Nobody can say who approves what, or a newcomer asks what this project actually is and there's no written answer.</div>
+      <ul class="say"><li>&ldquo;who signs off on what here?&rdquo;</li><li>&ldquo;write the project description&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">a03-contract-commitments<span class="step">A03</span></div>
+      <div class="cell get"><span class="lbl">What you get</span>A commitments register - delivery obligations, client obligations, acceptance rules, reporting duties - checked against the scope, roadmap and economy.</div>
+      <div class="cell"><span class="lbl">When</span>The signed contract or SOW lands and nobody has read it against what the team plans to build.</div>
+      <ul class="say"><li>&ldquo;what did we commit to?&rdquo;</li><li>&ldquo;does the contract match our scope?&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">a05-a06-scope-and-risks<span class="step">A05 &middot; A06</span></div>
+      <div class="cell get"><span class="lbl">What you get</span>The assumptions behind the estimate interrogated, critical scope with acceptance criteria, a required-roles list, CR candidates, and the project's first risk register.</div>
+      <div class="cell"><span class="lbl">When</span>The sold estimate looks thin and you have to say so before committing to it.</div>
+      <ul class="say"><li>&ldquo;are we underestimating this?&rdquo;</li><li>&ldquo;sold vs what we can actually deliver&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">a07-a08-roadmap-and-economy<span class="step">A07 &middot; A08</span></div>
+      <div class="cell get"><span class="lbl">What you get</span>A roadmap and milestones with owners and dates, the role-by-month hours plan, and those hours written into the economy file for you and the RM to work on.</div>
+      <div class="cell"><span class="lbl">When</span>You owe a client or leadership dates and have none, or the economy file is empty so staffing can't be requested.</div>
+      <ul class="say"><li>&ldquo;build the roadmap&rdquo;</li><li>&ldquo;how long will this take?&rdquo;</li></ul>
+    </div>
+
+    <div class="row is-gate">
+      <div class="sk">a09-baseline-gate<span class="step">A09 &middot; the gate</span></div>
+      <div class="cell get"><span class="lbl">What you get</span>The baseline package, a one-page leadership summary carrying your readiness call and your flags, the value classification, and the decision recorded.</div>
+      <div class="cell"><span class="lbl">When</span>Scope, plan and economy are on the table and someone has to say go or no-go. Setup and staffing don't begin before this.</div>
+      <ul class="say"><li>&ldquo;run the baseline gate&rdquo;</li><li>&ldquo;is this project approved to start?&rdquo;</li></ul>
+    </div>
+
+    <h3 class="group-head">The initiation arc - after the gate</h3>
+
+    <div class="row">
+      <div class="sk">a10-staffing<span class="step">A10</span></div>
+      <div class="cell get"><span class="lbl">What you get</span>The role requirements you send the Delivery Manager, a checklist for accepting candidates, and the confirmed team moved into your Resource Plan and P&amp;L.</div>
+      <div class="cell"><span class="lbl">When</span>You're about to ask for people, or the DM has come back and the team needs recording.</div>
+      <ul class="say"><li>&ldquo;what roles do I need to staff?&rdquo;</li><li>&ldquo;the DM sent role requirements&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">a11-project-setup<span class="step">A11</span></div>
+      <div class="cell get"><span class="lbl">What you get</span>Drive folders and sensitive storage, the project notebook, a chat plan, the board checked, the PROREP card's descriptive fields filled, and Communication Plan and Working Rules drafts.</div>
+      <div class="cell"><span class="lbl">When</span>The project has nowhere to put anything, or what it has is a mess. Worth doing early - earlier steps assume these exist.</div>
+      <ul class="say"><li>&ldquo;the project has no folders&rdquo;</li><li>&ldquo;is my project set up properly?&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">a12-a14-kickoff<span class="step">A12 &ndash; A14</span></div>
+      <div class="cell get"><span class="lbl">What you get</span>Internal team alignment, the PMO kick-off deck filled slide by slide, the client process topics, an access list, the invite, and the 24-hour follow-up.</div>
+      <div class="cell"><span class="lbl">When</span>Kick-off is on the calendar and there's no deck, agenda or follow-up yet.</div>
+      <ul class="say"><li>&ldquo;prepare the kick-off&rdquo;</li><li>&ldquo;write the kick-off recap&rdquo;</li></ul>
+    </div>
+
+    <h3 class="group-head">All project long</h3>
+
+    <div class="row">
+      <div class="sk">prorep-card<span class="step">weekly &middot; every project</span></div>
+      <div class="cell get"><span class="lbl">What you get</span>The eight-field status and the eight PMO indicators, posted to the leadership card in one go, plus the same text handed back for you to post in the project chat.</div>
+      <div class="cell"><span class="lbl">When</span>It's the weekly reporting slot. Or a card hasn't been touched in weeks while the project moved on.</div>
+      <ul class="say"><li>&ldquo;do my weekly statuses&rdquo;</li><li>&ldquo;which of my cards are stale?&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">risk-register</div>
+      <div class="cell get"><span class="lbl">What you get</span>One risk or blocker in or out, holding the register's IDs and conventions - plus a review of whether your criticals still have owners.</div>
+      <div class="cell"><span class="lbl">When</span>Something worrying comes up mid-delivery. Or the register hasn't moved in months and you want to know what's rotted.</div>
+      <ul class="say"><li>&ldquo;add a risk: the client's API is undocumented&rdquo;</li><li>&ldquo;review my risk register&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">project-brain</div>
+      <div class="cell get"><span class="lbl">What you get</span>Things worth remembering pushed into the project's NotebookLM notebook, answers pulled back out of it, and a check on whether it's gone stale.</div>
+      <div class="cell"><span class="lbl">When</span>Something worth keeping was just produced or found. Or nobody can recall what was decided and when.</div>
+      <ul class="say"><li>&ldquo;did we ever decide about the mobile scope?&rdquo;</li><li>&ldquo;is the brain up to date?&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">correspondence-log</div>
+      <div class="cell get"><span class="lbl">What you get</span>The project's client email collected into one Doc the team can read and the notebook can answer from, back over the history and forward from now on. It makes mail findable; it is not evidence of anything.</div>
+      <div class="cell"><span class="lbl">When</span>You are digging through your own inbox for what a client agreed. Or the project's mail lives nowhere but one mailbox and somebody else now needs that trail.</div>
+      <ul class="say"><li>&ldquo;collect the correspondence for this project&rdquo;</li><li>&ldquo;where is the email where they agreed to that?&rdquo;</li></ul>
+    </div>
+
+    <h3 class="group-head">Whenever you ask or write</h3>
+
+    <div class="row">
+      <div class="sk">pmo-guide</div>
+      <div class="cell get"><span class="lbl">What you get</span>The rule, where it is written and whether it is current - read from the live Confluence page with the page ID cited. Any block of the standard, A to G. It explains and points you at the skill that does the work.</div>
+      <div class="cell"><span class="lbl">When</span>You need to know how we do something here, and the answer has to be the current one rather than what someone remembers.</div>
+      <ul class="say"><li>&ldquo;who approves a change request?&rdquo;</li><li>&ldquo;what does the standard say for a running project?&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">pm-voice</div>
+      <div class="cell get"><span class="lbl">What you get</span>Text you can paste: the length the channel expects, without the tells that make a message read as AI, in English or Russian. Your own voice skill or saved samples win over its defaults.</div>
+      <div class="cell"><span class="lbl">When</span>Anything that goes out with your name on it. Other skills hand their drafts to it, so mostly you won't call it at all.</div>
+      <ul class="say"><li>&ldquo;reply to the client, keep it short&rdquo;</li><li>&ldquo;this reads like AI, fix it&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">daily-digest</div>
+      <div class="cell get"><span class="lbl">What you get</span>One digest a day of your Chat spaces, mail and meeting notes - what needs you, what was decided, new ideas and use cases, risks - delivered to a private place you choose. You pick what it looks for and when it runs; it asks for the time at the end of setup.</div>
+      <div class="cell"><span class="lbl">When</span>You skim a hundred spaces and still miss the one decision that mattered. Or you re-scroll every chat at the end of the day. It runs while Claude is open.</div>
+      <ul class="say"><li>&ldquo;set up a daily digest of my chats&rdquo;</li><li>&ldquo;add risks on the Alchemy project to my digest&rdquo;</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="sk">wrap-up</div>
+      <div class="cell get"><span class="lbl">What you get</span>Before a chat closes: new tasks on your list, what stays true in the project&rsquo;s context file, and a short resume note in the project folder, so the next chat starts where this one stopped. A wrap-up routine of your own wins over it.</div>
+      <div class="cell"><span class="lbl">When</span>You are done for the day, or moving to a new chat. It writes only your own local files - never Jira, PROREP or a message.</div>
+      <ul class="say"><li>&ldquo;wrap up&rdquo;</li><li>&ldquo;that&rsquo;s it for today, let&rsquo;s close&rdquo;</li></ul>
+    </div>
+  </div>
+
+  <div class="twocol">
+    <section>
+      <h2 class="section">What it will not do</h2>
+      <p class="section-sub">Worth knowing up front, so none of it reads as the copilot failing.</p>
+      <ul class="list warn">
+        <li><b>It never sends.</b> Not to a client, not to Sales, not to a project chat. It drafts and names the destination; you send. The one exception is your own daily digest, posted only to the private place you chose for it.</li>
+        <li><b>It shows you every write first.</b> Nothing reaches Jira, a shared Sheet, a P&amp;L or the project notebook without the exact content on screen and a yes from you.</li>
+        <li><b>It doesn't approve anything.</b> It prepares the decision and records what was decided. The call is yours.</li>
+        <li><b>Money stays out</b> of the project notebook, the common folder and anything client-facing. Hours are fine everywhere; rates, margins and P&amp;L figures are not.</li>
+        <li><b>Contract text lives in a separate confidential notebook</b>, never the project brain.</li>
+        <li><b>It is not an authority on how we do things.</b> When it says &ldquo;I'm not sure what we usually do here, this is my draft&rdquo; - believe it, and check with the people who hold the convention.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="section">Getting more out of it</h2>
+      <p class="section-sub">Six things that make the difference in practice.</p>
+      <ul class="list">
+        <li><b>Describe the situation, not a command.</b> &ldquo;The client just told me something that worries me&rdquo; works better than any skill name.</li>
+        <li><b>Name the project.</b> It knows your portfolio and the aliases each project goes by, so one name is enough.</li>
+        <li><b>It works in stages and stops.</b> Every checkpoint shows what it found before it moves on. &ldquo;Go on&rdquo; is all it needs.</li>
+        <li><b>Ask what it can do - it answers against your own portfolio.</b> &ldquo;What can you help me with?&rdquo; gets what's overdue on your projects, not a list of features. Needs the copilot's rules installed, which is step 8 of setup.</li>
+        <li><b>Say &ldquo;log this&rdquo; when it gets something wrong.</b> It keeps a feedback log in your workspace - send the file back and the next version is better.</li>
+        <li><b>Two files do the remembering:</b> <code>project-context.md</code> per project, and one task list across your whole portfolio. It writes to both as it goes and tells you when it did.</li>
+      </ul>
+    </section>
+  </div>
+
+  <footer>
+    <span>PM Copilot - alpha</span>
+    <span class="sep">&middot;</span>
+    <span>21 skills</span>
+    <span class="sep">&middot;</span>
+    <span>Standard A: initiation, A01&ndash;A14</span>
+    <span class="sep">&middot;</span>
+    <span>Standards B&ndash;G: ask, and pmo-guide answers from the live page</span>
+  </footer>
+
+</div>
+</body>
+</html>

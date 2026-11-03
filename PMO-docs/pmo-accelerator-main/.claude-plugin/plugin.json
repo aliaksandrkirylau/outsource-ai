@@ -1,0 +1,17 @@
+{
+  "name": "pm-copilot",
+  "version": "0.46.1",
+  "description": "Runs Innowise PMO delivery work as guided, gated skills. Every step of Project Initiation (Standard A) has a skill. Artifact skills keep the project brain, risk register and weekly PROREP status alive all project long. pmo-guide answers process questions from live Confluence, pm-voice makes anything a PM sends read like a PM wrote it, daily-digest schedules a digest of chats, mail and meetings, and wrap-up closes a session into the files the next one reads. The PM judges and sends.",
+  "author": {
+    "name": "Anton Oparienko"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "pmo",
+    "project-initiation",
+    "standard-a",
+    "handover",
+    "project-takeover",
+    "innowise"
+  ]
+}

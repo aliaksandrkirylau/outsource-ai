@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web demo walkthrough - HQ afternoon</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0">
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle}
+</style>
+</helmet>
+<div style="width: 1440px; min-height: 2500px; box-sizing: border-box; padding: 56px 64px; background: #FFF8F6; color: #241914; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; display: flex; flex-direction: column; gap: 28px">
+
+<header style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; border-bottom: 4px solid #ED712E; padding-bottom: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 13px; font-weight: 600; letter-spacing: 0.08em; color: #A14000">OES HQ WEB APP · CLICKABLE PROTOTYPE · INTERNAL DEMO SCRIPT</div>
+<h1 style="margin: 0; font-size: 36px; font-weight: 600">HQ follows the rigs</h1>
+<div style="color: #574238; font-size: 15px">About 15 minutes. 14 Oct 2026, 15:30: Rig 07 has just synced. Khalid Nasser (supervisor) works through it, then Sara Al-Mutairi (admin) sets things up. Run it after the desktop demo; the steps marked Desktop show where the two apps meet.</div>
+</div>
+<a href="WSignIn.dc.html" style="display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 28px; border-radius: 24px; background: #A14000; color: #FFFFFF; font-weight: 600; font-size: 16px; text-decoration: none"><span class="ms" aria-hidden="true">play_arrow</span>Start the demo</a>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Say at the start</h2>
+<div style="line-height: 1.5">Same prototype, HQ side. The data is the same invented data as on the rig computer, as it looks after the rig has synced. Prices and costs are invented too.</div>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">How we agree</h2>
+<div style="line-height: 1.5">We note every comment on the screen. After the demo we send a written summary and the open questions. Each area is agreed by a written OK by email from the named contact; a nod in the call is not acceptance.</div>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Keep in mind</h2>
+<div style="line-height: 1.5">The web app does not enter mud data; it reads what the rigs sync and makes decisions. Three roles only (Admin, Supervisor / Manager, Engineer). Use "View as" in the user menu to switch people. Do not promise items marked "not yet".</div>
+</section>
+</div>
+
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="10">
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 20px 24px; display: grid; grid-template-columns: 56px minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px; align-items: start">
+<div style="width: 44px; height: 44px; border-radius: 22px; background: #F6CD96; color: #521D00; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700">{{s.n}}</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap"><h2 style="margin: 0; font-size: 18px; font-weight: 600">{{s.title}}</h2><span style="color: #574238">{{s.time}}</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{s.links}}" as="l" hint-placeholder-count="2"><a href="{{l.href}}" style="display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #8B7267; color: #A14000; font-weight: 600; text-decoration: none"><span class="ms" aria-hidden="true" style="font-size: 18px">open_in_new</span>{{l.label}}</a></sc-for>
+</div>
+<div style="line-height: 1.5"><b>Do:</b> {{s.doIt}}</div>
+<div style="line-height: 1.5; color: #574238"><b style="color: #241914">Say:</b> {{s.say}}</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; background: #FFF1EC; border-radius: 8px; padding: 14px 16px">
+<div style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: #A14000">ASK THE CLIENT</div>
+<sc-for list="{{s.ask}}" as="q" hint-placeholder-count="2"><div style="display: flex; gap: 8px; line-height: 1.45"><span class="ms" aria-hidden="true" style="font-size: 18px; color: #A14000">help</span><span>{{q}}</span></div></sc-for>
+<sc-if value="{{s.hasNot}}" hint-placeholder-val="{{ false }}"><div style="font-size: 12px; color: #574238; line-height: 1.45; border-top: 1px solid #F4DED5; padding-top: 8px"><b>Not yet:</b> {{s.notYet}}</div></sc-if>
+</div>
+</section>
+</sc-for>
+
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">After the demo</h2>
+<div style="line-height: 1.5">Add the web comments to the same summary as the desktop demo. Ask them for: the list of HQ users and their roles, which rigs each supervisor covers, who approves what, the threshold ranges they use per mud system, and the product catalogue with prices (or who owns it). Ask for a written OK per area.</div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const L = (label, href) => ({ label, href });
+    const S = (n, title, time, links, doIt, say, ask, notYet) => ({ n, title, time, links, doIt, say, ask, notYet: notYet || '', hasNot: !!notYet });
+    return {
+      steps: [
+        S(1, 'Sign in at HQ', '1 min', [L('W1 Sign in', 'WSignIn.dc.html')],
+          'Pick the Supervisor demo account and Sign in.',
+          'A normal web app in the browser, Flutter Web like the rig app. Accounts are made by the admin; no self-registration.',
+          ['How many HQ users, and who are they?', 'Is email and password enough, or do you need single sign-on or two-factor?'], 'Two-factor sign-in (excluded in the SOW), single sign-on.'),
+        S(2, 'The HQ dashboard', '2 min', [L('W2 Dashboard', 'WDashboard.dc.html')],
+          'Point at the five tiles, the rig table and the red Rig 21 (no sync for 21 hours). Search "KH".',
+          'Khalid sees only his three rigs. Faisal (manager) sees all rigs with the same screens. Nothing is live: data arrives when a rig syncs.',
+          ['After how many hours without a sync should a rig turn red?', 'Which numbers do you want on this page? Anything missing?'], 'Email or SMS alerts; per-column filters; custom charts.'),
+        S(3, 'Approvals', '3 min', [L('W3 Approvals', 'WApprovals.dc.html'), L('Desktop: correction sent', 'MudCheck.dc.html'), L('Desktop: sync', 'Settings.dc.html')],
+          'Approve the PV correction. Reject the chlorides one: try without a comment, then add one. Mark the KH-104 flag reviewed.',
+          'Everything that needs a decision is in one list. The engineer sent the PV correction from the rig (show the desktop screen); he sees your decision after his next sync, like the 08:00 one Faisal approved at 13:20 (desktop Settings).',
+          ['Who approves corrections: supervisor, manager, or both?', 'Do flagged checks need a review at HQ, or is the reason on the rig enough?']),
+        S(4, 'Approve a section report', '3 min', [L('W4 Section report', 'WReport.dc.html'), L('Desktop: submit', 'ReportSummary.dc.html')],
+          'Scroll the report. Show the product cost box on the right. Try Send back without a comment, then Approve. Download the PDF.',
+          'The engineer submitted it on the rig at 15:12 (desktop). Cost is calculated at HQ from catalogue prices and never goes to the rig or the operator.',
+          ['One approval step enough, or supervisor then manager?', 'Should cost be on the report PDF for internal use?'], 'Editing the report text at HQ.'),
+        S(5, 'A well in detail', '2 min', [L('W5 Wells', 'WWells.dc.html'), L('W6 DW-217', 'WWell.dc.html')],
+          'Wells list: filter by rig. Open DW-217: mud checks table with red and blue cells, then the Inventory and Reports tabs.',
+          'Read only: the same data as on the rig computer after the sync. Red is outside the range, blue is a correction waiting for approval.',
+          ['Which parameters do you want in this table by default?', 'Do you need to compare wells side by side?'], 'Offset-well comparison, charts per parameter.'),
+        S(6, 'Open a well from HQ', '1 min', [L('W7 New well', 'WWellForm.dc.html')],
+          'Pick Rig 12: the engineers and the current well change. Point at the duplicate warning.',
+          'Same form as on the rig, plus the rig. The rig computer gets the well with its next sync.',
+          ['Who usually opens a new well: HQ or the rig engineer?', 'If both did it offline, which one wins?']),
+        S(7, 'Inventory across rigs', '1 min', [L('W8 Inventory', 'WStock.dc.html')],
+          'Switch rigs. Point at the alerts and the value on hand. Open Movements.',
+          'Read only at HQ. Stock is recorded on the rig. Value uses catalogue prices.',
+          ['Who records deliveries: the rig when they arrive, or HQ when they ship?', 'Do you need a stock report across all rigs?'], 'Ordering and transfers from HQ.'),
+        S(8, 'Admin: people and rigs', '2 min', [L('W9 Users', 'WUsers.dc.html'), L('W10 Rigs', 'WRigs.dc.html')],
+          'In the user menu, View as Sara (admin). Edit Yusuf Karim: rigs 12 and 21. Add a user, try saving without an email. Open Rigs and add one.',
+          'Engineers and supervisors are assigned to rigs, not wells. The rig list is plain: just names and active or not.',
+          ['Is a person on several rigs normal?', 'Do you have a list of rigs we can load?']),
+        S(9, 'Admin: thresholds and products', '2 min', [L('W11 Thresholds', 'WThresholds.dc.html'), L('W12 Products', 'WProducts.dc.html')],
+          'Thresholds: company default, then KH-104 with its density override. Products: edit a price, add a product.',
+          'Ranges flag values on the rig; they reach the rig with the next sync. One product catalogue for all rigs.',
+          ['Are ranges per mud system, per operator, or per well?', 'Who keeps the catalogue and prices up to date?']),
+        S(10, 'Admin: audit log', '1 min', [L('W13 Audit log', 'WAudit.dc.html')],
+          'Filter by Approvals, then search "Ali".',
+          'Every change on the rig and at HQ, with who, when and old and new value. Nothing can be deleted.',
+          ['How long must the log be kept?', 'Who else may see it?'], 'Export of the log.')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

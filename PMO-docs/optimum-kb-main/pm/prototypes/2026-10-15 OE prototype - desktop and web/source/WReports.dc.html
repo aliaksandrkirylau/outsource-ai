@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reports (HQ)</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0">
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle}
+td,th{white-space:nowrap}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 1000px; box-sizing: border-box; background: #FFF8F6; color: #241914; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; display: flex; flex-direction: column">
+<dc-import name="WebTopBar" user="khalid" hint-size="100%,68px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; flex: 1; align-items: stretch">
+<div style="flex: 0 0 96px; display: flex"><dc-import name="WebRail" role="sup" sel="reports" hint-size="96px,836px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; padding: 24px 32px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; max-width: 1340px">
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<h1 style="margin: 0; font-size: 24px; font-weight: 400">Reports</h1>
+<span style="color: #574238">{{count}}</span>
+</div>
+<div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center">
+<label style="display: inline-flex; align-items: center; height: 40px; padding: 0 16px 0 8px; gap: 8px; border: 1px solid #8B7267; border-radius: 20px; min-width: 300px; background: #FFFFFF"><span class="ms" aria-hidden="true" style="color: #574238">search</span><input aria-label="Search reports" placeholder="Search well or engineer" value="{{q}}" onChange="{{setQ}}" style="flex: 1; border: 0; outline: 0; font: inherit; background: transparent"></label>
+<label style="display: inline-flex; align-items: center; gap: 8px; color: #574238">Rig
+<select value="{{rig}}" onChange="{{setRig}}" style="height: 40px; border: 1px solid #8B7267; border-radius: 4px; padding: 0 10px; font: inherit; color: #241914; background: #FFFFFF"><option value="all">All my rigs</option><option value="OES Rig 07">OES Rig 07</option><option value="OES Rig 12">OES Rig 12</option><option value="OES Rig 21">OES Rig 21</option></select></label>
+<label style="display: inline-flex; align-items: center; gap: 8px; color: #574238">Type
+<select value="{{type}}" onChange="{{setType}}" style="height: 40px; border: 1px solid #8B7267; border-radius: 4px; padding: 0 10px; font: inherit; color: #241914; background: #FFFFFF"><option value="all">All</option><option value="day">End-of-day</option><option value="sec">Section</option><option value="well">End-of-well</option><option value="inv">Inventory</option></select></label>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; min-width: 1000px">
+<thead><tr style="height: 52px; text-align: left; color: #574238"><th style="padding: 0 16px; font-weight: 600">Report</th><th style="padding: 0 12px; font-weight: 600">Well</th><th style="padding: 0 12px; font-weight: 600">Rig</th><th style="padding: 0 12px; font-weight: 600">Period <span class="ms" aria-hidden="true" style="font-size: 16px">arrow_downward</span></th><th style="padding: 0 12px; font-weight: 600">By</th><th style="padding: 0 12px; font-weight: 600">Status</th><th style="padding: 0 16px"></th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+<tr style="height: 52px; border-top: 1px solid #F4DED5">
+<td style="padding: 0 16px"><a href="{{r.href}}" style="font-weight: 600">{{r.name}}</a></td><td style="padding: 0 12px">{{r.well}}</td><td style="padding: 0 12px">{{r.rig}}</td><td style="padding: 0 12px">{{r.period}}</td><td style="padding: 0 12px; color: #574238">{{r.by}}</td>
+<td style="padding: 0 12px"><span style="display: inline-flex; align-items: center; height: 26px; padding: 0 8px; border-radius: 8px; font-size: 12px; font-weight: 600; background: {{r.bg}}; color: {{r.fg}}; border: {{r.b}}">{{r.status}}</span></td>
+<td style="padding: 0 16px; text-align: right"><a href="{{r.href}}" aria-label="Download PDF" style="display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; color: #574238; text-decoration: none"><span class="ms" aria-hidden="true">download</span></a></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="color: #574238; font-size: 13px; line-height: 1.5">The rig computer makes the reports; HQ gets them, as PDF and data, with the sync. Prototype: every row opens the 12¼ in section report of DW-217.</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { q: '', rig: 'all', type: 'all' };
+  }
+  renderVals() {
+    const ST = { wait: ['Waiting for approval', 'transparent', '#00658B', '1px solid #00658B'], appr: ['Approved', '#F6CD96', '#521D00', '0'], fin: ['Final', 'transparent', '#574238', '1px solid #8B7267'] };
+    const N = { day: 'End-of-day report', sec: 'Section report', well: 'End-of-well report', inv: 'Inventory report' };
+    const R = (type, extra, well, rig, period, by, s) => { const t = ST[s]; return { type, name: N[type] + (extra ? ', ' + extra : ''), well, rig, period, by, status: t[0], bg: t[1], fg: t[2], b: t[3], href: 'WReport.dc.html' }; };
+    const all = [
+      R('sec', '12¼ in', 'DW-217', 'OES Rig 07', '21 Sep - 14 Oct 2026', 'Ali Hassan', 'wait'),
+      R('day', '', 'DW-217', 'OES Rig 07', '13 Oct 2026', 'Omar Saleh', 'fin'),
+      R('day', '', 'KH-104', 'OES Rig 12', '13 Oct 2026', 'Hamad Ali', 'fin'),
+      R('day', '', 'KH-109', 'OES Rig 21', '13 Oct 2026', 'Mansour Fahd', 'fin'),
+      R('day', '', 'DW-217', 'OES Rig 07', '12 Oct 2026', 'Ali Hassan', 'fin'),
+      R('inv', '', 'KH-104', 'OES Rig 12', '01 - 12 Oct 2026', 'Yusuf Karim', 'fin'),
+      R('sec', '12¼ in', 'KH-104', 'OES Rig 12', '28 Sep - 10 Oct 2026', 'Hamad Ali', 'appr'),
+      R('sec', '17½ in', 'DW-217', 'OES Rig 07', '08 - 20 Sep 2026', 'Ali Hassan, Omar Saleh', 'appr'),
+      R('well', '', 'DW-212', 'OES Rig 07', '15 Jul - 28 Aug 2026', 'Ali Hassan', 'appr'),
+      R('well', '', 'KH-099', 'OES Rig 12', '10 Aug - 21 Sep 2026', 'Hamad Ali', 'appr')
+    ];
+    const S = this.state, q = S.q.trim().toLowerCase();
+    const rows = all.filter((r) => (S.rig === 'all' || r.rig === S.rig) && (S.type === 'all' || r.type === S.type) && (!q || (r.well + ' ' + r.by).toLowerCase().includes(q)));
+    return {
+      rows, count: rows.length + ' of ' + all.length + ' · 1 waiting for approval',
+      q: S.q, rig: S.rig, type: S.type,
+      setQ: (e) => this.setState({ q: e.target.value }), setRig: (e) => this.setState({ rig: e.target.value }), setType: (e) => this.setState({ type: e.target.value })
+    };
+  }
+}
+</script>
+</body>
+</html>

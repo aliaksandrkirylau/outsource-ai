@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reports</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0">
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle}
+th,td{white-space:nowrap}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 900px; box-sizing: border-box; background: #FFF8F6; color: #241914; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; display: flex; flex-direction: column">
+<dc-import name="TopBar" well-name="DW-217" well-sub="12¼ in section · Day shift" hint-size="100%,68px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; flex: 1; align-items: stretch">
+<div style="flex: 0 0 96px; display: flex"><dc-import name="Rail" sel="reports" hint-size="96px,836px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; padding: 24px 32px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; max-width: 1280px">
+
+<h1 style="margin: 0; font-size: 24px; font-weight: 400">Reports</h1>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px">
+<a href="ReportDaily.dc.html" style="display: flex; flex-direction: column; gap: 8px; padding: 16px; background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; text-decoration: none; color: #241914"><span class="ms" aria-hidden="true" style="color: #A14000">today</span><span style="font-weight: 600; font-size: 16px">End of day</span><span style="color: #574238; font-size: 13px">The day's mud checks, products, volumes and comments. No approval.</span></a>
+<a href="ReportSummary.dc.html" style="display: flex; flex-direction: column; gap: 8px; padding: 16px; background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; text-decoration: none; color: #241914"><span class="ms" aria-hidden="true" style="color: #A14000">segment</span><span style="font-weight: 600; font-size: 16px">End of section</span><span style="color: #574238; font-size: 13px">Summary of one hole section. HQ approves it.</span></a>
+<a href="ReportSummary.dc.html" style="display: flex; flex-direction: column; gap: 8px; padding: 16px; background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; text-decoration: none; color: #241914"><span class="ms" aria-hidden="true" style="color: #A14000">flag_circle</span><span style="font-weight: 600; font-size: 16px">End of well</span><span style="color: #574238; font-size: 13px">Summary of the whole well, data, inventory and simulations. HQ approves it.</span></a>
+<a href="ReportSummary.dc.html" style="display: flex; flex-direction: column; gap: 8px; padding: 16px; background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; text-decoration: none; color: #241914"><span class="ms" aria-hidden="true" style="color: #A14000">inventory</span><span style="font-weight: 600; font-size: 16px">Inventory</span><span style="color: #574238; font-size: 13px">Products, use and balance for a day, a section or the well. No approval.</span></a>
+</div>
+
+<div style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; min-width: 900px">
+<thead><tr style="height: 52px; text-align: left; color: #574238"><th style="padding: 0 16px; font-weight: 600">Report</th><th style="padding: 0 12px; font-weight: 600">Covers <span class="ms" aria-hidden="true" style="font-size: 16px">arrow_downward</span></th><th style="padding: 0 12px; font-weight: 600">Made by</th><th style="padding: 0 12px; font-weight: 600">Status</th><th style="padding: 0 16px; font-weight: 600"></th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+<tr style="height: 56px; border-top: 1px solid #F4DED5">
+<td style="padding: 0 16px"><span style="display: inline-flex; align-items: center; gap: 10px"><span class="ms" aria-hidden="true" style="color: #A14000; font-size: 20px">{{r.icon}}</span><a href="{{r.href}}" style="font-weight: 600">{{r.name}}</a></span></td>
+<td style="padding: 0 12px">{{r.covers}}</td>
+<td style="padding: 0 12px; color: #574238">{{r.by}}</td>
+<td style="padding: 0 12px"><span style="display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 8px; border-radius: 8px; font-size: 12px; font-weight: 600; background: {{r.chipBg}}; color: {{r.chipFg}}; border: {{r.chipBorder}}"><span class="ms" aria-hidden="true" style="font-size: 16px">{{r.sicon}}</span>{{r.status}}</span></td>
+<td style="padding: 0 16px; text-align: right"><a href="{{r.href}}" style="font-weight: 600">Open</a></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="color: #574238; font-size: 13px; line-height: 1.5">Reports are built from the data on this computer and can be made offline. Export gives a PDF, Excel or CSV file to send by email as today. An approved report is locked.</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = {
+      draft: { status: 'Day not closed', sicon: 'edit_note', chipBg: 'transparent', chipFg: '#574238', chipBorder: '1px solid #8B7267' },
+      done: { status: 'Exported', sicon: 'check_circle', chipBg: 'transparent', chipFg: '#574238', chipBorder: '1px solid #8B7267' },
+      pend: { status: 'Waiting for HQ approval', sicon: 'hourglass_top', chipBg: 'transparent', chipFg: '#00658B', chipBorder: '1px solid #00658B' },
+      appr: { status: 'Approved, locked', sicon: 'lock', chipBg: '#F6CD96', chipFg: '#521D00', chipBorder: '0' }
+    };
+    const R = (icon, name, covers, by, s, href) => ({ icon, name, covers, by, href, ...st[s] });
+    return {
+      rows: [
+        R('today', 'End of day', '14 Oct 2026', 'Ali Hassan', 'draft', 'ReportDaily.dc.html'),
+        R('today', 'End of day', '13 Oct 2026', 'Omar Saleh, 13 Oct 23:40', 'done', 'ReportDaily.dc.html'),
+        R('today', 'End of day', '12 Oct 2026', 'Omar Saleh, 12 Oct 23:35', 'done', 'ReportDaily.dc.html'),
+        R('inventory', 'Inventory', '17½ in section, 08 - 20 Sep 2026', 'Ali Hassan, 21 Sep', 'done', 'ReportSummary.dc.html'),
+        R('segment', 'End of section', '17½ in section, 08 - 20 Sep 2026', 'Ali Hassan, 21 Sep', 'appr', 'ReportSummary.dc.html'),
+        R('segment', 'End of section', '26 in section, 02 - 07 Sep 2026', 'Ali Hassan, 08 Sep', 'appr', 'ReportSummary.dc.html')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

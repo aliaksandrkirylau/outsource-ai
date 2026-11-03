@@ -1,0 +1,321 @@
+<!doctype html>
+<!--
+  Skeleton of both apps for the vision session. Leu's working material in ba/, not evidence and
+  not shown to the client yet (ba/AGENTS.md). Session: [[S00 Vision and UI kit]]. Leu owns the
+  prototypes; Anton's v0 canvas ([[2026-10-30 Prototype canvas export]]) and Mikhail's OE prototype
+  are inputs to one master.
+  One file, no internet needed: double-click to open. Fictional data only (CON-006).
+  Presenter notes (internal: WBS rows, open questions) are hidden; press N to show or hide them.
+
+  Simpler pass, 30 October: it shows the structure, not answers to open questions. Where a screen
+  has to pick one option to be drawn at all, it picks the one in the estimate (fixed price, K-5):
+  three roles (WBS row 19); no sync status, shift or rig scope; plain sign-in; each module a
+  title, one line and an empty area. Out of scope is never drawn: no mobile, API, onboarding
+  wizard, historical import, documents from HQ, lab equipment, calculation report.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OES Skeleton</title>
+<style>
+  :root {
+    --primary: #0B5CAD; --primary-soft: #E3EEF9;
+    --text: #17212B; --muted: #4A5866; --faint: #A9B4BF;
+    --border: #D5DCE3; --bg: #F6F8FA; --panel: #EEF1F4; --white: #FFFFFF;
+    --flag: #8A3B00;
+    --note: #FFF7D6; --note-border: #E8D27A;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { font: 14px/1.45 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; color: var(--text); background: var(--panel); display: flex; flex-direction: column; }
+  button { font: inherit; cursor: pointer; }
+
+  /* Presenter bar - outside the apps */
+  .presenter { display: flex; align-items: center; gap: 16px; padding: 8px 16px; background: var(--text); color: #fff; font-size: 13px; flex-wrap: wrap; }
+  .presenter .tag { opacity: .7; }
+  .seg { display: inline-flex; border: 1px solid #4A5866; border-radius: 6px; overflow: hidden; }
+  .seg button { background: transparent; color: #cfd6dd; border: 0; padding: 4px 12px; }
+  .seg button.on { background: #fff; color: var(--text); }
+  .presenter .spacer { flex: 1; }
+  .presenter .hint { opacity: .55; }
+
+  .stage { flex: 1; display: flex; min-height: 0; }
+  .app { flex: 1; display: flex; flex-direction: column; min-width: 0; background: var(--bg); }
+
+  /* Window and browser chrome */
+  .chrome { display: flex; align-items: center; gap: 10px; height: 32px; padding: 0 12px; background: #DDE3E9; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+  .chrome .dots span { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--faint); margin-right: 5px; }
+  .chrome .url { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 2px 12px; min-width: 260px; }
+
+  /* Sign-in */
+  .signin { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 28px; width: 400px; max-width: 100%; }
+  .card h1 { font-size: 20px; margin: 0 0 18px; }
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; font-weight: 600; }
+  .logo { width: 34px; height: 34px; border-radius: 8px; background: var(--primary); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+  label { display: block; font-size: 12px; color: var(--muted); margin: 12px 0 4px; }
+  input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font: inherit; }
+  .btn { background: var(--primary); color: #fff; border: 0; border-radius: 6px; padding: 9px 16px; }
+  .btn.wide { width: 100%; margin-top: 18px; }
+  .btn.ghost { background: #fff; color: var(--primary); border: 1px solid var(--border); }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--panel); display: grid; place-items: center; font-size: 12px; font-weight: 600; color: var(--muted); }
+  .muted { color: var(--muted); }
+  .small { font-size: 12px; }
+  .divider { border-top: 1px solid var(--border); margin: 18px 0 4px; padding-top: 10px; }
+  .roles { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+
+  /* Signed in */
+  .header { display: flex; align-items: center; gap: 10px 18px; padding: 8px 18px; min-height: 52px; background: var(--white); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .header .ctx { display: flex; gap: 18px; flex-wrap: wrap; }
+  .header .ctx div { font-size: 12px; color: var(--muted); }
+  .header .ctx b { display: block; color: var(--text); font-size: 13px; font-weight: 600; }
+  .header .spacer { flex: 1; }
+  .who { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .linkbtn { background: none; border: 0; color: var(--primary); padding: 0; }
+  .body { flex: 1; display: flex; min-height: 0; }
+  nav { width: 210px; background: var(--white); border-right: 1px solid var(--border); padding: 12px 8px; flex-shrink: 0; }
+  nav button { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: none; border: 0; border-radius: 6px; padding: 9px 12px; color: var(--muted); }
+  nav button.on { background: var(--primary-soft); color: var(--primary); font-weight: 600; }
+  nav .ico { width: 18px; text-align: center; }
+  main { flex: 1; padding: 24px 28px; overflow: auto; min-width: 0; display: flex; flex-direction: column; }
+  main h2 { margin: 0 0 4px; font-size: 22px; }
+  main .what { color: var(--muted); margin: 0 0 20px; max-width: 720px; }
+  .frame { flex: 1; min-height: 240px; border: 2px dashed var(--border); border-radius: 10px; background: var(--white); display: flex; align-items: center; justify-content: center; padding: 22px; text-align: center; }
+  .frame span { font-size: 13px; color: var(--muted); background: var(--panel); border-radius: 12px; padding: 4px 14px; }
+
+  /* Presenter notes, internal */
+  .notes { width: 320px; flex-shrink: 0; background: var(--note); border-left: 1px solid var(--note-border); padding: 16px; overflow: auto; font-size: 13px; }
+  .notes h3 { margin: 0 0 4px; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--flag); }
+  .notes .warn { font-size: 12px; color: var(--flag); margin-bottom: 12px; }
+  .notes ul { padding-left: 18px; margin: 6px 0 12px; }
+  .hidden { display: none !important; }
+
+  @media (max-width: 760px) {
+    nav { width: 64px; } nav button span.lbl { display: none; }
+    .notes { position: fixed; inset: auto 0 0 0; width: auto; max-height: 45vh; border-left: 0; border-top: 1px solid var(--note-border); }
+    main { padding: 16px; }
+    .chrome .url { min-width: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="presenter">
+  <span class="tag">Skeleton · fictional data</span>
+  <span class="seg" id="appSeg">
+    <button data-app="rig">Rig app (desktop)</button>
+    <button data-app="web">HQ web app</button>
+  </span>
+  <span class="seg" id="modelSeg" title="How many roles the web app shows">
+    <button data-model="3">3 roles</button>
+    <button data-model="4">4 roles</button>
+  </span>
+  <span class="spacer"></span>
+  <span class="hint">N: presenter notes</span>
+</div>
+
+<div class="stage">
+  <div class="app" id="app"></div>
+  <aside class="notes hidden" id="notes"></aside>
+</div>
+
+<script>
+// Fictional data only. Names match Anton's v0 where it has them.
+const ENGINEER = { name: 'Yusuf Rahman', initials: 'YR' };
+const JOB = { well: 'ALPHA-3', rig: 'Rig 14' };
+
+const RIG_MODULES = [
+  { id: 'dashboard', icon: '⌂', label: 'Dashboard', title: 'Dashboard',
+    what: 'A summary of this well.', session: 'dashboards',
+    notes: ['D6, WBS Development Flutter row 56, built in M6 - last. Builds before M6 open on Mud checks.', 'Content not shown on purpose: KPIs are topic 7 (Q&A F.27). Offset wells need import: out.', 'Light question: should an engineer land here or on today\'s mud checks?'] },
+  { id: 'job', icon: '▤', label: 'Well job', title: 'Well job',
+    what: 'The well being drilled and its details.', session: 'well jobs and mud checks',
+    notes: ['D2, row 50, M3. No WBS line for a job list and details view (mapping 1b #9).', 'Who opens the job when the rig moves, HQ or the engineer (REQ-020)?'] },
+  { id: 'checks', icon: '✎', label: 'Mud checks', title: 'Mud checks',
+    what: 'Enter mud checks and see the ones already entered.', session: 'well jobs and mud checks',
+    notes: ['D2, rows 51-54, M3; alerts M4. Up to 50 parameters (row 28).', 'How many checks a day and who does them: prep questions 1 and 2 (TRM-008, TRM-001).'] },
+  { id: 'calc', icon: 'ƒ', label: 'Calculations', title: 'Calculations',
+    what: 'Calculated values and the hydraulics simulation.', session: 'calculations',
+    notes: ['D3, rows 58-60, M5.', 'Power law or Herschel-Bulkley (QUE-008). Formula set still owed.', 'How far we check formulas: Mikhail and Kavalchuk decide - not for the session.'] },
+  { id: 'inv', icon: '▦', label: 'Inventory', title: 'Inventory',
+    what: 'Products on this rig and how much is used.', session: 'inventory',
+    notes: ['D4, rows 62-66, M4.', 'Low-stock levels and expiry: no line lets anyone enter them (mapping 1a #4). Do not mention alerts.'] },
+  { id: 'reports', icon: '▧', label: 'Reports', title: 'Reports',
+    what: 'Reports for this well: daily, end of section, end of well.', session: 'reports',
+    notes: ['D5, rows 68-71, M6. The three types as the SOW names them, plus inventory reports.', 'What a report wraps, a shift or a day: TRM-001, disputed. No e-mail button; calculation report is a CR candidate.'] },
+];
+
+const WEB_MODULES = {
+  dashboard: { icon: '⌂', label: 'Dashboard', title: 'Dashboard',
+    what: 'A summary across the rigs.', session: 'dashboards',
+    notes: ['W6, row 31, M5.', 'Content not shown on purpose: fleet KPIs undefined (REQ-011). No offset wells.'] },
+  jobs: { icon: '▤', label: 'Well jobs', title: 'Well jobs',
+    what: 'Create well jobs, assign engineers, and see each job\'s details.', session: 'well jobs and mud checks',
+    notes: ['W3, rows 26-27, M3. "Assign engineers" is the SOW wording, per job.', 'Rig or well assignment is open: prep question 13, QUE-012. Rig assignment needs a rig list (row 23, outside the estimate).'] },
+  qc: { icon: '✓', label: 'Quality control', title: 'Quality control',
+    what: 'Mud checks from the rigs, to review.', session: 'well jobs and mud checks',
+    notes: ['W3, rows 28-29, M3. Read-only review; no outcome drawn.', 'Which rigs a supervisor sees depends on QUE-012: not shown.', 'Prep question 7.'] },
+  inventory: { icon: '▦', label: 'Inventory', title: 'Inventory',
+    what: 'The product catalogue and the stock on the rigs.', session: 'inventory',
+    notes: ['W4, rows 39-41, M4.', 'Validation rules and viewing consumption: promised in the SOW, no WBS line (mapping 1a #3, #6). No prices.'] },
+  reports: { icon: '▧', label: 'Reports', title: 'Reports',
+    what: 'Reports from the rigs, and their approval.', session: 'reports',
+    notes: ['W5, rows 33-37, M6.', 'Who approves, one step or two; does the web generate or only show reports?'] },
+  approvals: { icon: '⇄', label: 'Edit approvals', title: 'Edit approvals',
+    what: 'Requests to correct a saved entry, approved or rejected here.', session: 'administration',
+    notes: ['W2, rows 19-22.', 'Who approves: "operations manager and/or system admin" (Q&A E.22) - a guess here.'] },
+  users: { icon: '☺', label: 'Users', title: 'Users',
+    what: 'Accounts and roles.', session: 'administration',
+    notes: ['W2, row 19, M2. Users list with filter and search only implied (mapping 1b #7).', 'Who administers: IT (D.16) or operations? Prep question 15.'] },
+  thresholds: { icon: '↕', label: 'Ranges', title: 'Ranges',
+    what: 'The acceptable range for each mud property.', session: 'well jobs and mud checks',
+    notes: ['W2 thresholds, M4. "Ranges": they asked what a threshold means (E.19, TRM-007).', 'Per well, customer, mud system, or global?'] },
+  audit: { icon: '☰', label: 'Audit log', title: 'Audit log',
+    what: 'Who changed what, and when.', session: 'administration',
+    notes: ['W2, row 21, M6. Up to 30 logged actions - to put in writing.'] },
+  units: { icon: '⚖', label: 'Units', title: 'Units',
+    what: 'The units the apps show.', session: 'well jobs and mud checks',
+    notes: ['W2, row 22. Three unit sets (rows 22, 54); which three and per what is open (X4).'] },
+};
+
+// Three roles is the estimate (WBS row 19, SOW M2). Four is the client's wording (Q&A D.13).
+const ROLES = {
+  3: {
+    supman: { label: 'Supervisor / Manager', name: 'Hana Saleh', initials: 'HS',
+      nav: ['dashboard', 'jobs', 'qc', 'inventory', 'reports', 'approvals'] },
+    admin: { label: 'Admin', name: 'Lena Ivanova', initials: 'LI',
+      nav: ['users', 'thresholds', 'approvals', 'audit', 'units'] },
+  },
+  4: {
+    supervisor: { label: 'Supervisor', name: 'Hana Saleh', initials: 'HS',
+      nav: ['dashboard', 'jobs', 'qc', 'inventory', 'reports'] },
+    manager: { label: 'Manager', name: 'Omar Haddad', initials: 'OH',
+      nav: ['dashboard', 'jobs', 'qc', 'inventory', 'reports', 'approvals'] },
+    admin: { label: 'Admin', name: 'Lena Ivanova', initials: 'LI',
+      nav: ['users', 'thresholds', 'approvals', 'audit', 'units'] },
+  },
+};
+
+const ROLE_NOTES = {
+  3: ['Three roles: the estimate (WBS row 19, SOW M2), Version B of REQ-004.', 'Engineers use only the rig app.', 'Ask, do not propose: prep questions 11 and 12. If they need four, it is a delta against row 19.'],
+  4: ['Four roles: the client\'s wording (Q&A D.13), Version A of REQ-004 - outside the estimate.', 'Show only if they bring it up. Here the only difference is edit approvals, a guess.', 'Where do Project Engineers, Operations Support, Operations Manager fit (C.10)?'],
+};
+
+const state = { app: 'rig', model: 3, signedIn: false, role: null, page: null, notes: false };
+const $ = (s) => document.querySelector(s);
+
+function render() {
+  document.querySelectorAll('#appSeg button').forEach(b => b.classList.toggle('on', b.dataset.app === state.app));
+  document.querySelectorAll('#modelSeg button').forEach(b => b.classList.toggle('on', +b.dataset.model === state.model));
+  $('#modelSeg').style.visibility = state.app === 'web' ? 'visible' : 'hidden';
+  $('#app').innerHTML = state.app === 'rig' ? renderRig() : renderWeb();
+  renderNotes();
+}
+
+function chrome(kind) {
+  return kind === 'rig'
+    ? `<div class="chrome"><span class="dots"><span></span><span></span><span></span></span><span>OES Mud Engineering - rig app</span></div>`
+    : `<div class="chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">oes-hq.example/app</span></div>`;
+}
+
+function frame(m) {
+  return `<h2>${m.title}</h2><p class="what">${m.what}</p>
+    <div class="frame"><span>We draw this in the session on ${m.session}</span></div>`;
+}
+
+function navHtml(items, current) {
+  return items.map(m => `<button class="${m.id === current ? 'on' : ''}" data-page="${m.id}"><span class="ico">${m.icon}</span><span class="lbl">${m.label}</span></button>`).join('');
+}
+
+function signinCard(sub, fields, extra) {
+  return `<div class="signin"><div class="card">
+    <div class="brand"><span class="logo">OES</span>${sub}</div>
+    <h1>Sign in</h1>${fields}${extra || ''}</div></div>`;
+}
+
+function renderRig() {
+  if (!state.signedIn) {
+    return chrome('rig') + signinCard('Mud Engineering',
+      `<label for="un">Username</label><input id="un" value="yusuf.rahman">
+       <label for="pw">Password</label><input id="pw" type="password" value="........">
+       <button class="btn wide" data-action="rig-signin">Sign in</button>`);
+  }
+  const page = RIG_MODULES.find(m => m.id === state.page) || RIG_MODULES[0];
+  return `${chrome('rig')}
+    <div class="header">
+      <div class="ctx"><div>Well job<b>${JOB.well}</b></div><div>Rig<b>${JOB.rig}</b></div></div>
+      <span class="spacer"></span>
+      <span class="who"><span class="avatar">${ENGINEER.initials}</span>${ENGINEER.name}</span>
+      <button class="linkbtn" data-action="signout">Sign out</button>
+    </div>
+    <div class="body"><nav>${navHtml(RIG_MODULES, page.id)}</nav><main>${frame(page)}</main></div>`;
+}
+
+function renderWeb() {
+  const roles = ROLES[state.model];
+  if (!state.signedIn || !roles[state.role]) {
+    state.signedIn = false;
+    const btns = Object.entries(roles).map(([k, r]) => `<button class="btn ghost" data-role="${k}">${r.label}</button>`).join('');
+    return chrome('web') + signinCard('Mud Engineering · HQ',
+      `<label for="em">E-mail</label><input id="em" type="email" value="name@example.com">
+       <label for="pw2">Password</label><input id="pw2" type="password" value="........">
+       <button class="btn wide" data-role="${Object.keys(roles)[0]}">Sign in</button>`,
+      `<div class="divider small muted">Prototype only: sign in as</div><div class="roles">${btns}</div>`);
+  }
+  const r = roles[state.role];
+  const pageId = r.nav.includes(state.page) ? state.page : r.nav[0];
+  state.page = pageId;
+  const items = r.nav.map(id => ({ id, ...WEB_MODULES[id] }));
+  const switcher = Object.entries(roles).map(([k, x]) => `<option value="${k}" ${k === state.role ? 'selected' : ''}>${x.label}</option>`).join('');
+  return `${chrome('web')}
+    <div class="header">
+      <div class="ctx"><div>Role<b>${r.label}</b></div></div>
+      <span class="spacer"></span>
+      <label class="small muted" style="margin:0">Prototype: view as
+        <select data-action="switch-role" style="margin-left:6px;font:inherit">${switcher}</select></label>
+      <span class="who"><span class="avatar">${r.initials}</span>${r.name}</span>
+      <button class="linkbtn" data-action="signout">Sign out</button>
+    </div>
+    <div class="body"><nav>${navHtml(items, pageId)}</nav><main>${frame(WEB_MODULES[pageId])}</main></div>`;
+}
+
+function renderNotes() {
+  const el = $('#notes');
+  el.classList.toggle('hidden', !state.notes);
+  if (!state.notes) return;
+  let title = 'Sign-in', items;
+  if (state.app === 'rig') {
+    if (!state.signedIn) items = ['D1, rows 47 and 12, M2. Offline sign-in is in the SOW; how it works is not drawn.', 'Personal account or one per rig computer: prep question 14 (REQ-003).', 'Engineers only on the rig app.'];
+    else { const m = RIG_MODULES.find(x => x.id === state.page) || RIG_MODULES[0]; title = m.title; items = m.notes; }
+  } else {
+    if (!state.signedIn) items = ['W1, rows 17 and 12, M2.', ...ROLE_NOTES[state.model]];
+    else { const m = WEB_MODULES[state.page]; title = m.title; items = [...m.notes, ...ROLE_NOTES[state.model]]; }
+  }
+  el.innerHTML = `<h3>Presenter notes</h3><div class="warn">Internal. Hide with N before sharing the screen.</div>
+    <b>${title}</b><ul>${items.map(i => `<li>${i}</li>`).join('')}</ul>`;
+}
+
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('button');
+  if (!t) return;
+  if (t.dataset.app) { state.app = t.dataset.app; state.signedIn = false; state.page = null; }
+  else if (t.dataset.model) { state.model = +t.dataset.model; state.signedIn = false; state.page = null; }
+  else if (t.dataset.page) state.page = t.dataset.page;
+  else if (t.dataset.role) { state.role = t.dataset.role; state.signedIn = true; state.page = null; }
+  else if (t.dataset.action === 'rig-signin') { state.signedIn = true; state.page = 'dashboard'; }
+  else if (t.dataset.action === 'signout') { state.signedIn = false; state.page = null; }
+  else return;
+  render();
+});
+document.addEventListener('change', (e) => {
+  if (e.target.dataset.action === 'switch-role') { state.role = e.target.value; render(); }
+});
+document.addEventListener('keydown', (e) => {
+  if ((e.key === 'n' || e.key === 'N') && !e.target.matches('input, select, textarea')) { state.notes = !state.notes; renderNotes(); }
+});
+
+render();
+</script>
+</body>
+</html>

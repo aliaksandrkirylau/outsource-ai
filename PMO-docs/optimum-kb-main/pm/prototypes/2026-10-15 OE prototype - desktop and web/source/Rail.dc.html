@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OE Desktop - Navigation rail</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0">
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle}
+</style>
+</helmet>
+<nav aria-label="Well" style="width: 96px; min-height: 836px; height: 100%; background: #FFF1EC; padding: 16px 0; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 14px; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px">
+<sc-for list="{{items}}" as="item" hint-placeholder-count="5">
+<sc-if value="{{item.enabled}}" hint-placeholder-val="{{ true }}">
+<a href="{{item.href}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; width: 88px; min-height: 56px; text-decoration: none; color: #241914">
+<span style="width: 56px; height: 32px; border-radius: 16px; background: {{item.pill}}; color: {{item.iconColor}}; display: flex; align-items: center; justify-content: center"><span class="ms" aria-hidden="true">{{item.icon}}</span></span>
+<span style="font-size: 12px; font-weight: {{item.weight}}; color: {{item.textColor}}">{{item.label}}</span>
+</a>
+</sc-if>
+<sc-if value="{{item.disabled}}" hint-placeholder-val="{{ false }}">
+<span aria-disabled="true" style="display: flex; flex-direction: column; align-items: center; gap: 4px; width: 88px; min-height: 56px; color: #9C8B84">
+<span style="width: 56px; height: 32px; display: flex; align-items: center; justify-content: center"><span class="ms" aria-hidden="true">{{item.icon}}</span></span>
+<span style="font-size: 12px">{{item.label}}</span>
+</span>
+</sc-if>
+</sc-for>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"sel":{"editor":"enum","options":["none","dashboard","measure","inventory","calc","reports"],"default":"none"},"disabled":{"editor":"boolean","default":false},"$preview":{"width":96,"height":836}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sel = this.props.sel ?? 'none';
+    const off = this.props.disabled === true || this.props.disabled === 'true';
+    const defs = [
+      { key: 'dashboard', icon: 'dashboard', label: 'Dashboard' },
+      { key: 'measure', icon: 'science', label: 'Measure' },
+      { key: 'inventory', icon: 'inventory_2', label: 'Inventory' },
+      { key: 'calc', icon: 'calculate', label: 'Calculate' },
+      { key: 'reports', icon: 'description', label: 'Reports' }
+    ];
+    const items = defs.map((d) => {
+      const on = d.key === sel;
+      return { ...d, href: ({ measure: 'Measure.dc.html', inventory: 'Inventory.dc.html', calc: 'Calculate.dc.html', reports: 'Reports.dc.html', dashboard: 'Dashboard.dc.html' })[d.key] || 'Dashboard.dc.html', enabled: !off, disabled: off, pill: on ? '#F6CD96' : 'transparent', iconColor: on ? '#521D00' : '#574238', textColor: on ? '#241914' : '#574238', weight: on ? '700' : '400' };
+    });
+    return { items };
+  }
+}
+</script>
+</body>
+</html>

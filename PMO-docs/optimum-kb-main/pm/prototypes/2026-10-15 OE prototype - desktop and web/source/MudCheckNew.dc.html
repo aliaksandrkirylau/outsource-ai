@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>New mud check</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0">
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle}
+</style>
+</helmet>
+<div style="position: relative; width: 100%; min-height: 1800px; box-sizing: border-box; background: #FFF8F6; color: #241914; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; display: flex; flex-direction: column">
+<dc-import name="TopBar" well-name="DW-217" well-sub="12¼ in section · Day shift" hint-size="100%,68px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; flex: 1; align-items: stretch">
+<div style="flex: 0 0 96px; display: flex"><dc-import name="Rail" sel="measure" hint-size="96px,836px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; padding: 24px 32px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; max-width: 1280px">
+
+<div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap">
+<a href="Measure.dc.html" aria-label="Back to mud checks" style="display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; color: #574238; text-decoration: none"><span class="ms" aria-hidden="true">arrow_back</span></a>
+<h1 style="margin: 0; font-size: 24px; font-weight: 400">New mud check</h1>
+<span style="color: #574238">14 Oct 2026 · Day shift · Ali Hassan · check 3 of 4 today</span>
+</div>
+
+<sc-if value="{{showOut}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; gap: 12px; align-items: center; padding: 12px 16px; background: #FFDAD6; color: #93000A; border-radius: 8px"><span class="ms" aria-hidden="true">flag</span><span style="flex: 1">Out of range: <b>{{outNames}}</b>. You can save, with a reason; the check is saved as Flagged.</span></div>
+</sc-if>
+<sc-if value="{{showInvalid}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; gap: 12px; align-items: center; padding: 12px 16px; background: #FFFFFF; border: 2px solid #BA1A1A; color: #93000A; border-radius: 8px"><span class="ms" aria-hidden="true">block</span><span style="flex: 1">Not a possible value: <b>{{invalidNames}}</b>. Fix it to save.</span></div>
+</sc-if>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(520px, 1fr)); gap: 16px; align-items: start">
+<sc-for list="{{cards}}" as="c" hint-placeholder-count="6">
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">{{c.title}}</h2>
+<div style="display: grid; grid-template-columns: repeat({{c.cols}}, minmax(0, 1fr)); gap: 12px 16px">
+<sc-for list="{{c.fields}}" as="f" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<label for="{{f.id}}" style="font-size: 12px; color: {{f.labelColor}}; font-weight: {{f.labelWeight}}">{{f.label}}</label>
+<div style="display: flex; align-items: center; gap: 6px; height: 52px; border: {{f.border}}; border-radius: 4px; padding: 0 {{f.pad}}; background: #FFFFFF">
+<input id="{{f.id}}" value="{{f.val}}" onChange="{{f.change}}" style="flex: 1; border: 0; outline: 0; font: inherit; font-size: 16px; background: transparent; min-width: 0; width: 100%">
+<span style="color: #574238; white-space: nowrap">{{f.unit}}</span>
+<span class="ms" aria-hidden="true" style="color: {{f.iconColor}}">{{f.icon}}</span>
+</div>
+<div style="font-size: 12px; color: {{f.hintColor}}; min-height: 16px">{{f.hint}}</div>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+</div>
+
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap"><h2 style="margin: 0; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px"><span class="ms" aria-hidden="true" style="color: #A14000">function</span>Calculated as you type</h2><span style="display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 8px; border: 1px solid #00658B; color: #00658B; font-size: 12px; font-weight: 600">Not verified - for discussion</span></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+<sc-for list="{{calc}}" as="c" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="color: #574238; font-size: 12px">{{c.k}}</span><span style="font-size: 20px; color: {{c.color}}">{{c.v}} <span style="font-size: 12px; color: #574238">{{c.unit}}</span></span></div>
+</sc-for>
+</div>
+<div style="color: #574238; font-size: 12px; line-height: 1.5">Power law from the dial readings; solids from the client's equations 10-4 to 10-8 (barite SG 4.2, low-gravity solids 2.6). On save the app also calculates ECD at the current flow rate with the well's hydraulics inputs.</div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<label for="comment" style="font-size: 16px; font-weight: 600">Comment (optional)</label>
+<textarea id="comment" rows="2" placeholder="Anything the next shift or HQ should know about this check" style="border: 1px solid #8B7267; border-radius: 4px; padding: 10px 12px; font: inherit; font-size: 15px; resize: vertical"></textarea>
+</section>
+
+<div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px; flex-wrap: wrap">
+<span style="color: #574238; flex: 1; min-width: 280px">Saved on this computer and sent to HQ with the next sync.</span>
+<a href="Measure.dc.html" style="display: inline-flex; align-items: center; height: 40px; padding: 0 16px; border-radius: 20px; color: #A14000; font-weight: 600; text-decoration: none">Cancel</a>
+<sc-if value="{{saveBlocked}}" hint-placeholder-val="{{ false }}"><button type="button" disabled style="height: 40px; padding: 0 24px; border-radius: 20px; border: 0; background: #EDE0DB; color: #9C8B84; font: inherit; font-weight: 600">Save mud check</button></sc-if>
+<sc-if value="{{saveFlag}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{openDialog}}" style="height: 40px; padding: 0 24px; border-radius: 20px; border: 0; background: #A14000; color: #FFFFFF; font: inherit; font-weight: 600; cursor: pointer">Save mud check</button></sc-if>
+<sc-if value="{{saveOk}}" hint-placeholder-val="{{ false }}"><a href="MudCheck.dc.html" style="display: inline-flex; align-items: center; height: 40px; padding: 0 24px; border-radius: 20px; background: #A14000; color: #FFFFFF; font-weight: 600; text-decoration: none">Save mud check</a></sc-if>
+</div>
+<div style="color: #574238; font-size: 13px">Try it: change plastic viscosity to 30 and the flag disappears; type 19 in pH and saving is blocked.</div>
+</main>
+</div>
+
+<sc-if value="{{dialog}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; z-index: 30; background: rgba(36,25,20,0.32); display: flex; justify-content: center; align-items: flex-start; padding-top: 220px">
+<div role="dialog" aria-label="Save with a flag" style="width: 520px; max-width: calc(100% - 32px); background: #FFF1EC; border-radius: 28px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 4px 16px rgba(36,25,20,0.3)">
+<div style="display: flex; gap: 12px; align-items: center"><span class="ms" aria-hidden="true" style="color: #BA1A1A">flag</span><span style="font-size: 22px">Save as flagged?</span></div>
+<div style="color: #574238; line-height: 1.5">Out of range: <b style="color: #241914">{{outDetails}}</b>. Add a reason. The check is saved as Flagged and HQ sees it in quality control.</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="reason" style="font-size: 12px; color: #574238">Reason (required)</label><textarea id="reason" rows="3" style="border: 1px solid #8B7267; border-radius: 4px; padding: 10px 12px; font: inherit; background: #FFFFFF; resize: none">Fine solids building up. Dilution and centrifuge planned for the next shift.</textarea></div>
+<div style="display: flex; justify-content: flex-end; gap: 8px">
+<button type="button" onClick="{{closeDialog}}" style="height: 40px; padding: 0 12px; border-radius: 20px; border: 0; background: transparent; color: #A14000; font: inherit; font-weight: 600; cursor: pointer">Back to edit</button>
+<a href="MudCheck.dc.html" style="display: inline-flex; align-items: center; height: 40px; padding: 0 24px; border-radius: 20px; background: #A14000; color: #FFFFFF; font-weight: 600; text-decoration: none">Save as flagged</a>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1800}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { vals: {}, dialog: false };
+  }
+  defs() {
+    const n = (id, label, unit, init, min, max, hmin, hmax) => ({ id, label, unit, init, min, max, hmin: hmin ?? 0, hmax, num: true });
+    const t = (id, label, init, icon) => ({ id, label, unit: '', init, num: false, icon });
+    return [
+      { title: 'General', cols: 3, fields: [
+        t('sample', 'Sample from', 'Flowline', 'arrow_drop_down'), t('time', 'Check time', '14:00', 'schedule'), n('fv', 'Funnel viscosity', 's/qt', '52', 40, 60, 0, 300),
+        n('md', 'MD', 'ft', '8,450', null, null, 0, 40000), n('bit', 'Bit depth', 'ft', '8,450', null, null, 0, 40000), n('tvd', 'TVD', 'ft', '8,120', null, null, 0, 40000),
+        n('ttemp', 'Test temperature', '°F', '120', null, null, 32, 500), n('rtemp', 'Rheology temperature', '°F', '120', null, null, 32, 500)
+      ] },
+      { title: 'Density and rheology', cols: 3, fields: [
+        n('density', 'Density', 'ppg', '10.4', 9.0, 12.5, 6, 25), n('pv', 'Plastic viscosity', 'cP', '41', 10, 35, 0, 200), n('yp', 'Yield point', 'lbf/100ft²', '22', 10, 30, 0, 200),
+        n('gel10s', 'Gel 10 sec', 'lbf/100ft²', '6', 3, 12, 0, 200), n('gel10m', 'Gel 10 min', 'lbf/100ft²', '14', 6, 25, 0, 200)
+      ] },
+      { title: 'Rheometer dial readings', cols: 3, fields: [
+        n('r600', '600 rpm', '', '104', null, null, 0, 320), n('r300', '300 rpm', '', '63', null, null, 0, 320), n('r200', '200 rpm', '', '49', null, null, 0, 320),
+        n('r100', '100 rpm', '', '34', null, null, 0, 320), n('r6', '6 rpm', '', '9', null, null, 0, 320), n('r3', '3 rpm', '', '7', null, null, 0, 320)
+      ] },
+      { title: 'Filtration', cols: 2, fields: [
+        n('filt', 'API filtrate', 'cc/30 min', '5.2', null, 6.0, 0, 100), n('cake', 'API filter cake', '1/32 in', '1', null, 2, 0, 32)
+      ] },
+      { title: 'Chemistry', cols: 4, fields: [
+        n('ph', 'pH', '', '9.8', 9.0, 10.5, 0, 14), n('pm', 'Pm', 'cc', '1.2', null, null, 0, 50), n('pf', 'Pf', 'cc', '0.6', null, null, 0, 50), n('mf', 'Mf', 'cc', '1.1', null, null, 0, 50),
+        n('lime', 'Excess lime', 'lb/bbl', '0.3', null, null, 0, 50), n('hard', 'Hardness (Ca)', 'mg/L', '240', null, 400, 0, 100000), n('cl', 'Chlorides', 'mg/L', '38,000', null, null, 0, 300000), n('mbt', 'MBT', 'lb/bbl', '15', null, 25, 0, 100)
+      ] },
+      { title: 'Solids (retort)', cols: 3, fields: [
+        n('water', 'Water', '%', '86', null, null, 0, 100), n('oil', 'Oil', '%', '0', null, null, 0, 100), n('sand', 'Sand', '%', '0.5', null, 1.0, 0, 100)
+      ] }
+    ];
+  }
+  renderVals() {
+    const s = this.state;
+    const out = [], bad = [];
+    const cards = this.defs().map((c) => ({ ...c, fields: c.fields.map((f) => {
+      const val = s.vals[f.id] ?? f.init;
+      const change = (e) => this.setState({ vals: { ...this.state.vals, [f.id]: e.target.value } });
+      let kind = 'ok';
+      if (f.num && String(val).trim() !== '') {
+        const x = Number(String(val).replace(/,/g, ''));
+        if (isNaN(x) || x < f.hmin || (f.hmax != null && x > f.hmax)) kind = 'bad';
+        else if ((f.min != null && x < f.min) || (f.max != null && x > f.max)) kind = 'out';
+      }
+      const range = f.min != null && f.max != null ? f.min + ' - ' + f.max : f.max != null ? 'max ' + f.max : f.min != null ? 'min ' + f.min : '';
+      let hint = range ? 'Range ' + range + (f.unit ? ' ' + f.unit : '') : '';
+      if (kind === 'out') { hint = 'Out of range (' + range + '). Reason needed'; out.push({ label: f.label, val, unit: f.unit, range }); }
+      if (kind === 'bad') { hint = 'Not possible: must be ' + f.hmin + ' - ' + f.hmax; bad.push(f.label); }
+      const red = kind !== 'ok';
+      return { ...f, val, change, hint,
+        border: red ? '2px solid #BA1A1A' : '1px solid #8B7267', pad: red ? '11px' : '12px',
+        labelColor: red ? '#BA1A1A' : '#574238', labelWeight: red ? '600' : '400',
+        hintColor: red ? '#BA1A1A' : '#574238',
+        icon: kind === 'bad' ? 'block' : kind === 'out' ? 'error' : (f.icon || ''), iconColor: red ? '#BA1A1A' : '#574238' };
+    }) }));
+    const num = (id) => { const f = this.defs().flatMap((c) => c.fields).find((x) => x.id === id); return Number(String(s.vals[id] ?? f.init).replace(/,/g, '')); };
+    const fx = (x, d) => (isFinite(x) ? Number(x).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }) : '-');
+    const t600 = num('r600'), t300 = num('r300'), t6 = num('r6'), t3 = num('r3');
+    const np = 3.32 * Math.log10(t600 / t300), Kp = 5.11 * t600 / Math.pow(1022, np) / 5.11;
+    const na = 0.5 * Math.log10(t300 / t3), Ka = 5.11 * t300 / Math.pow(511, na) / 5.11;
+    const Vw = num('water'), Vo = num('oil'), Cs = num('cl'), Wm = num('density');
+    const Vs = 100 - (Vw + Vo), Vss = Vs - Vw * (Cs / (1680000 - 1.21 * Cs)), rf = 1 + 0.00000109 * Cs;
+    const Vlg = (1 / (4.2 - 2.6)) * (100 * rf + (4.2 - rf) * Vss - 12 * Wm - (rf - 0.84) * Vo), Vb = Vss - Vlg;
+    const solidsOut = Vs > 16;
+    const calc = [
+      { k: 'PV / YP from dial', v: fx(t600 - t300, 0) + ' / ' + fx(2 * t300 - t600, 0), unit: 'cP / lbf/100ft²', color: '#241914' },
+      { k: 'n / K (pipe)', v: fx(np, 2) + ' / ' + fx(Kp, 2), unit: 'lbf·sⁿ/100ft²', color: '#241914' },
+      { k: 'n / K (annulus)', v: fx(na, 2) + ' / ' + fx(Ka, 2), unit: 'lbf·sⁿ/100ft²', color: '#241914' },
+      { k: 'Retort solids', v: fx(Vs, 1), unit: '% (max 16)', color: solidsOut ? '#BA1A1A' : '#241914' },
+      { k: 'Low-gravity solids', v: fx(Vlg, 1) + ' % · ' + fx(3.5 * 2.6 * Vlg, 0), unit: 'lb/bbl', color: '#241914' },
+      { k: 'Barite (weighting material)', v: fx(Vb, 1) + ' % · ' + fx(3.5 * 4.2 * Vb, 0), unit: 'lb/bbl', color: '#241914' }
+    ];
+    if (solidsOut) out.push({ label: 'Retort solids', val: fx(Vs, 1), unit: '%', range: 'max 16' });
+    return {
+      calc,
+      cards,
+      showOut: out.length > 0 && bad.length === 0,
+      showInvalid: bad.length > 0,
+      outNames: out.map((o) => o.label.toLowerCase()).join(', '),
+      outDetails: out.map((o) => o.label + ' ' + o.val + (o.unit ? ' ' + o.unit : '') + ' (range ' + o.range + ')').join('; '),
+      invalidNames: bad.join(', '),
+      saveBlocked: bad.length > 0,
+      saveFlag: bad.length === 0 && out.length > 0,
+      saveOk: bad.length === 0 && out.length === 0,
+      dialog: s.dialog,
+      openDialog: () => this.setState({ dialog: true }),
+      closeDialog: () => this.setState({ dialog: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

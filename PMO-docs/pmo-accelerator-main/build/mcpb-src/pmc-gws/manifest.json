@@ -1,0 +1,59 @@
+{
+  "manifest_version": "0.4",
+  "name": "pmc-gws",
+  "display_name": "PM Copilot - Google Workspace",
+  "version": "1.2.0",
+  "description": "Gmail, Drive, Calendar, Docs, Slides, Tasks, Chat, Contacts and Apps Script for the PM Copilot. Runs upstream workspace-mcp against the Innowise PMO OAuth client.",
+  "author": {
+    "name": "Innowise"
+  },
+  "server": {
+    "type": "uv",
+    "entry_point": "workspace-mcp",
+    "mcp_config": {
+      "command": "uv",
+      "args": [
+        "tool",
+        "run",
+        "--python",
+        "3.12",
+        "--from",
+        "workspace-mcp==1.27.0",
+        "--with",
+        "pip-system-certs",
+        "workspace-mcp",
+        "--single-user",
+        "--tools",
+        "gmail",
+        "slides",
+        "drive",
+        "calendar",
+        "docs",
+        "tasks",
+        "appscript",
+        "chat",
+        "contacts"
+      ],
+      "env": {
+        "UV_NO_MODIFY_PATH": "1",
+        "GOOGLE_OAUTH_CLIENT_ID": "121722741974-51729dor2qr25bpvpqs0babdg4cci6k4.apps.googleusercontent.com",
+        "UV_PYTHON_PREFERENCE": "only-managed",
+        "OAUTHLIB_INSECURE_TRANSPORT": "1",
+        "GOOGLE_OAUTH_CLIENT_SECRET": "__FROM_client_secret.json__",
+        "UV_SYSTEM_CERTS": "1",
+        "UV_PYTHON_INSTALL_DIR": "${HOME}/.uv/python"
+      }
+    }
+  },
+  "compatibility": {
+    "platforms": [
+      "win32",
+      "darwin"
+    ],
+    "runtimes": {
+      "python": ">=3.11"
+    }
+  },
+  "tools_generated": true,
+  "license": "MIT"
+}

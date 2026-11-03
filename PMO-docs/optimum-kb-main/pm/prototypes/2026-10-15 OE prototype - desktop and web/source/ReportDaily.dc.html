@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>End-of-day report</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0">
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle}
+.rp td,.rp th{white-space:nowrap}
+</style>
+</helmet>
+<div style="position: relative; width: 100%; min-height: 1700px; box-sizing: border-box; background: #FFF8F6; color: #241914; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; display: flex; flex-direction: column">
+<dc-import name="TopBar" well-name="DW-217" well-sub="12¼ in section · Day shift" hint-size="100%,68px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; flex: 1; align-items: stretch">
+<div style="flex: 0 0 96px; display: flex"><dc-import name="Rail" sel="reports" hint-size="96px,836px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; padding: 24px 32px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; max-width: 1340px">
+
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<a href="Reports.dc.html" aria-label="Back to reports" style="display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; color: #574238; text-decoration: none"><span class="ms" aria-hidden="true">arrow_back</span></a>
+<h1 style="margin: 0; font-size: 24px; font-weight: 400">End-of-day report</h1>
+<span style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border: 1px solid #8B7267; border-radius: 8px; background: #FFFFFF"><span class="ms" aria-hidden="true" style="font-size: 20px; color: #574238">calendar_month</span>13 Oct 2026</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+
+<aside style="flex: 0 0 260px; display: flex; flex-direction: column; gap: 16px; background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 20px; box-sizing: border-box">
+<div style="font-weight: 600">Include in the report</div>
+<sc-for list="{{blocks}}" as="b" hint-placeholder-count="5">
+<label style="display: flex; align-items: center; gap: 10px; min-height: 36px"><input type="checkbox" checked="{{b.on}}" onChange="{{b.toggle}}" style="width: 18px; height: 18px; accent-color: #A14000">{{b.label}}</label>
+</sc-for>
+<div style="height: 1px; background: #F4DED5"></div>
+<div style="font-weight: 600">Export</div>
+<button type="button" onClick="{{exPdf}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; border-radius: 20px; border: 0; background: #A14000; color: #FFFFFF; font: inherit; font-weight: 600; cursor: pointer"><span class="ms" aria-hidden="true" style="font-size: 20px">picture_as_pdf</span>PDF</button>
+<button type="button" onClick="{{exXlsx}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; border-radius: 20px; border: 1px solid #8B7267; background: transparent; color: #A14000; font: inherit; font-weight: 600; cursor: pointer"><span class="ms" aria-hidden="true" style="font-size: 20px">table_view</span>Excel</button>
+<button type="button" onClick="{{exCsv}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; border-radius: 20px; border: 1px solid #8B7267; background: transparent; color: #A14000; font: inherit; font-weight: 600; cursor: pointer"><span class="ms" aria-hidden="true" style="font-size: 20px">csv</span>CSV</button>
+<div style="color: #574238; font-size: 12px; line-height: 1.5">Excel and CSV carry the same blocks as tables, one sheet per block. The file is saved on this computer; send it by email as today.</div>
+</aside>
+
+<article class="rp" aria-label="Report preview" style="flex: 999 1 640px; min-width: 0; background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 4px; box-shadow: 0 1px 4px rgba(36,25,20,0.12); padding: 32px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 22px; font-size: 13px; overflow-x: auto">
+
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; border-bottom: 3px solid #ED712E; padding-bottom: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 20px; font-weight: 700">Daily Drilling Fluids Report</span><span style="color: #574238">Report No. 42 · 13 Oct 2026 · MD 8,310 ft · Drilling</span></div>
+<span style="background: #FFFFFF; color: #B83830; font-weight: 800; letter-spacing: 0.06em; font-size: 20px; border: 1px solid #DFC0B3; padding: 2px 10px; border-radius: 6px">OES</span>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px 20px">
+<sc-for list="{{head}}" as="h" hint-placeholder-count="12"><div style="display: flex; flex-direction: column"><span style="color: #574238; font-size: 11px">{{h.k}}</span><span style="font-weight: 600">{{h.v}}</span></div></sc-for>
+</div>
+
+<sc-if value="{{show.props}}" hint-placeholder-val="{{ true }}">
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700; color: #A14000">Mud properties</h2>
+<table style="width: 100%; border-collapse: collapse">
+<thead><tr style="background: #FFF1EC; text-align: right"><th style="padding: 5px 8px; text-align: left; font-weight: 600">Property</th><th style="padding: 5px 8px; text-align: left; font-weight: 600">Unit</th><th style="padding: 5px 8px; font-weight: 600">02:00</th><th style="padding: 5px 8px; font-weight: 600">08:00</th><th style="padding: 5px 8px; font-weight: 600">14:00</th><th style="padding: 5px 8px; font-weight: 600">20:00</th></tr></thead>
+<tbody>
+<sc-for list="{{props}}" as="p" hint-placeholder-count="16">
+<tr style="border-top: 1px solid #F4DED5"><td style="padding: 4px 8px">{{p.k}}</td><td style="padding: 4px 8px; color: #574238">{{p.u}}</td><sc-for list="{{p.vals}}" as="c" hint-placeholder-count="4"><td style="padding: 4px 8px; text-align: right; color: {{c.color}}; font-weight: {{c.weight}}">{{c.v}}</td></sc-for></tr>
+</sc-for>
+</tbody>
+</table>
+<div style="color: #574238; font-size: 12px">Red = out of range and flagged; the reason is under Comments.</div>
+</section>
+</sc-if>
+
+<sc-if value="{{show.calc}}" hint-placeholder-val="{{ true }}">
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700; color: #A14000">Rheology, hydraulics and solids (calculated)</h2>
+<table style="width: 100%; border-collapse: collapse">
+<thead><tr style="background: #FFF1EC; text-align: right"><th style="padding: 5px 8px; text-align: left; font-weight: 600">Value</th><th style="padding: 5px 8px; text-align: left; font-weight: 600">Unit</th><th style="padding: 5px 8px; font-weight: 600">02:00</th><th style="padding: 5px 8px; font-weight: 600">08:00</th><th style="padding: 5px 8px; font-weight: 600">14:00</th><th style="padding: 5px 8px; font-weight: 600">20:00</th></tr></thead>
+<tbody>
+<sc-for list="{{calc}}" as="p" hint-placeholder-count="6">
+<tr style="border-top: 1px solid #F4DED5"><td style="padding: 4px 8px">{{p.k}}</td><td style="padding: 4px 8px; color: #574238">{{p.u}}</td><sc-for list="{{p.vals}}" as="c" hint-placeholder-count="4"><td style="padding: 4px 8px; text-align: right">{{c}}</td></sc-for></tr>
+</sc-for>
+</tbody>
+</table>
+<div style="color: #574238; font-size: 12px">ECD at 650 USgal/min with the well's hydraulics inputs. Power law; client formulas, not verified yet.</div>
+</section>
+</sc-if>
+
+<sc-if value="{{show.products}}" hint-placeholder-val="{{ true }}">
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700; color: #A14000">Products</h2>
+<table style="width: 100%; border-collapse: collapse">
+<thead><tr style="background: #FFF1EC; text-align: right"><th style="padding: 5px 8px; text-align: left; font-weight: 600">Product</th><th style="padding: 5px 8px; text-align: left; font-weight: 600">Unit</th><th style="padding: 5px 8px; font-weight: 600">Start</th><th style="padding: 5px 8px; font-weight: 600">Received</th><th style="padding: 5px 8px; font-weight: 600">Returned</th><th style="padding: 5px 8px; font-weight: 600">Lost</th><th style="padding: 5px 8px; font-weight: 600">Used</th><th style="padding: 5px 8px; font-weight: 600">Final</th><th style="padding: 5px 8px; font-weight: 600">Conc., lb/bbl</th></tr></thead>
+<tbody>
+<sc-for list="{{products}}" as="p" hint-placeholder-count="6">
+<tr style="border-top: 1px solid #F4DED5; text-align: right"><td style="padding: 4px 8px; text-align: left">{{p.n}}</td><td style="padding: 4px 8px; text-align: left; color: #574238">{{p.u}}</td><td style="padding: 4px 8px">{{p.s}}</td><td style="padding: 4px 8px">{{p.r}}</td><td style="padding: 4px 8px">{{p.rt}}</td><td style="padding: 4px 8px">{{p.l}}</td><td style="padding: 4px 8px; font-weight: 700">{{p.us}}</td><td style="padding: 4px 8px">{{p.f}}</td><td style="padding: 4px 8px">{{p.c}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+<div style="color: #574238; font-size: 12px">Products not used today are left out. The full list is in the inventory report.</div>
+</section>
+</sc-if>
+
+<sc-if value="{{show.comments}}" hint-placeholder-val="{{ true }}">
+<section style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700; color: #A14000">Comments</h2>
+<div><b>20:00 · flagged:</b> plastic viscosity 37 cP above range 10 - 35 cP. "Fine solids up after drilling a shale stringer. Centrifuge running, dilution with 40 bbl premix at 22:00." - Omar Saleh</div>
+<div><b>14:00:</b> "Added 2 sacks xanthan gum to hold YP." - Ali Hassan</div>
+</section>
+</sc-if>
+
+<footer style="display: flex; justify-content: space-between; gap: 12px; color: #574238; font-size: 11px; border-top: 1px solid #F4DED5; padding-top: 8px"><span>Prepared by Omar Saleh, mud engineer · Ali Hassan, mud engineer</span><span>OES Mud Engineering app · made 13 Oct 2026 23:40 · page 1 of 2</span></footer>
+</article>
+</div>
+<div style="color: #574238; font-size: 13px; line-height: 1.5">Not in this report until confirmed with the client: volumes and pits, pumps, bit and BHA, solids control equipment and costs. The client's sample daily report has them, but there is no entry screen or WBS line for them yet.</div>
+</main>
+</div>
+
+<sc-if value="{{toast}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="position: absolute; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 30; display: flex; align-items: center; gap: 16px; padding: 14px 16px; background: #3B2E28; color: #FFEDE6; border-radius: 4px; min-width: 420px; box-shadow: 0 4px 12px rgba(36,25,20,0.3)"><span style="flex: 1">Saved: Documents\OES Reports\{{toast}}</span><button type="button" onClick="{{closeToast}}" style="border: 0; background: transparent; color: #FFB596; font: inherit; font-weight: 600; cursor: pointer">OK</button></div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1700}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { on: { props: true, calc: true, products: true, comments: true }, toast: '' };
+  }
+  renderVals() {
+    const S = this.state;
+    const blockDefs = [['props', 'Mud properties'], ['calc', 'Rheology, hydraulics, solids'], ['products', 'Products'], ['comments', 'Comments']];
+    const blocks = blockDefs.map(([k, label]) => ({ label, on: !!S.on[k], toggle: () => this.setState({ on: { ...this.state.on, [k]: !this.state.on[k] } }) }));
+    const P = (k, u, vals, flag) => ({ k, u, vals: vals.map((v, i) => ({ v, color: flag === i ? '#BA1A1A' : '#241914', weight: flag === i ? '700' : '400' })) });
+    const name = 'DW-217 End of day 2026-10-13';
+    return {
+      blocks, show: S.on, toast: S.toast, closeToast: () => this.setState({ toast: '' }),
+      exPdf: () => this.setState({ toast: name + '.pdf' }), exXlsx: () => this.setState({ toast: name + '.xlsx' }), exCsv: () => this.setState({ toast: name + '.csv' }),
+      head: [
+        { k: 'Job #', v: 'OES-26-0417' }, { k: 'Well', v: 'DW-217' }, { k: 'Rig', v: 'OES Rig 07' }, { k: 'Field / block', v: 'Field A' },
+        { k: 'Operator', v: 'Operator X' }, { k: 'Contractor', v: 'Drilling Co. Y' }, { k: 'Company rep', v: 'J. Smith' }, { k: 'Spud date', v: '02 Sep 2026' },
+        { k: 'Section', v: '12¼ in' }, { k: 'Mud type / system', v: 'Water-based / KCl polymer' }, { k: 'MD / TVD', v: '8,310 / 7,990 ft' }, { k: 'Progress today', v: '250 ft' }
+      ],
+      props: [
+        P('Sample from', '', ['Flowline', 'Flowline', 'Flowline', 'Pit 4B']), P('Bit depth', 'ft', ['8,060', '8,140', '8,220', '8,310']),
+        P('Density', 'ppg', ['10.2', '10.2', '10.3', '10.3']), P('Funnel viscosity', 's/qt', ['50', '51', '52', '55']),
+        P('Plastic viscosity', 'cP', ['30', '30', '31', '37'], 3), P('Yield point', 'lbf/100ft²', ['19', '20', '20', '24']),
+        P('Gels 10 sec / 10 min', 'lbf/100ft²', ['5 / 12', '5 / 12', '6 / 13', '7 / 15']), P('Dial 600 / 300', '', ['79 / 49', '80 / 50', '82 / 51', '98 / 61']),
+        P('Dial 6 / 3', '', ['6 / 5', '6 / 5', '7 / 5', '8 / 6']), P('API filtrate', 'cc/30 min', ['5.0', '5.0', '5.1', '5.4']),
+        P('Filter cake', '1/32 in', ['1', '1', '1', '1']), P('pH', '', ['9.9', '9.8', '9.8', '9.7']),
+        P('Pm / Pf / Mf', 'cc', ['1.3 / 0.6 / 1.1', '1.2 / 0.6 / 1.1', '1.2 / 0.6 / 1.1', '1.2 / 0.5 / 1.0']), P('Chlorides', 'mg/L', ['37,000', '37,000', '37,500', '38,000']),
+        P('Hardness (Ca)', 'mg/L', ['220', '230', '230', '240']), P('MBT', 'lb/bbl', ['14', '14', '15', '15']),
+        P('Water / oil (retort)', '%', ['87 / 0', '87 / 0', '86.5 / 0', '86 / 0']), P('Sand', '%', ['0.5', '0.5', '0.5', '0.75'])
+      ],
+      calc: [
+        { k: 'n / K (pipe)', u: 'lbf·sⁿ/100ft²', vals: ['0.69 / 0.67', '0.68 / 0.73', '0.68 / 0.71', '0.68 / 0.86'] },
+        { k: 'ECD at bit / shoe', u: 'ppg', vals: ['10.39 / 10.37', '10.39 / 10.37', '10.49 / 10.47', '10.53 / 10.51'] },
+        { k: 'Retort solids', u: '%', vals: ['13.0', '13.0', '13.5', '14.0'] },
+        { k: 'Low-gravity solids', u: '% · lb/bbl', vals: ['10.3 · 94', '10.3 · 94', '10.5 · 96', '11.5 · 105'] },
+        { k: 'Barite', u: '% · lb/bbl', vals: ['0.7 · 11', '0.7 · 11', '1.0 · 14', '0.5 · 7'] }
+      ],
+      products: [
+        { n: 'Caustic soda', u: '25 kg sack', s: '29', r: '-', rt: '-', l: '-', us: '2', f: '27', c: '0.85' },
+        { n: 'Citric acid', u: '55 lb sack', s: '3', r: '-', rt: '-', l: '-', us: '1', f: '2', c: '0.10' },
+        { n: 'OES-BAR (barite)', u: '50 kg sack', s: '1,360', r: '-', rt: '-', l: '-', us: '60', f: '1,300', c: '18.0' },
+        { n: 'OES-Salt Clay', u: '50 lb sack', s: '92', r: '-', rt: '-', l: '-', us: '12', f: '80', c: '8.00' },
+        { n: 'Xanthan gum', u: '55 lb sack', s: '12', r: '-', rt: '-', l: '-', us: '2', f: '10', c: '0.70' },
+        { n: 'XCD-Polymer', u: '25 kg sack', s: '49', r: '-', rt: '-', l: '-', us: '4', f: '45', c: '1.20' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

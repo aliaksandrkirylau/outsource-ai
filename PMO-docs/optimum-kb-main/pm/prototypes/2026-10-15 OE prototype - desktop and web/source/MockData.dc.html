@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OE Desktop - Mock data</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+</style>
+</helmet>
+<div style="width: 1440px; min-height: 1640px; box-sizing: border-box; padding: 56px 64px; background: #FFF8F6; color: #241914; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; display: flex; flex-direction: column; gap: 28px">
+
+<header style="display: flex; flex-direction: column; gap: 6px; border-bottom: 4px solid #ED712E; padding-bottom: 20px">
+<h1 style="margin: 0; font-size: 36px; font-weight: 600">Mock data used on every screen</h1>
+<div style="color: #574238; font-size: 15px">All names are fictional. Ranges are placeholders for the prototype: the real ranges are set per customer at HQ. Parameters follow the client's sample daily report.</div>
+</header>
+
+<div style="display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.3fr) minmax(0, 1.1fr); gap: 32px; align-items: start">
+
+<section style="display: flex; flex-direction: column; gap: 20px">
+<h2 style="margin: 0; font-size: 20px; font-weight: 600">Project and people</h2>
+<div style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{project}}" as="p" hint-placeholder-count="12">
+<div style="display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid #F4DED5; padding-bottom: 8px"><span style="color: #574238">{{p.k}}</span><span style="font-weight: 600; text-align: right">{{p.v}}</span></div>
+</sc-for>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="font-weight: 600">Users of the rig computer</div>
+<div style="display: flex; justify-content: space-between"><span>Ali Hassan</span><span style="color: #574238">Mud engineer, day</span></div>
+<div style="display: flex; justify-content: space-between"><span>Omar Saleh</span><span style="color: #574238">Mud engineer, night</span></div>
+<div style="font-weight: 600; padding-top: 8px">Seen only as names (web app users)</div>
+<div style="display: flex; justify-content: space-between"><span>Khalid Nasser</span><span style="color: #574238">Supervisor</span></div>
+<div style="display: flex; justify-content: space-between"><span>Faisal Qureshi</span><span style="color: #574238">Operations manager</span></div>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 16px 20px; display: flex; flex-direction: column; gap: 8px">
+<div style="font-weight: 600">Shifts</div>
+<div>Day 06:00-18:00 · Night 18:00-06:00</div>
+<div style="color: #574238">About 4 mud checks a day (Q&amp;A answer)</div>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 20px; font-weight: 600">Mud check parameters ({{paramCount}} entered + 4 derived)</h2>
+<div style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; overflow: hidden">
+<table style="width: 100%; border-collapse: collapse; font-size: 13px">
+<thead><tr style="height: 40px; text-align: left; color: #574238; background: #FFF1EC"><th style="padding: 0 12px; font-weight: 600">Group</th><th style="padding: 0 12px; font-weight: 600">Parameter</th><th style="padding: 0 12px; font-weight: 600">Unit</th><th style="padding: 0 12px; font-weight: 600">Mock range</th><th style="padding: 0 12px; font-weight: 600; text-align: right">Last value</th></tr></thead>
+<tbody>
+<sc-for list="{{params}}" as="r" hint-placeholder-count="36">
+<tr style="height: 32px; border-top: 1px solid #F4DED5"><td style="padding: 0 12px; color: #574238">{{r.g}}</td><td style="padding: 0 12px">{{r.n}}</td><td style="padding: 0 12px; color: #574238">{{r.u}}</td><td style="padding: 0 12px; color: #574238">{{r.r}}</td><td style="padding: 0 12px; text-align: right; font-weight: 600">{{r.v}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="color: #574238; font-size: 13px">"Derived" rows are calculated by the app after saving (static in the prototype). One value is out of range on purpose (plastic viscosity 41) to demo the flag.</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 20px; font-weight: 600">Products on the rig</h2>
+<div style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; overflow: hidden">
+<table style="width: 100%; border-collapse: collapse; font-size: 13px">
+<thead><tr style="height: 40px; text-align: left; color: #574238; background: #FFF1EC"><th style="padding: 0 12px; font-weight: 600">Product</th><th style="padding: 0 12px; font-weight: 600">Unit</th><th style="padding: 0 12px; font-weight: 600; text-align: right">On hand</th><th style="padding: 0 12px; font-weight: 600; text-align: right">Min</th><th style="padding: 0 12px; font-weight: 600">Expiry</th></tr></thead>
+<tbody>
+<sc-for list="{{products}}" as="p" hint-placeholder-count="10">
+<tr style="height: 36px; border-top: 1px solid #F4DED5"><td style="padding: 0 12px">{{p.n}}</td><td style="padding: 0 12px; color: #574238">{{p.u}}</td><td style="padding: 0 12px; text-align: right; font-weight: 600">{{p.q}}</td><td style="padding: 0 12px; text-align: right; color: #574238">{{p.m}}</td><td style="padding: 0 12px; color: #574238">{{p.e}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="color: #574238; font-size: 13px">Product names from the client's sample report and the OES product pages. Xanthan gum is low on purpose, citric acid is out, soda ash expires soon, to demo the warnings. Prices are left out of the prototype until Step 3.</div>
+<div style="background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 16px 20px; display: flex; flex-direction: column; gap: 8px">
+<div style="font-weight: 600">Pits (volume report)</div>
+<div style="color: #574238">Active: Pit 4B, Pit 5A, Pit 5B · Reserve: Pit 6, Pit 7, Frac 1 · Trip tank</div>
+</div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1640}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const project = [
+      { k: 'Job #', v: 'OES-26-0417' }, { k: 'Well', v: 'DW-217' }, { k: 'Rig', v: 'OES Rig 07' },
+      { k: 'Field / block', v: 'Field A' }, { k: 'Operator', v: 'Operator X' }, { k: 'Contractor', v: 'Drilling Co. Y' },
+      { k: 'Spud date', v: '02 Sep 2026' }, { k: 'Section', v: '12¼ in' }, { k: 'MD / TVD', v: '8,450 / 8,120 ft' },
+      { k: 'Mud type', v: 'Water-based' }, { k: 'Mud system', v: 'KCl polymer' }, { k: 'Status', v: 'Active' }
+    ];
+    const params = [
+      { g: 'General', n: 'Sample from', u: '', r: 'Flowline / Pit', v: 'Flowline' },
+      { g: 'General', n: 'Check time', u: '', r: '', v: '14:00' },
+      { g: 'General', n: 'MD', u: 'ft', r: '', v: '8,450' },
+      { g: 'General', n: 'Bit depth', u: 'ft', r: '', v: '8,450' },
+      { g: 'General', n: 'TVD', u: 'ft', r: '', v: '8,120' },
+      { g: 'General', n: 'Test temperature', u: '°F', r: '', v: '120' },
+      { g: 'General', n: 'Rheology temperature', u: '°F', r: '', v: '120' },
+      { g: 'General', n: 'Funnel viscosity', u: 's/qt', r: '40 - 60', v: '52' },
+      { g: 'Density & rheology', n: 'Density', u: 'ppg', r: '9.0 - 12.5', v: '10.4' },
+      { g: 'Density & rheology', n: 'Plastic viscosity', u: 'cP', r: '10 - 35', v: '41' },
+      { g: 'Density & rheology', n: 'Yield point', u: 'lbf/100ft²', r: '10 - 30', v: '22' },
+      { g: 'Density & rheology', n: 'Gel 10 sec', u: 'lbf/100ft²', r: '3 - 12', v: '6' },
+      { g: 'Density & rheology', n: 'Gel 10 min', u: 'lbf/100ft²', r: '6 - 25', v: '14' },
+      { g: 'Density & rheology', n: '600 rpm reading', u: '', r: '', v: '104' },
+      { g: 'Density & rheology', n: '300 rpm reading', u: '', r: '', v: '63' },
+      { g: 'Density & rheology', n: '200 rpm reading', u: '', r: '', v: '49' },
+      { g: 'Density & rheology', n: '100 rpm reading', u: '', r: '', v: '34' },
+      { g: 'Density & rheology', n: '6 rpm reading', u: '', r: '', v: '9' },
+      { g: 'Density & rheology', n: '3 rpm reading', u: '', r: '', v: '7' },
+      { g: 'Filtration', n: 'API filtrate', u: 'cc/30 min', r: '≤ 6.0', v: '5.2' },
+      { g: 'Filtration', n: 'API filter cake', u: '1/32 in', r: '≤ 2', v: '1' },
+      { g: 'Chemistry', n: 'pH', u: '', r: '9.0 - 10.5', v: '9.8' },
+      { g: 'Chemistry', n: 'Pm', u: 'cc', r: '', v: '1.2' },
+      { g: 'Chemistry', n: 'Pf', u: 'cc', r: '', v: '0.6' },
+      { g: 'Chemistry', n: 'Mf', u: 'cc', r: '', v: '1.1' },
+      { g: 'Chemistry', n: 'Excess lime', u: 'lb/bbl', r: '', v: '0.3' },
+      { g: 'Chemistry', n: 'Hardness (Ca)', u: 'mg/L', r: '≤ 400', v: '240' },
+      { g: 'Chemistry', n: 'Chlorides', u: 'mg/L', r: '', v: '38,000' },
+      { g: 'Chemistry', n: 'MBT', u: 'lb/bbl', r: '≤ 25', v: '15' },
+      { g: 'Solids (retort)', n: 'Water', u: '%', r: '', v: '86' },
+      { g: 'Solids (retort)', n: 'Oil', u: '%', r: '', v: '0' },
+      { g: 'Solids (retort)', n: 'Sand', u: '%', r: '≤ 1.0', v: '0.5' },
+      { g: 'Derived', n: 'Retort solids', u: '%', r: '≤ 16', v: '14.0' },
+      { g: 'Derived', n: 'n / K (pipe)', u: 'lbf·sⁿ/100ft²', r: '', v: '0.72 / 0.69' },
+      { g: 'Derived', n: 'Low-gravity solids / barite', u: '%', r: '', v: '10.8 / 1.2' },
+      { g: 'Derived', n: 'ECD at bit / shoe, 650 gpm', u: 'ppg', r: '', v: '10.65 / 10.63' }
+    ];
+    const products = [
+      { n: 'OES-BAR (barite)', u: '50 kg sack', q: '1,240', m: '300', e: '-' },
+      { n: 'Caustic soda', u: '25 kg sack', q: '25', m: '10', e: 'Mar 2027' },
+      { n: 'Salt', u: '55 lb sack', q: '53', m: '20', e: '-' },
+      { n: 'Xanthan gum', u: '55 lb sack', q: '8', m: '10', e: 'Jan 2027' },
+      { n: 'XCD-Polymer', u: '25 kg sack', q: '40', m: '10', e: 'Jun 2027' },
+      { n: 'OES-Salt Clay', u: '50 lb sack', q: '120', m: '40', e: '-' },
+      { n: 'OES Brine Vis', u: '25 kg sack', q: '30', m: '10', e: 'Apr 2027' },
+      { n: 'Soda ash', u: '55 lb sack', q: '18', m: '5', e: '28 Oct 2026' },
+      { n: 'Sodium bicarbonate', u: '55 lb sack', q: '22', m: '5', e: 'Dec 2027' },
+      { n: 'Citric acid', u: '55 lb sack', q: '0', m: '5', e: 'Feb 2027' }
+    ];
+    return { project, params, products, paramCount: params.filter((p) => p.g !== 'Derived').length };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1544 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HQ web app - prototype v0</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 1024px; box-sizing: border-box; background: #EEF1F4; color: #17212B; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.45;">
+
+<sc-if value="{{ isSignin }}" hint-placeholder-val="{{ true }}">
+<div style="box-sizing: border-box; padding: 96px 16px 48px; display: flex; align-items: flex-start; justify-content: center;">
+  <div style="width: 100%; max-width: 460px; background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 12px; padding: 36px 32px 30px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px;">
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <span style="font-size: 13px; font-weight: 500; color: #4A5866; letter-spacing: 0.02em;">[Product name] · HQ web app</span>
+      <h1 style="margin: 0; font-size: 28px; font-weight: 600; letter-spacing: -0.01em;">Sign in</h1>
+      <p style="margin: 0; color: #4A5866; font-size: 14px;">For supervisors, managers and administrators. Engineers sign in on the rig computer.</p>
+    </div>
+    <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500;">Email
+      <input type="email" value="{{ email }}" onChange="{{ onEmail }}" placeholder="name.surname@example.com" style="height: 44px; box-sizing: border-box; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: #17212B; background: #FFFFFF;">
+    </label>
+    <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500;">Password
+      <input type="password" placeholder="Any password works in this prototype" style="height: 44px; box-sizing: border-box; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: #17212B; background: #FFFFFF;">
+    </label>
+    <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
+      <div style="padding: 10px 12px; border-radius: 8px; background: #FDECEA; color: #A1251B; font-size: 14px;">{{ error }}</div>
+    </sc-if>
+    <button type="button" onClick="{{ signIn }}" style="height: 46px; border: 0; border-radius: 8px; background: #0B5CAD; color: #FFFFFF; font-family: 'IBM Plex Sans', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer;">Sign in</button>
+    <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #E3E8ED; padding-top: 16px;">
+      <span style="font-size: 13px; color: #4A5866;">Prototype only: sign in as</span>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <sc-for list="{{ roleButtons }}" as="r" hint-placeholder-count="3">
+          <button type="button" onClick="{{ r.pick }}" style="height: 40px; padding: 0 14px; border: 1px solid #C3CCD5; border-radius: 20px; background: #F6F8FA; color: #17212B; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; cursor: pointer;">{{ r.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+<div style="min-height: 1024px; display: flex; flex-direction: column;">
+
+  <header style="background: #FFFFFF; border-bottom: 1px solid #D5DCE3; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 12px 24px; box-sizing: border-box;">
+    <div style="display: flex; flex-direction: column; margin-right: 8px;">
+      <span style="font-size: 16px; font-weight: 600;">[Product name]</span>
+      <span style="font-size: 12px; color: #4A5866;">HQ web app · prototype v0</span>
+    </div>
+    <sc-if value="{{ isOps }}" hint-placeholder-val="{{ true }}">
+      <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4A5866;">Rigs
+        <select value="{{ rigSel }}" onChange="{{ onRigSel }}" aria-label="Rigs shown" style="height: 38px; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 8px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; color: #17212B; background: #FFFFFF;">
+          <sc-for list="{{ rigOptions }}" as="o" hint-placeholder-count="4">
+            <option value="{{ o.v }}">{{ o.label }}</option>
+          </sc-for>
+        </select>
+      </label>
+    </sc-if>
+    <div style="margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+      <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4A5866;">Units
+        <select value="{{ units }}" onChange="{{ onUnits }}" disabled="{{ unitsLocked }}" aria-label="Units shown" style="height: 38px; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 8px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; color: #17212B; background: #FFFFFF;">
+          <option value="oilfield">Oilfield (US)</option>
+          <option value="metric">Metric</option>
+          <option value="third" disabled="{{ yes }}">Third set (to confirm)</option>
+        </select>
+      </label>
+      <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4A5866; padding: 4px 10px; border: 1px dashed #8795A3; border-radius: 8px;">Prototype: view as
+        <select value="{{ role }}" onChange="{{ onRole }}" style="height: 34px; border: 1px solid #A9B4BF; border-radius: 6px; padding: 0 6px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; color: #17212B; background: #FFFFFF;">
+          <option value="supervisor">Supervisor</option>
+          <option value="manager">Manager</option>
+          <option value="admin">Admin</option>
+        </select>
+      </label>
+      <div style="display: flex; flex-direction: column; align-items: flex-end;">
+        <span style="font-size: 14px; font-weight: 600;">{{ userName }}</span>
+        <span style="font-size: 12px; color: #4A5866;">{{ roleLabel }}</span>
+      </div>
+      <button type="button" onClick="{{ signOut }}" style="height: 38px; padding: 0 12px; border: 1px solid #A9B4BF; border-radius: 8px; background: #FFFFFF; color: #17212B; font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; cursor: pointer;">Sign out</button>
+    </div>
+  </header>
+
+  <div style="flex: 1; display: flex; flex-wrap: wrap; align-items: stretch;">
+    <nav aria-label="Modules" style="flex: 1 1 240px; max-width: 280px; box-sizing: border-box; padding: 20px 12px; background: #FFFFFF; border-right: 1px solid #D5DCE3; display: flex; flex-direction: column; gap: 18px;">
+      <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="1">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <span style="padding: 0 12px 4px; font-size: 12px; font-weight: 600; color: #4A5866; text-transform: uppercase; letter-spacing: 0.06em;">{{ g.title }}</span>
+          <sc-for list="{{ g.items }}" as="n" hint-placeholder-count="5">
+            <button type="button" onClick="{{ n.go }}" style="height: 44px; padding: 0 12px; border: 0; border-radius: 8px; background: {{ n.bg }}; color: {{ n.fg }}; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 500; text-align: left; cursor: pointer;">{{ n.label }}</button>
+          </sc-for>
+        </div>
+      </sc-for>
+    </nav>
+
+    <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 24px 28px 40px; display: flex; flex-direction: column; gap: 16px;">
+      <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px;">
+        <div style="display: flex; flex-direction: column; gap: 4px; max-width: 760px;">
+          <h1 style="margin: 0; font-size: 26px; font-weight: 600;">{{ moduleTitle }}</h1>
+          <p style="margin: 0; color: #4A5866;">{{ moduleWhat }}</p>
+        </div>
+        <div style="padding: 10px 14px; border-radius: 8px; background: #E3EEF9; color: #0A4D91; font-size: 14px; font-weight: 500;">{{ roleLabel }} · {{ scope }}</div>
+      </div>
+
+      <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="position: fixed; right: 24px; bottom: 24px; z-index: 20; max-width: 520px; box-sizing: border-box; padding: 12px 16px; border-radius: 8px; background: #17212B; color: #FFFFFF; font-size: 14px; font-weight: 500; box-shadow: 0 6px 20px rgba(23, 33, 43, 0.25);">{{ toast }}</div>
+      </sc-if>
+
+      <sc-if value="{{ isEmptyModule }}" hint-placeholder-val="{{ false }}">
+        <div style="min-height: 560px; border: 2px dashed #A9B4BF; border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box; text-align: center; color: #4A5866; font-size: 16px; background: #F6F8FA;">{{ moduleWhen }}</div>
+      </sc-if>
+
+      <sc-if value="{{ isJobList }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 16px;">
+            <label style="flex: 1 1 280px; max-width: 420px; display: flex; flex-direction: column; gap: 5px; font-size: 13px; font-weight: 500;">Search
+              <input type="search" value="{{ jobSearch }}" onChange="{{ onJobSearch }}" placeholder="Job, well, operator, rig or engineer" style="height: 42px; box-sizing: border-box; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: #17212B; background: #FFFFFF;">
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 5px; font-size: 13px; font-weight: 500;">Status
+              <select value="{{ jobStatus }}" onChange="{{ onJobStatus }}" style="height: 42px; min-width: 150px; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 10px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: #17212B; background: #FFFFFF;">
+                <option value="active">Active</option>
+                <option value="closed">Closed</option>
+                <option value="all">All</option>
+              </select>
+            </label>
+            <span style="font-size: 14px; color: #4A5866; padding-bottom: 10px;">{{ jobCount }}</span>
+            <button type="button" onClick="{{ newJob }}" style="margin-left: auto; height: 44px; padding: 0 18px; border: 0; border-radius: 8px; background: #0B5CAD; color: #FFFFFF; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;">New job</button>
+          </div>
+          <div style="overflow-x: auto; background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px;">
+            <div style="min-width: 1080px; font-size: 14px;">
+              <div style="display: grid; grid-template-columns: 150px 84px minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1.5fr) 96px 150px 96px; background: #F6F8FA; border-bottom: 1px solid #D5DCE3; font-weight: 600;">
+                <div style="padding: 12px 16px;">Job · well</div>
+                <div style="padding: 12px 10px;">Rig</div>
+                <div style="padding: 12px 10px;">Operator</div>
+                <div style="padding: 12px 10px;">Hole section</div>
+                <div style="padding: 12px 10px;">Engineers assigned</div>
+                <div style="padding: 12px 10px;">Status</div>
+                <div style="padding: 12px 10px;">Rig last synced</div>
+                <div style="padding: 12px 10px;"></div>
+              </div>
+              <sc-for list="{{ jobRows }}" as="j" hint-placeholder-count="5">
+                <div style="display: grid; grid-template-columns: 150px 84px minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1.5fr) 96px 150px 96px; align-items: center; border-bottom: 1px solid #EEF1F4;">
+                  <div style="padding: 10px 16px; display: flex; flex-direction: column;">
+                    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #4A5866;">{{ j.id }}</span>
+                    <span style="font-weight: 600;">Well {{ j.well }}</span>
+                  </div>
+                  <div style="padding: 10px 10px;">{{ j.rig }}</div>
+                  <div style="padding: 10px 10px;">{{ j.operator }}</div>
+                  <div style="padding: 10px 10px;">{{ j.section }}</div>
+                  <div style="padding: 10px 10px;">{{ j.engineers }}</div>
+                  <div style="padding: 10px 10px;"><span style="display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 13px; font-weight: 500; background: {{ j.statusBg }}; color: {{ j.statusFg }};">{{ j.status }}</span></div>
+                  <div style="padding: 10px 10px; display: flex; flex-direction: column;">
+                    <span style="color: {{ j.syncFg }}; font-weight: {{ j.syncFw }};">{{ j.sync }}</span>
+                    <span style="font-size: 12px; color: {{ j.syncFg }};">{{ j.syncAgo }}</span>
+                  </div>
+                  <div style="padding: 8px 12px 8px 4px; display: flex; justify-content: flex-end;">
+                    <button type="button" onClick="{{ j.open }}" aria-label="Open job {{ j.id }}" style="height: 38px; padding: 0 16px; border: 1px solid #0B5CAD; border-radius: 8px; background: #FFFFFF; color: #0B5CAD; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer;">Open</button>
+                  </div>
+                </div>
+              </sc-for>
+              <sc-if value="{{ noJobRows }}" hint-placeholder-val="{{ false }}">
+                <div style="padding: 24px 16px; color: #4A5866;">No jobs match. Clear the search or change the status.</div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isJobDetail }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <button type="button" onClick="{{ toJobList }}" style="align-self: flex-start; height: 32px; padding: 0; border: 0; background: transparent; color: #0B5CAD; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer;">← All jobs</button>
+          <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <h2 style="margin: 0; font-size: 22px; font-weight: 600;">{{ jd.title }}</h2>
+              <span style="color: #4A5866; font-size: 14px;">{{ jd.sub }}</span>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+              <sc-if value="{{ jd.canChecks }}" hint-placeholder-val="{{ true }}">
+                <button type="button" onClick="{{ jd.toChecks }}" style="height: 44px; padding: 0 16px; border: 1px solid #A9B4BF; border-radius: 8px; background: #FFFFFF; color: #17212B; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer;">Mud checks</button>
+              </sc-if>
+              <sc-if value="{{ jd.canEdit }}" hint-placeholder-val="{{ true }}">
+                <button type="button" onClick="{{ jd.edit }}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 8px; background: #0B5CAD; color: #FFFFFF; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;">Edit job</button>
+              </sc-if>
+              <sc-if value="{{ jd.editing }}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{ jd.cancel }}" style="height: 44px; padding: 0 16px; border: 1px solid #A9B4BF; border-radius: 8px; background: #FFFFFF; color: #17212B; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; cursor: pointer;">Cancel</button>
+                <button type="button" onClick="{{ jd.save }}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 8px; background: #0B5CAD; color: #FFFFFF; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;">{{ jd.saveLabel }}</button>
+              </sc-if>
+            </div>
+          </div>
+          <sc-if value="{{ jd.hasError }}" hint-placeholder-val="{{ false }}">
+            <div role="alert" style="padding: 10px 14px; border-radius: 8px; background: #FDECEA; color: #A1251B; font-size: 14px;">{{ jd.error }}</div>
+          </sc-if>
+          <div style="padding: 10px 14px; border-radius: 8px; background: {{ jd.syncBg }}; color: {{ jd.syncFg }}; font-size: 14px;">{{ jd.syncNote }}</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 16px; align-items: start;">
+            <section style="background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <h3 style="margin: 0; font-size: 16px; font-weight: 600;">Set at HQ</h3>
+                <span style="font-size: 13px; color: #4A5866;">Shown at the rig, where it cannot be changed.</span>
+              </div>
+              <sc-for list="{{ jd.hqFields }}" as="f" hint-placeholder-count="10">
+                <div style="display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; align-items: center; min-height: 40px;">
+                  <span style="font-size: 14px; color: #4A5866;">{{ f.label }}</span>
+                  <sc-if value="{{ f.isInput }}" hint-placeholder-val="{{ false }}">
+                    <input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" aria-label="{{ f.label }}" style="height: 40px; box-sizing: border-box; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 10px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: #17212B; background: #FFFFFF;">
+                  </sc-if>
+                  <sc-if value="{{ f.isRigSelect }}" hint-placeholder-val="{{ false }}">
+                    <select value="{{ f.value }}" onChange="{{ f.onChange }}" aria-label="Rig" style="height: 40px; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 8px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: #17212B; background: #FFFFFF;">
+                      <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3">
+                        <option value="{{ o.v }}">{{ o.label }}</option>
+                      </sc-for>
+                    </select>
+                  </sc-if>
+                  <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}">
+                    <span style="font-size: 15px;">{{ f.value }}</span>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </section>
+            <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+              <section style="background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                  <h3 style="margin: 0; font-size: 16px; font-weight: 600;">Engineers assigned</h3>
+                  <span style="font-size: 13px; color: #4A5866;">{{ jd.engNote }}</span>
+                </div>
+                <sc-for list="{{ jd.engineers }}" as="e" hint-placeholder-count="2">
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid #EEF1F4;">
+                    <span style="display: flex; flex-direction: column;">
+                      <span style="font-weight: 600;">{{ e.name }}</span>
+                      <span style="font-size: 12px; color: #4A5866;">{{ e.note }}</span>
+                    </span>
+                    <sc-if value="{{ e.canRemove }}" hint-placeholder-val="{{ true }}">
+                      <button type="button" onClick="{{ e.remove }}" aria-label="Remove {{ e.name }} from this job" style="height: 38px; padding: 0 14px; border: 1px solid #A9B4BF; border-radius: 8px; background: #FFFFFF; color: #17212B; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; cursor: pointer;">Remove</button>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ jd.noEngineers }}" hint-placeholder-val="{{ false }}">
+                  <span style="padding: 8px 0; border-top: 1px solid #EEF1F4; color: #4A5866; font-size: 14px;">No engineers assigned yet.</span>
+                </sc-if>
+                <sc-if value="{{ jd.canAssign }}" hint-placeholder-val="{{ true }}">
+                  <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; padding-top: 6px; border-top: 1px solid #EEF1F4;">
+                    <label style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 5px; font-size: 13px; font-weight: 500;">Assign an engineer
+                      <select value="{{ jd.addValue }}" onChange="{{ jd.onAdd }}" style="height: 40px; min-width: 0; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 8px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; color: #17212B; background: #FFFFFF;">
+                        <option value="">Choose an engineer</option>
+                        <sc-for list="{{ jd.addOptions }}" as="o" hint-placeholder-count="6">
+                          <option value="{{ o.v }}">{{ o.label }}</option>
+                        </sc-for>
+                      </select>
+                    </label>
+                    <button type="button" onClick="{{ jd.add }}" disabled="{{ jd.addDisabled }}" style="height: 40px; padding: 0 16px; border: 0; border-radius: 8px; background: {{ jd.addBg }}; color: {{ jd.addFg }}; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer;">Assign</button>
+                  </div>
+                </sc-if>
+              </section>
+              <section style="background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                  <h3 style="margin: 0; font-size: 16px; font-weight: 600;">Entered at the rig</h3>
+                  <span style="font-size: 13px; color: #4A5866;">As of the rig's last sync. Changed only at the rig.</span>
+                </div>
+                <sc-for list="{{ jd.rigFields }}" as="f" hint-placeholder-count="6">
+                  <div style="display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 12px; min-height: 28px; align-items: center;">
+                    <span style="font-size: 14px; color: #4A5866;">{{ f.label }}</span>
+                    <span>{{ f.value }}</span>
+                  </div>
+                </sc-for>
+                <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 8px; border-top: 1px solid #EEF1F4;">
+                  <span style="font-size: 14px; color: #4A5866;">Hole sections</span>
+                  <sc-for list="{{ jd.sections }}" as="x" hint-placeholder-count="2">
+                    <div style="display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 12px;">
+                      <span style="font-weight: 500;">{{ x.name }}</span>
+                      <span style="color: #4A5866;">{{ x.when }}</span>
+                    </div>
+                  </sc-for>
+                  <sc-if value="{{ jd.noSections }}" hint-placeholder-val="{{ false }}">
+                    <span style="color: #4A5866; font-size: 14px;">None recorded yet.</span>
+                  </sc-if>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isQc }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px;">
+            <div role="group" aria-label="Day" style="display: flex; border: 1px solid #A9B4BF; border-radius: 8px; overflow: hidden;">
+              <sc-for list="{{ qc.dayTabs }}" as="t" hint-placeholder-count="2">
+                <button type="button" onClick="{{ t.pick }}" aria-pressed="{{ t.on }}" style="height: 42px; padding: 0 16px; border: 0; background: {{ t.bg }}; color: {{ t.fg }}; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer;">{{ t.label }}</button>
+              </sc-for>
+            </div>
+            <span style="font-size: 14px; color: #4A5866;">Read only. ▲ above and ▼ below the job's range when the check was entered.</span>
+          </div>
+
+          <section style="background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; overflow: hidden;">
+            <div style="padding: 14px 18px 12px; border-bottom: 1px solid #D5DCE3;">
+              <h2 style="margin: 0; font-size: 16px; font-weight: 600;">{{ qc.listTitle }}</h2>
+            </div>
+            <div style="overflow-x: auto;">
+              <div style="min-width: 880px; font-size: 14px;">
+                <div style="display: grid; grid-template-columns: minmax(0, 1.3fr) 90px minmax(0, 1fr) minmax(0, 1fr) 170px 150px; background: #F6F8FA; border-bottom: 1px solid #D5DCE3; font-weight: 600;">
+                  <div style="padding: 10px 18px;">Job · well</div>
+                  <div style="padding: 10px 10px;">Rig</div>
+                  <div style="padding: 10px 10px;">Checks received</div>
+                  <div style="padding: 10px 10px;">Values flagged</div>
+                  <div style="padding: 10px 10px;">Rig last synced</div>
+                  <div style="padding: 10px 10px;"></div>
+                </div>
+                <sc-for list="{{ qc.rows }}" as="r" hint-placeholder-count="3">
+                  <div style="display: grid; grid-template-columns: minmax(0, 1.3fr) 90px minmax(0, 1fr) minmax(0, 1fr) 170px 150px; align-items: center; border-bottom: 1px solid #EEF1F4; background: {{ r.bg }};">
+                    <div style="padding: 9px 18px; display: flex; flex-direction: column;">
+                      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #4A5866;">{{ r.id }}</span>
+                      <span style="font-weight: 600;">Well {{ r.well }}</span>
+                    </div>
+                    <div style="padding: 9px 10px;">{{ r.rig }}</div>
+                    <div style="padding: 9px 10px;">{{ r.received }}</div>
+                    <div style="padding: 9px 10px;"><span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 500; background: {{ r.flagBg }}; color: {{ r.flagFg }};">{{ r.flagged }}</span></div>
+                    <div style="padding: 9px 10px; display: flex; flex-direction: column;">
+                      <span style="color: {{ r.syncFg }}; font-weight: {{ r.syncFw }};">{{ r.sync }}</span>
+                      <span style="font-size: 12px; color: {{ r.syncFg }};">{{ r.syncAgo }}</span>
+                    </div>
+                    <div style="padding: 8px 12px 8px 4px; display: flex; justify-content: flex-end;">
+                      <button type="button" onClick="{{ r.pick }}" aria-pressed="{{ r.on }}" style="height: 38px; padding: 0 14px; border: 1px solid {{ r.btnBorder }}; border-radius: 8px; background: {{ r.btnBg }}; color: {{ r.btnFg }}; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer;">{{ r.btn }}</button>
+                    </div>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ qc.noRows }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding: 20px 18px; color: #4A5866;">No active jobs on these rigs.</div>
+                </sc-if>
+              </div>
+            </div>
+          </section>
+
+          <sc-if value="{{ qc.hasJob }}" hint-placeholder-val="{{ true }}">
+            <section style="background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; overflow: hidden;">
+              <div style="padding: 14px 18px; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 24px; border-bottom: 1px solid #D5DCE3;">
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                  <h2 style="margin: 0; font-size: 18px; font-weight: 600;">{{ qc.jobTitle }}</h2>
+                  <span style="font-size: 14px; color: #4A5866;">{{ qc.jobSub }}</span>
+                </div>
+                <button type="button" onClick="{{ qc.toJob }}" style="height: 36px; padding: 0; border: 0; background: transparent; color: #0B5CAD; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer;">Job details →</button>
+              </div>
+              <sc-if value="{{ qc.hasNote }}" hint-placeholder-val="{{ false }}">
+                <div style="margin: 14px 18px 0; padding: 10px 14px; border-radius: 8px; background: {{ qc.noteBg }}; color: {{ qc.noteFg }}; font-size: 14px;">{{ qc.note }}</div>
+              </sc-if>
+              <sc-if value="{{ qc.noChecks }}" hint-placeholder-val="{{ false }}">
+                <div style="padding: 20px 18px; color: #4A5866;">No mud checks received for this day.</div>
+              </sc-if>
+              <sc-if value="{{ qc.hasChecks }}" hint-placeholder-val="{{ true }}">
+                <div style="overflow-x: auto; margin-top: 14px; border-top: 1px solid #D5DCE3;">
+                  <div style="min-width: 960px; font-size: 14px;">
+                    <div style="display: grid; grid-template-columns: 260px 110px repeat(4, minmax(0, 1fr)); background: #F6F8FA; border-bottom: 1px solid #D5DCE3;">
+                      <div style="padding: 12px 16px; font-weight: 600;">Property</div>
+                      <div style="padding: 12px 12px; font-weight: 600;">Unit</div>
+                      <sc-for list="{{ qc.cols }}" as="c" hint-placeholder-count="4">
+                        <div style="padding: 10px 16px; border-left: 1px solid #E3E8ED; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
+                          <span style="font-weight: 600; font-size: 14px;">{{ c.title }}</span>
+                          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px;">{{ c.time }}</span>
+                          <span style="font-size: 12px; color: #4A5866; text-align: right;">{{ c.who }}</span>
+                          <span style="font-size: 12px; font-weight: 500; padding: 1px 8px; border-radius: 10px; background: {{ c.chipBg }}; color: {{ c.chipFg }};">{{ c.chip }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                    <sc-for list="{{ qc.tableRows }}" as="r" hint-placeholder-count="12">
+                      <sc-if value="{{ r.isHead }}" hint-placeholder-val="{{ false }}">
+                        <div style="padding: 10px 16px 6px; font-size: 12px; font-weight: 600; color: #4A5866; text-transform: uppercase; letter-spacing: 0.06em; background: #FBFCFD; border-bottom: 1px solid #E3E8ED;">{{ r.label }}</div>
+                      </sc-if>
+                      <sc-if value="{{ r.isRow }}" hint-placeholder-val="{{ true }}">
+                        <div style="display: grid; grid-template-columns: 260px 110px repeat(4, minmax(0, 1fr)); border-bottom: 1px solid #EEF1F4;">
+                          <div style="padding: 7px 16px; font-weight: 500;">{{ r.label }}</div>
+                          <div style="padding: 7px 12px; color: #4A5866; font-size: 13px;">{{ r.unit }}</div>
+                          <sc-for list="{{ r.cells }}" as="x" hint-placeholder-count="4">
+                            <div style="padding: 7px 16px; text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 14px; border-left: 1px solid #E3E8ED; background: {{ x.bg }}; color: {{ x.fg }}; font-weight: {{ x.fw }};">{{ x.text }}</div>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ qc.hasChecks }}" hint-placeholder-val="{{ true }}">
+                <p style="margin: 0; padding: 12px 18px 16px; font-size: 12px; line-height: 1.5; color: #4A5866;">{{ qc.methodLine }}</p>
+              </sc-if>
+            </section>
+
+            <section style="background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px;">
+              <h2 style="margin: 0; font-size: 15px; font-weight: 600;">Values outside the range, with the engineers' reasons</h2>
+              <sc-if value="{{ qc.noFlags }}" hint-placeholder-val="{{ false }}">
+                <span style="color: #4A5866; font-size: 14px;">None on this day.</span>
+              </sc-if>
+              <sc-for list="{{ qc.flags }}" as="fl" hint-placeholder-count="2">
+                <div style="display: flex; flex-wrap: wrap; gap: 6px 24px; padding: 10px 0; border-top: 1px solid #EEF1F4; font-size: 14px;">
+                  <span style="flex: 0 0 190px; color: #4A5866;">{{ fl.where }}</span>
+                  <span style="flex: 0 0 290px; display: flex; flex-direction: column;"><span style="font-weight: 600; color: #8A3B00;">{{ fl.what }}</span><span style="font-size: 12px; color: #4A5866;">{{ fl.range }}</span></span>
+                  <span style="flex: 1 1 300px; display: flex; flex-direction: column;"><span>“{{ fl.reason }}”</span><span style="font-size: 12px; color: #4A5866;">{{ fl.who }}</span></span>
+                </div>
+              </sc-for>
+              <span style="font-size: 13px; color: #4A5866; padding-top: 4px;">Nothing on this page is sent back to the rig. Corrections to saved checks come from the rig and are approved at HQ.</span>
+            </section>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isRanges }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 16px;">
+            <label style="display: flex; flex-direction: column; gap: 5px; font-size: 13px; font-weight: 500;">Ranges for
+              <select value="{{ rg.target }}" onChange="{{ rg.onTarget }}" style="height: 42px; min-width: 340px; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 10px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: #17212B; background: #FFFFFF;">
+                <option value="default">Default, for jobs without their own range</option>
+                <sc-for list="{{ rg.jobOptions }}" as="o" hint-placeholder-count="5">
+                  <option value="{{ o.v }}">{{ o.label }}</option>
+                </sc-for>
+              </select>
+            </label>
+            <span style="font-size: 14px; color: #4A5866; padding-bottom: 10px;">{{ rg.changed }}</span>
+            <div style="margin-left: auto; display: flex; gap: 10px;">
+              <button type="button" onClick="{{ rg.discard }}" disabled="{{ rg.clean }}" style="height: 44px; padding: 0 16px; border: 1px solid #A9B4BF; border-radius: 8px; background: #FFFFFF; color: {{ rg.discardFg }}; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; cursor: pointer;">Discard changes</button>
+              <button type="button" onClick="{{ rg.save }}" disabled="{{ rg.cantSave }}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 8px; background: {{ rg.saveBg }}; color: {{ rg.saveFg }}; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;">Save ranges</button>
+            </div>
+          </div>
+          <div style="padding: 10px 14px; border-radius: 8px; background: #E3EEF9; color: #0A4D91; font-size: 14px;">{{ rg.note }}</div>
+          <div style="overflow-x: auto; background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px;">
+            <div style="min-width: 1000px; font-size: 14px;">
+              <div style="display: grid; grid-template-columns: 210px 110px 180px 150px 150px minmax(0, 1fr); background: #F6F8FA; border-bottom: 1px solid #D5DCE3; font-weight: 600;">
+                <div style="padding: 12px 16px;">Property</div>
+                <div style="padding: 12px 10px;">Unit</div>
+                <div style="padding: 12px 10px;">Cannot be saved outside</div>
+                <div style="padding: 12px 10px;">Flag below (min)</div>
+                <div style="padding: 12px 10px;">Flag above (max)</div>
+                <div style="padding: 12px 10px;">Set for</div>
+              </div>
+              <sc-for list="{{ rg.rows }}" as="r" hint-placeholder-count="12">
+                <sc-if value="{{ r.isHead }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding: 10px 16px 6px; font-size: 12px; font-weight: 600; color: #4A5866; text-transform: uppercase; letter-spacing: 0.06em; background: #FBFCFD; border-bottom: 1px solid #E3E8ED;">{{ r.label }}</div>
+                </sc-if>
+                <sc-if value="{{ r.isRow }}" hint-placeholder-val="{{ true }}">
+                  <div style="display: grid; grid-template-columns: 210px 110px 180px 150px 150px minmax(0, 1fr); align-items: center; border-bottom: 1px solid #EEF1F4; background: {{ r.bg }};">
+                    <div style="padding: 6px 16px; font-weight: 500;">{{ r.label }}</div>
+                    <div style="padding: 6px 10px; color: #4A5866; font-size: 13px;">{{ r.unit }}</div>
+                    <div style="padding: 6px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #4A5866;">{{ r.possible }}</div>
+                    <sc-if value="{{ r.editable }}" hint-placeholder-val="{{ true }}">
+                      <div style="padding: 5px 10px;">
+                        <input type="text" value="{{ r.min }}" onChange="{{ r.onMin }}" aria-label="{{ r.label }}, flag below" placeholder="none" style="width: 100%; height: 36px; box-sizing: border-box; border: 1px solid {{ r.inBorder }}; border-radius: 8px; padding: 0 10px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #17212B; background: #FFFFFF;">
+                      </div>
+                      <div style="padding: 5px 10px;">
+                        <input type="text" value="{{ r.max }}" onChange="{{ r.onMax }}" aria-label="{{ r.label }}, flag above" placeholder="none" style="width: 100%; height: 36px; box-sizing: border-box; border: 1px solid {{ r.inBorder }}; border-radius: 8px; padding: 0 10px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #17212B; background: #FFFFFF;">
+                      </div>
+                      <div style="padding: 6px 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px;">
+                        <span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; background: {{ r.srcBg }}; color: {{ r.srcFg }};">{{ r.src }}</span>
+                        <sc-if value="{{ r.canReset }}" hint-placeholder-val="{{ false }}">
+                          <button type="button" onClick="{{ r.reset }}" style="height: 30px; padding: 0 4px; border: 0; background: transparent; color: #0B5CAD; font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer;">{{ r.resetLabel }}</button>
+                        </sc-if>
+                        <sc-if value="{{ r.hasErr }}" hint-placeholder-val="{{ false }}">
+                          <span style="font-size: 12px; font-weight: 600; color: #A1251B;">{{ r.err }}</span>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ r.fixed }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding: 10px 10px; color: #4A5866; font-size: 13px;">No range</div>
+                      <div style="padding: 10px 10px; color: #4A5866; font-size: 13px;">No range</div>
+                      <div style="padding: 10px 10px; color: #4A5866; font-size: 13px;">Possible values only</div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+              </sc-for>
+            </div>
+          </div>
+          <span style="font-size: 13px; color: #4A5866;">Outside the range, a value is kept, flagged, and the engineer gives a reason. Outside the possible values, it cannot be saved. An empty box means no limit on that side.</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isUnits }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <section style="background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column; gap: 14px;">
+            <h2 style="margin: 0; font-size: 16px; font-weight: 600;">Settings</h2>
+            <div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 32px;">
+              <label style="display: flex; flex-direction: column; gap: 5px; font-size: 13px; font-weight: 500;">Default unit set
+                <select value="{{ un.def }}" onChange="{{ un.onDef }}" style="height: 42px; min-width: 220px; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 10px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: #17212B; background: #FFFFFF;">
+                  <option value="oilfield">Oilfield (US)</option>
+                  <option value="metric">Metric</option>
+                  <option value="third" disabled="{{ yes }}">Third set (to confirm)</option>
+                </select>
+              </label>
+              <label style="display: flex; align-items: center; gap: 10px; min-height: 42px; font-size: 15px;">
+                <input type="checkbox" checked="{{ un.sw }}" onChange="{{ un.onSw }}" style="width: 20px; height: 20px; margin: 0;">
+                Each user can switch to another set, in the header
+              </label>
+            </div>
+            <span style="font-size: 13px; color: #4A5866;">A value entered in one set is shown converted in the others, at the rig and at HQ. Ranges and possible values convert with it.</span>
+          </section>
+          <section style="background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; overflow: hidden;">
+            <div style="padding: 14px 18px 12px; border-bottom: 1px solid #D5DCE3;">
+              <h2 style="margin: 0; font-size: 16px; font-weight: 600;">Unit sets</h2>
+            </div>
+            <div style="overflow-x: auto;">
+              <div style="min-width: 1000px; font-size: 14px;">
+                <div style="display: grid; grid-template-columns: 160px minmax(0, 1.4fr) 120px 120px 150px minmax(0, 1.2fr); background: #F6F8FA; border-bottom: 1px solid #D5DCE3; font-weight: 600;">
+                  <div style="padding: 12px 18px;">Quantity</div>
+                  <div style="padding: 12px 10px;">Used for</div>
+                  <div style="padding: 12px 10px;">Oilfield (US)</div>
+                  <div style="padding: 12px 10px;">Metric</div>
+                  <div style="padding: 12px 10px;">Third set (to confirm)</div>
+                  <div style="padding: 12px 10px;">Conversion</div>
+                </div>
+                <sc-for list="{{ un.rows }}" as="u" hint-placeholder-count="12">
+                  <div style="display: grid; grid-template-columns: 160px minmax(0, 1.4fr) 120px 120px 150px minmax(0, 1.2fr); align-items: center; border-bottom: 1px solid #EEF1F4;">
+                    <div style="padding: 10px 18px; font-weight: 500;">{{ u.q }}</div>
+                    <div style="padding: 10px 10px; color: #4A5866;">{{ u.used }}</div>
+                    <div style="padding: 10px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; background: {{ u.oBg }};">{{ u.o }}</div>
+                    <div style="padding: 10px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; background: {{ u.mBg }};">{{ u.m }}</div>
+                    <div style="padding: 10px 10px; color: #4A5866;">?</div>
+                    <div style="padding: 10px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #4A5866;">{{ u.conv }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </section>
+        </div>
+      </sc-if>
+    </main>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"start":{"editor":"enum","options":["signin","app"],"default":"signin"},"role":{"editor":"enum","options":["supervisor","manager","admin"],"default":"supervisor"},"view":{"editor":"enum","options":["none","jobs","job","qc","ranges","units"],"default":"none"},"$preview":{"width":1440,"height":1024}}'>
+class Component extends DCLogic {
+  roles() {
+    return {
+      supervisor: { label: 'Supervisor', user: 'Hana Saleh', email: 'hana.saleh@example.com', scope: 'sees the 3 rigs assigned to them', nav: ['dashboard', 'jobs', 'qc', 'inventory', 'reports'], rigs: ['Rig 03', 'Rig 07', 'Rig 12'] },
+      manager: { label: 'Manager', user: 'Omar Haddad', email: 'omar.haddad@example.com', scope: 'sees all 14 active rigs', nav: ['dashboard', 'jobs', 'qc', 'inventory', 'reports', 'approvals'], rigs: null },
+      admin: { label: 'Admin', user: 'Lena Ivanova', email: 'lena.ivanova@example.com', scope: 'manages users and settings', nav: ['users', 'thresholds', 'approvals', 'audit', 'units'], rigs: null }
+    };
+  }
+
+  modules() {
+    return {
+      dashboard: { label: 'Dashboard', group: 'Operations', what: 'One page with the status of each rig, key indicators and progress against targets, with filter and search to narrow to one job.', topic: 'dashboards' },
+      jobs: { label: 'Jobs', group: 'Operations', what: 'Open and edit well jobs, assign and reassign engineers, and find a job in the list with filter and search.', topic: 'well jobs and mud checks', drawn: true },
+      qc: { label: 'Mud checks and QC', group: 'Operations', what: 'The mud checks the engineers entered, job by job, with values outside the range highlighted and the engineers’ reasons.', topic: 'well jobs and mud checks', drawn: true },
+      inventory: { label: 'Inventory', group: 'Operations', what: 'The product list, stock movements per rig, and consumption linked to the price list.', topic: 'inventory' },
+      reports: { label: 'Reports', group: 'Operations', what: 'Reports per job, viewed and exported. End-of-Section and End-of-Well reports are approved or locked here.', topic: 'reports' },
+      users: { label: 'Users', group: 'Administration', what: 'Create a user with one role, edit, deactivate and reactivate; the list of users with filter and search.', topic: 'administration' },
+      thresholds: { label: 'Ranges', group: 'Administration', what: 'The minimum and maximum for each mud property, used to flag values at the rig.', topic: 'well jobs and mud checks', drawn: true },
+      approvals: { label: 'Correction approvals', group: 'Administration', what: 'Corrections and backfills of saved mud checks, waiting for approval.', topic: 'administration' },
+      audit: { label: 'Audit log', group: 'Administration', what: 'Who entered or changed what, and when, with the approval status.', topic: 'administration' },
+      units: { label: 'Units', group: 'Administration', what: 'The unit sets used for entries and views.', topic: 'well jobs and mud checks', drawn: true }
+    };
+  }
+
+  allRigs() {
+    const out = [];
+    for (let i = 1; i <= 14; i++) out.push('Rig ' + this.pad(i));
+    return out;
+  }
+
+  scopeRigs(role) {
+    const R = this.roles();
+    const r = R[role] || R.supervisor;
+    return r.rigs || this.allRigs();
+  }
+
+  pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  defs() {
+    return [
+      { id: 'md', label: 'Measured depth', q: 'depth', dp: 0, dpm: 0, lo: 0, hi: 40000, g: 'depth', fixed: true },
+      { id: 'bit', label: 'Bit depth', q: 'depth', dp: 0, dpm: 0, lo: 0, hi: 40000, g: 'depth', fixed: true },
+      { id: 'tvd', label: 'True vertical depth', q: 'depth', dp: 0, dpm: 0, lo: 0, hi: 40000, g: 'depth', fixed: true },
+      { id: 'dens', label: 'Density', q: 'dens', dp: 1, dpm: 2, lo: 6.5, hi: 22, g: 'dens' },
+      { id: 'fv', label: 'Funnel viscosity', q: 'fv', dp: 0, dpm: 0, lo: 26, hi: 300, g: 'dens' },
+      { id: 'ttemp', label: 'Test temperature', q: 'temp', dp: 0, dpm: 0, lo: 32, hi: 400, g: 'dens' },
+      { id: 'rtemp', label: 'Rheology temperature', q: 'temp', dp: 0, dpm: 0, lo: 32, hi: 250, g: 'dens' },
+      { id: 'r600', label: '600 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo', fixed: true },
+      { id: 'r300', label: '300 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo', fixed: true },
+      { id: 'r200', label: '200 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo', fixed: true },
+      { id: 'r100', label: '100 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo', fixed: true },
+      { id: 'r60', label: '60 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo', fixed: true },
+      { id: 'r30', label: '30 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo', fixed: true },
+      { id: 'r6', label: '6 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo', fixed: true },
+      { id: 'r3', label: '3 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo', fixed: true },
+      { id: 'pv', label: 'Plastic viscosity', q: 'visc', dp: 0, dpm: 0, lo: 0, hi: 200, g: 'rheo', calc: true },
+      { id: 'yp', label: 'Yield point', q: 'stress', dp: 0, dpm: 1, lo: 0, hi: 200, g: 'rheo', calc: true },
+      { id: 'g10s', label: '10 s gel', q: 'stress', dp: 0, dpm: 1, lo: 0, hi: 200, g: 'rheo' },
+      { id: 'g10m', label: '10 min gel', q: 'stress', dp: 0, dpm: 1, lo: 0, hi: 200, g: 'rheo' },
+      { id: 'fl', label: 'API filtrate', q: 'fl', dp: 1, dpm: 1, lo: 0, hi: 200, g: 'filt' },
+      { id: 'cake', label: 'API filter cake', q: 'cake', dp: 0, dpm: 1, lo: 0, hi: 32, g: 'filt' },
+      { id: 'water', label: 'Retort water', q: 'pct', dp: 1, dpm: 1, lo: 0, hi: 100, g: 'sol' },
+      { id: 'oil', label: 'Retort oil', q: 'pct', dp: 1, dpm: 1, lo: 0, hi: 100, g: 'sol' },
+      { id: 'solids', label: 'Retort solids', q: 'pct', dp: 1, dpm: 1, lo: 0, hi: 100, g: 'sol', calc: true },
+      { id: 'sand', label: 'Sand', q: 'pct', dp: 2, dpm: 2, lo: 0, hi: 100, g: 'sol' },
+      { id: 'ph', label: 'pH', q: 'none', dp: 1, dpm: 1, lo: 0, hi: 14, g: 'chem' },
+      { id: 'pm', label: 'Pm', q: 'titr', dp: 2, dpm: 2, lo: 0, hi: 50, g: 'chem' },
+      { id: 'pf', label: 'Pf', q: 'titr', dp: 2, dpm: 2, lo: 0, hi: 50, g: 'chem' },
+      { id: 'mf', label: 'Mf', q: 'titr', dp: 2, dpm: 2, lo: 0, hi: 50, g: 'chem' },
+      { id: 'lime', label: 'Excess lime', q: 'conc', dp: 2, dpm: 1, lo: 0, hi: 50, g: 'chem', calc: true },
+      { id: 'hard', label: 'Hardness', q: 'mgl', dp: 0, dpm: 0, lo: 0, hi: 100000, g: 'chem' },
+      { id: 'cl', label: 'Chlorides', q: 'mgl', dp: 0, dpm: 0, lo: 0, hi: 200000, g: 'chem' },
+      { id: 'mbt', label: 'MBT', q: 'conc', dp: 1, dpm: 0, lo: 0, hi: 100, g: 'chem' },
+      { id: 'np', label: 'n, pipe', q: 'none', dp: 2, dpm: 2, g: 'calc', calc: true, extra: true, fixed: true },
+      { id: 'kp', label: 'K, pipe', q: 'cons', dp: 2, dpm: 2, g: 'calc', calc: true, extra: true, fixed: true },
+      { id: 'na', label: 'n, annulus', q: 'none', dp: 2, dpm: 2, g: 'calc', calc: true, extra: true, fixed: true },
+      { id: 'ka', label: 'K, annulus', q: 'cons', dp: 2, dpm: 2, g: 'calc', calc: true, extra: true, fixed: true },
+      { id: 'vlg', label: 'Low-gravity solids by volume', q: 'pct', dp: 1, dpm: 1, g: 'calc', calc: true, extra: true, fixed: true },
+      { id: 'clg', label: 'Low-gravity solids concentration', q: 'conc', dp: 1, dpm: 0, g: 'calc', calc: true, extra: true, fixed: true },
+      { id: 'vb', label: 'Barite by volume', q: 'pct', dp: 1, dpm: 1, g: 'calc', calc: true, extra: true, fixed: true },
+      { id: 'cb', label: 'Barite concentration', q: 'conc', dp: 1, dpm: 0, g: 'calc', calc: true, extra: true, fixed: true }
+    ];
+  }
+
+  groupDefs() {
+    return [
+      { id: 'depth', title: 'Depth' },
+      { id: 'dens', title: 'Density, funnel viscosity and temperature' },
+      { id: 'rheo', title: 'Rheology' },
+      { id: 'filt', title: 'Filtration' },
+      { id: 'sol', title: 'Solids' },
+      { id: 'chem', title: 'Chemistry' },
+      { id: 'calc', title: 'Calculated at the rig: your procedures, power law' }
+    ];
+  }
+
+  // The same calculations as the rig app, which works them out when a check is saved. Oilfield units.
+  calcs(v) {
+    const ok = (x) => typeof x === 'number' && !isNaN(x);
+    const pos = (x) => ok(x) && x > 0;
+    const lg = Math.log10;
+    const out = Object.assign({}, v);
+    out.pv = ok(v.r600) && ok(v.r300) ? v.r600 - v.r300 : null;
+    out.yp = out.pv !== null ? v.r300 - out.pv : null;
+    const oil = ok(v.oil) ? v.oil : 0;
+    out.solids = ok(v.water) ? 100 - v.water - oil : null;
+    out.lime = ok(v.pm) && ok(v.pf) && ok(v.water) ? 0.26 * (v.pm - v.water / 100 * v.pf) : null;
+    out.np = out.kp = out.na = out.ka = null;
+    if (pos(v.r600) && pos(v.r300)) { out.np = 3.32 * lg(v.r600 / v.r300); out.kp = 5.11 * v.r600 / Math.pow(1022, out.np) / 4.788; }
+    if (pos(v.r300) && pos(v.r3)) { out.na = 0.5 * lg(v.r300 / v.r3); out.ka = 5.11 * v.r300 / Math.pow(511, out.na) / 4.788; }
+    out.vlg = out.clg = out.vb = out.cb = null;
+    if (out.solids !== null && out.solids >= 0 && ok(v.dens) && ok(v.cl)) {
+      const rb = 4.2, rlg = 2.6, ro = 0.84;
+      const vss = out.solids - v.water * (v.cl / (1680000 - 1.21 * v.cl));
+      const rf = 1 + 0.00000109 * v.cl;
+      out.vlg = (100 * rf + (rb - rf) * vss - 12 * v.dens - (rf - ro) * oil) / (rb - rlg);
+      out.vb = vss - out.vlg;
+      out.clg = 3.5 * rlg * out.vlg;
+      out.cb = 3.5 * rb * out.vb;
+    }
+    return out;
+  }
+
+  // Example data only: the retort water that makes a check's solids balance close for its density and chlorides.
+  waterFor(dens, cl) {
+    const k = cl / (1680000 - 1.21 * cl), rf = 1 + 0.00000109 * cl;
+    const lgsMax = (12 * dens - 100 * rf) / (2.6 - rf);
+    const lgs = Math.max(0, Math.min(6, 0.85 * lgsMax));
+    const vs = (1.6 * lgs - 100 * rf + 12 * dens) / ((4.2 - rf) * (1 + k)) + 100 * k / (1 + k);
+    return Math.round((100 - vs) * 10) / 10;
+  }
+
+  methodLine(set) {
+    return 'Calculated values come from the rig, worked out when each check is saved, from your procedures and not yet verified against worked examples: plastic viscosity, yield point and excess lime as API RP 13B-1 defines them; retort solids by your Equation 10-4. Power law: n and K for the pipe from the 600 and 300 RPM readings (Figure 2-3), for the annulus from 300 and 3 RPM (Figure 2-1); K converted from dyne·sⁿ/cm² to lbf·sⁿ/100 ft², as on your daily report' + (set === 'metric' ? ', and shown here in Pa·sⁿ' : '') + '. Solids: Equations 10-5 to 10-8, with barite SG 4.2, low-gravity solids SG 2.6, oil SG 0.84, the constant 3.50, and the filtrate density from chlorides as sodium chloride.';
+  }
+
+  unit(q, set) {
+    const U = {
+      oilfield: { depth: 'ft', dens: 'ppg', temp: '°F', dial: 'dial', visc: 'cP', stress: 'lbf/100ft²', fl: 'cc/30 min', cake: '1/32 in', pct: '%', none: '', titr: 'cc', conc: 'lb/bbl', mgl: 'mg/L', fv: 's/qt', cons: 'lbf·sⁿ/100ft²' },
+      metric: { depth: 'm', dens: 'SG', temp: '°C', dial: 'dial', visc: 'mPa·s', stress: 'Pa', fl: 'mL/30 min', cake: 'mm', pct: '%', none: '', titr: 'mL', conc: 'kg/m³', mgl: 'mg/L', fv: 's/qt', cons: 'Pa·sⁿ' }
+    };
+    return (U[set] || U.oilfield)[q];
+  }
+
+  toDisp(q, v, set) {
+    if (set !== 'metric' || typeof v !== 'number') return v;
+    if (q === 'depth') return v * 0.3048;
+    if (q === 'dens') return v / 8.345;
+    if (q === 'temp') return (v - 32) * 5 / 9;
+    if (q === 'stress' || q === 'cons') return v * 0.4788;
+    if (q === 'conc') return v * 2.853;
+    if (q === 'cake') return v * 0.79375;
+    return v;
+  }
+
+  toBase(q, v, set) {
+    if (set !== 'metric' || typeof v !== 'number') return v;
+    if (q === 'depth') return v / 0.3048;
+    if (q === 'dens') return v * 8.345;
+    if (q === 'temp') return v * 9 / 5 + 32;
+    if (q === 'stress' || q === 'cons') return v / 0.4788;
+    if (q === 'conc') return v / 2.853;
+    if (q === 'cake') return v / 0.79375;
+    return v;
+  }
+
+  fmt(v, dp) {
+    return Number(v).toLocaleString('en-US', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+
+  dpFor(d, set) { return set === 'metric' ? d.dpm : d.dp; }
+
+  num(raw) {
+    if (raw === undefined || raw === null) return null;
+    const t = String(raw).replace(/,/g, '').trim();
+    if (t === '') return null;
+    const n = Number(t);
+    return isFinite(n) ? n : NaN;
+  }
+
+  inputText(d, v, set) {
+    if (v === undefined || v === null) return '';
+    return String(Number(this.toDisp(d.q, v, set).toFixed(this.dpFor(d, set))));
+  }
+
+  rawText(d, e, set) {
+    if (e.set === set) return e.raw;
+    const n = this.num(e.raw);
+    if (n === null || isNaN(n)) return e.raw;
+    return this.inputText(d, this.toBase(d.q, n, e.set), set);
+  }
+
+  rangeText(d, r, set) {
+    if (!r) return '';
+    const u = this.unit(d.q, set);
+    const us = u ? ' ' + u : '';
+    const dp = this.dpFor(d, set);
+    const f = (v) => this.fmt(this.toDisp(d.q, v, set), dp);
+    const hasMin = r.min !== undefined;
+    const hasMax = r.max !== undefined;
+    if (hasMin && hasMax) return f(r.min) + '–' + f(r.max) + us;
+    if (hasMax) return 'up to ' + f(r.max) + us;
+    if (hasMin) return 'at least ' + f(r.min) + us;
+    return '';
+  }
+
+  cellText(d, v, set) {
+    if (v === null || v === undefined) return '–';
+    return this.fmt(this.toDisp(d.q, v, set), this.dpFor(d, set));
+  }
+
+  curSet(s) { return s.unitSwitch ? s.units : s.unitDefault; }
+
+  tpl() {
+    return [
+      { fv: 45, ttemp: 110, rtemp: 120, r600: 52, r300: 34, r200: 27, r100: 19, r60: 15, r30: 11, r6: 6, r3: 5, g10s: 6, g10m: 12, fl: 4.6, cake: 1, oil: 0, sand: 0.25, ph: 10.1, pm: 0.9, pf: 0.4, mf: 1.1, hard: 240, cl: 28000, mbt: 12.5 },
+      { fv: 46, ttemp: 115, rtemp: 120, r600: 54, r300: 35, r200: 28, r100: 20, r60: 16, r30: 12, r6: 6, r3: 5, g10s: 6, g10m: 13, fl: 4.8, cake: 1, oil: 0, sand: 0.3, ph: 10.0, pm: 0.8, pf: 0.35, mf: 1.0, hard: 260, cl: 29000, mbt: 13 },
+      { fv: 48, ttemp: 118, rtemp: 120, r600: 58, r300: 37, r200: 30, r100: 21, r60: 17, r30: 12, r6: 7, r3: 6, g10s: 7, g10m: 15, fl: 4.7, cake: 1, oil: 0, sand: 0.3, ph: 9.9, pm: 0.8, pf: 0.3, mf: 1.0, hard: 280, cl: 29500, mbt: 14 },
+      { fv: 47, ttemp: 120, rtemp: 120, r600: 56, r300: 36, r200: 29, r100: 20, r60: 16, r30: 11, r6: 6, r3: 5, g10s: 6, g10m: 14, fl: 4.9, cake: 1, oil: 0, sand: 0.3, ph: 10.0, pm: 0.85, pf: 0.35, mf: 1.05, hard: 300, cl: 29200, mbt: 14 }
+    ];
+  }
+
+  build(p) {
+    const T = this.tpl();
+    const out = {};
+    let k = 0;
+    ['15', '16'].forEach((day) => {
+      out[day] = (p.rows[day] || []).map((r) => {
+        const t = T[k % 4];
+        const md = p.md0 + k * p.step;
+        const values = Object.assign({}, t, { md, bit: md, tvd: md - p.gap, dens: r[3], cl: Math.round(t.cl * p.clF / 10000) * 100 }, r[4] || {});
+        values.water = this.waterFor(values.dens, values.cl);
+        k++;
+        return { time: r[0], sample: r[1], eng: r[2], values: this.calcs(values), flags: r[5] || {} };
+      });
+    });
+    return out;
+  }
+
+  otherJobs() {
+    return [
+      ['J-0128', 'Rig 01', 'EX-03', ['Ahmed Nasser', 'Lukas Weber'], 10.0],
+      ['J-0129', 'Rig 02', 'EX-05', ['Ravi Menon', 'Ali Hassan'], 9.4],
+      ['J-0130', 'Rig 04', 'EX-11', ['Sara Mahmoud', 'John Adeyemi'], 9.0],
+      ['J-0132', 'Rig 05', 'EX-12', ['Khalid Rashed', 'Pavel Sokolov'], 10.6],
+      ['J-0133', 'Rig 06', 'EX-19', ['Yusuf Demir', 'Marco Bianchi'], 9.7],
+      ['J-0134', 'Rig 08', 'EX-20', ['Hamza Saeed', 'Arjun Nair'], 9.2],
+      ['J-0135', 'Rig 09', 'EX-25', ['Bilal Khan', 'Erik Johansson'], 10.3],
+      ['J-0137', 'Rig 10', 'EX-27', ['Musa Bello', 'Sami Youssef'], 9.5],
+      ['J-0138', 'Rig 11', 'EX-28', ['Rashid Karimi', 'Kevin Osei'], 9.9],
+      ['J-0140', 'Rig 13', 'EX-33', ['Fahad Omran', 'Joseph Mensah'], 10.1],
+      ['J-0141', 'Rig 14', 'EX-35', ['Imran Sheikh', 'Anders Holm'], 9.3]
+    ];
+  }
+
+  syncs() {
+    return {
+      'Rig 01': [16, '12:40'], 'Rig 02': [16, '12:51'], 'Rig 03': [16, '12:58'], 'Rig 04': [16, '11:02'], 'Rig 05': [13, '18:05'],
+      'Rig 06': [16, '12:47'], 'Rig 07': [16, '00:50'], 'Rig 08': [16, '07:15'], 'Rig 09': [16, '12:33'], 'Rig 10': [16, '12:55'],
+      'Rig 11': [16, '12:20'], 'Rig 12': [16, '09:30'], 'Rig 13': [16, '12:58'], 'Rig 14': [16, '10:45']
+    };
+  }
+
+  syncInfo(rig) {
+    const sy = this.syncs()[rig];
+    if (!sy) return { text: '–', ago: '', stale: false };
+    const d = sy[0];
+    const t = sy[1];
+    const mins = (16 - d) * 1440 + (13 * 60 + 5) - (Number(t.slice(0, 2)) * 60 + Number(t.slice(3, 5)));
+    let ago;
+    if (mins < 60) ago = mins + ' min ago';
+    else if (mins < 1440) ago = Math.floor(mins / 60) + ' h ago';
+    else ago = Math.floor(mins / 1440) + ' days ago';
+    return { text: d + ' Oct ' + t, ago, stale: mins >= 1440 };
+  }
+
+  freeEngineers() { return ['Adel Barakat', 'Nikola Jovanovic', 'Liam Byrne']; }
+
+  seedJobs() {
+    const hq = (job, operator, contractor, rig, well, field, lease, spud) => ({ job, operator, contractor, rig, well, field, lease, region: 'Eastern Province', country: 'Saudi Arabia', spud });
+    const rg = (mudSystem, section, activity, companyRep, contractorRep) => ({ mudType: 'Water-based', mudSystem, section, activity, companyRep, contractorRep });
+    const OP = ['Example Operator Co.', 'Sample Petroleum Co.', 'Demo Energy Co.'];
+    const jobs = [
+      { id: 'J-0142', status: 'Active', hq: hq('J-0142', OP[0], 'Example Drilling Co.', 'Rig 07', 'EX-14', 'Block 9', 'North Area', '30 Sep 2026'), rig: rg('KCl polymer', '12-1/4 in hole', 'Drilling ahead', 'A. Karim', 'M. Novak'), engineers: ['Faisal Rahman', 'Daniel Okafor'], sections: [['17-1/2 in hole', '30 Sep to 08 Oct'], ['12-1/4 in hole', 'from 09 Oct']] },
+      { id: 'J-0127', status: 'Closed', hq: hq('J-0127', OP[0], 'Example Drilling Co.', 'Rig 07', 'EX-09', 'Block 9', 'North Area', '02 Aug 2026'), rig: rg('KCl polymer', '8-1/2 in hole', 'Rig released', 'A. Karim', 'M. Novak'), engineers: ['Faisal Rahman', 'Daniel Okafor'] },
+      { id: 'J-0139', status: 'Active', hq: hq('J-0139', OP[1], 'Example Drilling Co.', 'Rig 03', 'EX-22', 'Block 4', 'South Area', '21 Sep 2026'), rig: rg('Low-solids non-dispersed', '8-1/2 in hole', 'Drilling ahead', 'S. Rahimi', 'J. Ortega'), engineers: ['Yousef Amin', 'Peter Lindqvist'], sections: [['12-1/4 in hole', '21 Sep to 05 Oct'], ['8-1/2 in hole', 'from 06 Oct']] },
+      { id: 'J-0131', status: 'Closed', hq: hq('J-0131', OP[1], 'Example Drilling Co.', 'Rig 03', 'EX-17', 'Block 4', 'South Area', '10 Aug 2026'), rig: rg('Low-solids non-dispersed', '6-1/8 in hole', 'Rig released', 'S. Rahimi', 'J. Ortega'), engineers: ['Yousef Amin', 'Peter Lindqvist'] },
+      { id: 'J-0136', status: 'Active', hq: hq('J-0136', OP[2], 'Sample Drilling Co.', 'Rig 12', 'EX-31', 'Block 12', 'West Area', '06 Oct 2026'), rig: rg('Polymer', '16 in hole', 'Drilling ahead', 'R. Qasim', 'L. Moreau'), engineers: ['Karim Mansour', 'Victor Ruiz'] }
+    ];
+    const systems = ['KCl polymer', 'Polymer', 'Low-solids non-dispersed'];
+    const holes = ['12-1/4 in hole', '8-1/2 in hole', '16 in hole'];
+    const acts = ['Drilling ahead', 'Tripping out', 'Running casing', 'Circulating'];
+    const leases = ['North Area', 'South Area', 'West Area'];
+    const spuds = ['12 Sep 2026', '18 Sep 2026', '25 Sep 2026', '27 Sep 2026', '01 Oct 2026', '03 Oct 2026', '04 Oct 2026', '07 Oct 2026', '09 Oct 2026', '11 Oct 2026', '13 Oct 2026'];
+    const coReps = ['K. Idris', 'N. Farah', 'B. Saleem', 'O. Kader', 'W. Aziz', 'F. Latif', 'G. Hamid', 'D. Salem', 'M. Tahir', 'E. Rami', 'Z. Hadi'];
+    const ctReps = ['T. Haas', 'R. Silva', 'P. Costa', 'S. Berg', 'A. Lund', 'C. Dubois', 'H. Kraus', 'I. Rossi', 'J. Meyer', 'L. Brandt', 'V. Horak'];
+    this.otherJobs().forEach((o, i) => {
+      jobs.push({ id: o[0], status: 'Active', hq: hq(o[0], OP[i % 3], i % 2 ? 'Sample Drilling Co.' : 'Example Drilling Co.', o[1], o[2], 'Block ' + (2 + i), leases[i % 3], spuds[i]), rig: rg(systems[i % 3], holes[i % 3], acts[i % 4], coReps[i], ctReps[i]), engineers: o[3].slice() });
+    });
+    return jobs;
+  }
+
+  seedRanges() {
+    const r1 = (x) => Math.round(x * 10) / 10;
+    const jobs = {
+      'J-0142': { dens: { min: 9.8, max: 10.8 }, cl: { max: 30000 } },
+      'J-0127': { dens: { min: 9.6, max: 10.4 } },
+      'J-0139': { dens: { min: 9.6, max: 10.2 } },
+      'J-0131': { dens: { min: 9.0, max: 9.6 } },
+      'J-0136': { dens: { min: 8.9, max: 9.4 } }
+    };
+    this.otherJobs().forEach((o) => { jobs[o[0]] = { dens: { min: r1(o[4] - 0.3), max: r1(o[4] + 0.5) } }; });
+    return {
+      def: { pv: { min: 12, max: 26 }, yp: { min: 12, max: 24 }, g10s: { min: 3, max: 12 }, g10m: { min: 6, max: 25 }, fl: { max: 5 }, cake: { max: 2 }, solids: { max: 14 }, sand: { max: 0.5 }, ph: { min: 9.5, max: 11 }, hard: { max: 400 }, mbt: { max: 22.5 } },
+      jobs
+    };
+  }
+
+  seedChecks() {
+    const c = (time, sample, eng, values, flags) => ({ time, sample, eng, values: this.calcs(values), flags: flags || {} });
+    const out = {};
+    out['J-0142'] = {
+      '15': [
+        c('06:30', 'Flowline', 'Faisal Rahman', { md: 7420, bit: 7420, tvd: 7105, dens: 10.2, fv: 45, ttemp: 110, rtemp: 120, r600: 52, r300: 34, r200: 27, r100: 19, r60: 15, r30: 11, r6: 6, r3: 5, g10s: 6, g10m: 12, fl: 4.6, cake: 1, water: 89, oil: 0, sand: 0.25, ph: 10.1, pm: 0.9, pf: 0.4, mf: 1.1, hard: 240, cl: 28000, mbt: 12.5 }),
+        c('12:30', 'Flowline', 'Faisal Rahman', { md: 7655, bit: 7655, tvd: 7320, dens: 10.3, fv: 46, ttemp: 115, rtemp: 120, r600: 54, r300: 35, r200: 28, r100: 20, r60: 16, r30: 12, r6: 6, r3: 5, g10s: 6, g10m: 13, fl: 4.8, cake: 1, water: 88, oil: 0, sand: 0.3, ph: 10.0, pm: 0.8, pf: 0.35, mf: 1.0, hard: 260, cl: 29000, mbt: 13 }),
+        c('18:30', 'Flowline', 'Daniel Okafor', { md: 7890, bit: 7890, tvd: 7535, dens: 10.4, fv: 48, ttemp: 118, rtemp: 120, r600: 58, r300: 37, r200: 30, r100: 21, r60: 17, r30: 12, r6: 7, r3: 6, g10s: 7, g10m: 15, fl: 5.4, cake: 2, water: 87.5, oil: 0, sand: 0.3, ph: 9.9, pm: 0.8, pf: 0.3, mf: 1.0, hard: 280, cl: 29500, mbt: 14 }, { fl: 'Filtrate rising in the new formation. Added fluid-loss polymer; re-test at the next check.' }),
+        c('00:30 (16 Oct)', 'Active pit', 'Daniel Okafor', { md: 8105, bit: 8105, tvd: 7730, dens: 10.4, fv: 47, ttemp: 120, rtemp: 120, r600: 56, r300: 36, r200: 29, r100: 20, r60: 16, r30: 11, r6: 6, r3: 5, g10s: 6, g10m: 14, fl: 4.9, cake: 1, water: 87.2, oil: 0, sand: 0.3, ph: 10.0, pm: 0.85, pf: 0.35, mf: 1.05, hard: 300, cl: 30500, mbt: 14 }, { cl: 'Chlorides up after a salt stringer at 8,060 ft. Dilution started.' })
+      ],
+      '16': []
+    };
+    out['J-0139'] = this.build({
+      md0: 9850, step: 120, gap: 230, clF: 6,
+      rows: {
+        '15': [
+          ['06:10', 'Flowline', 'Yousef Amin', 9.8, { ph: 9.3, pm: 0.5, pf: 0.2 }, { ph: 'pH down after drilling out cement. Adding caustic soda; re-test at the next check.' }],
+          ['12:15', 'Flowline', 'Yousef Amin', 9.8],
+          ['18:20', 'Flowline', 'Peter Lindqvist', 9.9],
+          ['00:25 (16 Oct)', 'Active pit', 'Peter Lindqvist', 9.9]
+        ],
+        '16': [
+          ['06:20', 'Flowline', 'Yousef Amin', 9.9],
+          ['12:25', 'Flowline', 'Yousef Amin', 10.0, { sand: 0.6 }, { sand: 'Desander underflow plugged. Cleared at 12:10; re-test at the next check.' }]
+        ]
+      }
+    });
+    out['J-0136'] = this.build({
+      md0: 3120, step: 260, gap: 6, clF: 5,
+      rows: {
+        '15': [
+          ['06:30', 'Flowline', 'Karim Mansour', 9.1],
+          ['12:30', 'Flowline', 'Karim Mansour', 9.2],
+          ['18:30', 'Flowline', 'Victor Ruiz', 9.5, {}, { dens: 'Weighted up to 9.5 ppg ahead of the pressured zone, as the drilling programme says. The range for this job needs updating at HQ.' }],
+          ['00:30 (16 Oct)', 'Flowline', 'Victor Ruiz', 9.5, {}, { dens: 'Kept at 9.5 ppg as planned; see the 18:30 check.' }]
+        ],
+        '16': [
+          ['06:35', 'Flowline', 'Karim Mansour', 9.5, {}, { dens: 'Still 9.5 ppg as planned. Waiting for HQ to update the range.' }]
+        ]
+      }
+    });
+    const sy = this.syncs();
+    const r1 = (x) => Math.round(x * 10) / 10;
+    const special = { 'J-0135': { 2: [{ g10s: 10, g10m: 27 }, { g10m: 'Gels up after a long trip out. Treated with thinner; back in range by the next check.' }] } };
+    this.otherJobs().forEach((o, i) => {
+      const id = o[0];
+      const eng = o[3];
+      const dens = o[4];
+      const m = this.pad(5 + (i * 7) % 50);
+      const synced = sy[o[1]];
+      const fresh = synced[0] >= 16;
+      const rows15 = fresh ? [
+        ['06:' + m, 'Flowline', eng[0], dens],
+        ['12:' + m, 'Flowline', eng[0], dens],
+        ['18:' + m, 'Flowline', eng[1], r1(dens + 0.1)],
+        ['00:' + m + ' (16 Oct)', 'Active pit', eng[1], r1(dens + 0.1)]
+      ] : [];
+      const rows16 = fresh ? [
+        ['06:' + m, 'Flowline', eng[0], r1(dens + 0.1)],
+        ['12:' + m, 'Flowline', eng[0], r1(dens + 0.2)]
+      ].filter((r) => r[0] < synced[1]) : [];
+      const sp = special[id] || {};
+      Object.keys(sp).forEach((k) => { if (rows15[k]) { rows15[k][4] = sp[k][0]; rows15[k][5] = sp[k][1]; } });
+      out[id] = this.build({ md0: 4000 + i * 900, step: 150 + (i % 3) * 40, gap: 100 + i * 20, clF: [100, 8, 5][i % 3], rows: { '15': rows15, '16': rows16 } });
+    });
+    return out;
+  }
+
+  seed() {
+    if (!this._seed) this._seed = { jobs: this.seedJobs(), ranges: this.seedRanges(), checks: this.seedChecks() };
+    return this._seed;
+  }
+
+  defaults() {
+    const view = this.props.view || 'none';
+    const mod = { jobs: 'jobs', job: 'jobs', qc: 'qc', ranges: 'thresholds', units: 'units' }[view] || null;
+    const sd = this.seed();
+    return {
+      screen: this.props.start === 'app' ? 'app' : 'signin',
+      role: this.props.role || 'supervisor',
+      module: mod,
+      email: '',
+      error: '',
+      rigSel: 'all',
+      units: 'oilfield',
+      unitDefault: 'oilfield',
+      unitSwitch: true,
+      jobs: sd.jobs,
+      ranges: sd.ranges,
+      checks: sd.checks,
+      jobView: view === 'job' ? 'detail' : 'list',
+      jobId: 'J-0142',
+      jobEdit: false,
+      jobForm: null,
+      jobError: '',
+      jobSearch: '',
+      jobStatus: 'active',
+      addEng: '',
+      qcDay: view === 'qc' ? '15' : '16',
+      qcJob: view === 'qc' ? 'J-0142' : null,
+      rangeTarget: 'J-0142',
+      rangeDraft: {},
+      toast: ''
+    };
+  }
+
+  S() { return Object.assign({}, this.defaults(), this.state || {}); }
+
+  componentWillUnmount() { clearTimeout(this._t); }
+
+  flash(msg) {
+    clearTimeout(this._t);
+    this.setState({ toast: msg });
+    this._t = setTimeout(() => this.setState({ toast: '' }), 5000);
+  }
+
+  fresh(role) {
+    return { role, module: null, rigSel: 'all', jobView: 'list', jobEdit: false, jobForm: null, jobError: '', addEng: '', qcJob: null, rangeDraft: {}, toast: '' };
+  }
+
+  signInAs(role) { this.setState(Object.assign(this.fresh(role), { screen: 'app', error: '', email: '' })); }
+
+  signIn() {
+    const s = this.S();
+    const R = this.roles();
+    const e = (s.email || '').trim().toLowerCase();
+    if (!e) { this.setState({ error: 'Enter your email.' }); return; }
+    const role = Object.keys(R).find((k) => R[k].email === e);
+    if (!role) { this.setState({ error: 'No account with this email. In this prototype, sign in as one of the roles below.' }); return; }
+    this.signInAs(role);
+  }
+
+  setJobForm(k, v) {
+    const s = this.S();
+    const f = Object.assign({}, s.jobForm || {});
+    f[k] = v;
+    this.setState({ jobForm: f, jobError: '' });
+  }
+
+  saveJob() {
+    const s = this.S();
+    const f = s.jobForm || {};
+    if (!(f.well || '').trim() || !(f.operator || '').trim() || !f.rig) {
+      this.setState({ jobError: 'Enter at least the rig, the well name and the operator.' });
+      return;
+    }
+    if (s.jobView === 'new') {
+      const id = 'J-0' + (150 + s.jobs.filter((j) => j.isNew).length);
+      const job = { id, isNew: true, status: 'Active', hq: Object.assign({}, f, { job: id }), rig: { mudType: '', mudSystem: '', section: '', activity: '', companyRep: '', contractorRep: '' }, engineers: [] };
+      const checks = Object.assign({}, s.checks);
+      checks[id] = { '15': [], '16': [] };
+      this.setState({ jobs: s.jobs.concat([job]), checks, jobView: 'detail', jobId: id, jobEdit: false, jobForm: null, jobError: '' });
+      this.flash('Job ' + id + ' opened. ' + f.rig + ' gets it at its next sync.');
+    } else {
+      const jobs = s.jobs.map((j) => (j.id === s.jobId ? Object.assign({}, j, { hq: Object.assign({}, j.hq, f) }) : j));
+      this.setState({ jobs, jobEdit: false, jobForm: null, jobError: '' });
+      this.flash('Job ' + s.jobId + ' saved. ' + f.rig + ' gets the change at its next sync.');
+    }
+  }
+
+  addEngineer() {
+    const s = this.S();
+    const name = s.addEng;
+    const job = s.jobs.find((j) => j.id === s.jobId);
+    if (!name || !job || job.engineers.indexOf(name) >= 0) return;
+    const jobs = s.jobs.map((j) => (j.id === job.id ? Object.assign({}, j, { engineers: j.engineers.concat([name]) }) : j));
+    this.setState({ jobs, addEng: '' });
+    this.flash(name + ' assigned to ' + job.id + '. ' + job.hq.rig + ' gets the change at its next sync.');
+  }
+
+  removeEngineer(name) {
+    const s = this.S();
+    const job = s.jobs.find((j) => j.id === s.jobId);
+    if (!job) return;
+    const jobs = s.jobs.map((j) => (j.id === job.id ? Object.assign({}, j, { engineers: j.engineers.filter((n) => n !== name) }) : j));
+    this.setState({ jobs });
+    this.flash(name + ' removed from ' + job.id + '. ' + job.hq.rig + ' gets the change at its next sync.');
+  }
+
+  setRangeDraft(id, k, raw) {
+    const s = this.S();
+    const draft = Object.assign({}, s.rangeDraft);
+    const cur = Object.assign({}, draft[id] || {});
+    delete cur.reset;
+    cur[k] = { raw, set: this.curSet(s) };
+    draft[id] = cur;
+    this.setState({ rangeDraft: draft });
+  }
+
+  resetRange(id) {
+    const s = this.S();
+    const draft = Object.assign({}, s.rangeDraft);
+    draft[id] = { reset: true };
+    this.setState({ rangeDraft: draft });
+  }
+
+  pickRangeTarget(v) {
+    const s = this.S();
+    const dirty = Object.keys(s.rangeDraft).length > 0;
+    this.setState({ rangeTarget: v, rangeDraft: {} });
+    if (dirty) this.flash('Unsaved changes discarded.');
+  }
+
+  saveRanges() {
+    const s = this.S();
+    const t = s.rangeTarget;
+    const isDef = t === 'default';
+    const byId = {};
+    this.defs().forEach((d) => { byId[d.id] = d; });
+    const def = Object.assign({}, s.ranges.def);
+    const jobs = Object.assign({}, s.ranges.jobs);
+    const jr = isDef ? null : Object.assign({}, jobs[t] || {});
+    const rnd = (x) => Math.round(x * 10000) / 10000;
+    Object.keys(s.rangeDraft).forEach((id) => {
+      const d = byId[id];
+      const dr = s.rangeDraft[id];
+      if (dr.reset) { if (jr) delete jr[id]; return; }
+      const base = isDef ? (def[id] || {}) : (jr[id] || def[id] || {});
+      const nr = {};
+      ['min', 'max'].forEach((k) => {
+        if (dr[k] !== undefined) {
+          const n = this.num(dr[k].raw);
+          if (n !== null && !isNaN(n)) nr[k] = rnd(this.toBase(d.q, n, dr[k].set));
+        } else if (base[k] !== undefined) nr[k] = base[k];
+      });
+      if (isDef) {
+        if (nr.min === undefined && nr.max === undefined) delete def[id];
+        else def[id] = nr;
+      } else jr[id] = nr;
+    });
+    if (jr) jobs[t] = jr;
+    this.setState({ ranges: { def, jobs }, rangeDraft: {} });
+    if (isDef) this.flash('Default ranges saved. Jobs without a range of their own get them at their rig’s next sync.');
+    else {
+      const job = s.jobs.find((j) => j.id === t);
+      this.flash('Ranges for ' + t + ' saved. ' + (job ? job.hq.rig : 'The rig') + ' gets them at its next sync; checks already saved keep their flags.');
+    }
+  }
+
+  renderVals() {
+    const s = this.S();
+    const R = this.roles();
+    const M = this.modules();
+    const role = R[s.role] || R.supervisor;
+    const current = (s.module && role.nav.indexOf(s.module) >= 0) ? s.module : role.nav[0];
+    const m = M[current];
+    const set = this.curSet(s);
+    const scope = this.scopeRigs(s.role);
+    const rigsShown = (s.rigSel !== 'all' && scope.indexOf(s.rigSel) >= 0) ? [s.rigSel] : scope;
+    const navGroups = ['Operations', 'Administration'].map((g) => ({
+      title: g,
+      items: role.nav.filter((id) => M[id].group === g).map((id) => ({
+        label: M[id].label,
+        bg: id === current ? '#0B5CAD' : 'transparent',
+        fg: id === current ? '#FFFFFF' : '#17212B',
+        go: () => this.setState({ module: id, jobView: 'list', jobEdit: false, jobForm: null, jobError: '' })
+      }))
+    })).filter((g) => g.items.length > 0);
+
+    const rigOptions = [{ v: 'all', label: s.role === 'supervisor' ? 'All my rigs (' + scope.length + ')' : 'All rigs (' + scope.length + ')' }].concat(scope.map((r) => ({ v: r, label: r })));
+
+    return Object.assign({
+      yes: true,
+      isSignin: s.screen === 'signin',
+      isApp: s.screen === 'app',
+      email: s.email,
+      onEmail: (e) => this.setState({ email: e.target.value, error: '' }),
+      signIn: () => this.signIn(),
+      hasError: !!s.error,
+      error: s.error,
+      roleButtons: Object.keys(R).map((k) => ({ label: R[k].label, pick: () => this.signInAs(k) })),
+
+      role: s.role,
+      onRole: (e) => this.setState(this.fresh(e.target.value)),
+      isOps: s.role !== 'admin',
+      rigSel: s.rigSel,
+      rigOptions,
+      onRigSel: (e) => this.setState({ rigSel: e.target.value, jobView: 'list', jobEdit: false, jobForm: null, jobError: '' }),
+      units: set,
+      unitsLocked: !s.unitSwitch,
+      onUnits: (e) => this.setState({ units: e.target.value }),
+      userName: role.user,
+      roleLabel: role.label,
+      scope: role.scope,
+      signOut: () => this.setState({ screen: 'signin', module: null, error: '', toast: '' }),
+      navGroups,
+      moduleTitle: m.label,
+      moduleWhat: m.what,
+      moduleWhen: 'Not drawn yet. Drawn after the session on ' + m.topic + '.',
+      isEmptyModule: !m.drawn,
+      isJobList: current === 'jobs' && s.jobView === 'list',
+      isJobDetail: current === 'jobs' && s.jobView !== 'list',
+      isQc: current === 'qc',
+      isRanges: current === 'thresholds',
+      isUnits: current === 'units',
+      hasToast: !!s.toast,
+      toast: s.toast,
+      toJobList: () => this.setState({ jobView: 'list', jobEdit: false, jobForm: null, jobError: '' })
+    },
+    this.jobListVals(s, rigsShown),
+    { jd: this.jobDetailVals(s, scope) },
+    { qc: this.qcVals(s, set, rigsShown) },
+    { rg: this.rangesVals(s, set) },
+    { un: this.unitsVals(s, set) });
+  }
+
+  jobListVals(s, rigsShown) {
+    const q = (s.jobSearch || '').trim().toLowerCase();
+    const inScope = s.jobs.filter((j) => rigsShown.indexOf(j.hq.rig) >= 0);
+    const found = inScope
+      .filter((j) => s.jobStatus === 'all' || (s.jobStatus === 'closed' ? j.status === 'Closed' : j.status === 'Active'))
+      .filter((j) => !q || [j.id, j.hq.well, j.hq.operator, j.hq.rig, j.engineers.join(' ')].join(' ').toLowerCase().indexOf(q) >= 0);
+    found.sort((a, b) => (a.hq.rig === b.hq.rig ? (a.id < b.id ? 1 : -1) : (a.hq.rig < b.hq.rig ? -1 : 1)));
+    const jobRows = found.map((j) => {
+      const active = j.status === 'Active';
+      const sy = this.syncInfo(j.hq.rig);
+      const late = active && sy.stale;
+      return {
+        id: j.id, well: j.hq.well || '–', rig: j.hq.rig, operator: j.hq.operator || '–', section: j.rig.section || '–',
+        engineers: j.engineers.length ? j.engineers.join(', ') : 'None yet',
+        status: j.status, statusBg: active ? '#E6F4EC' : '#E9EDF1', statusFg: active ? '#1E6B3E' : '#4A5866',
+        sync: active ? sy.text : '–', syncAgo: active ? sy.ago : '',
+        syncFg: late ? '#8A3B00' : '#4A5866', syncFw: late ? '600' : '400',
+        open: () => this.setState({ jobView: 'detail', jobId: j.id, jobEdit: false, jobForm: null, jobError: '', addEng: '' })
+      };
+    });
+    const where = rigsShown.length === 1 ? 'on ' + rigsShown[0] : (s.role === 'supervisor' ? 'on your rigs' : 'on all rigs');
+    return {
+      jobRows,
+      noJobRows: jobRows.length === 0,
+      jobCount: 'Showing ' + jobRows.length + ' of ' + inScope.length + ' jobs ' + where,
+      jobSearch: s.jobSearch,
+      onJobSearch: (e) => this.setState({ jobSearch: e.target.value }),
+      jobStatus: s.jobStatus,
+      onJobStatus: (e) => this.setState({ jobStatus: e.target.value }),
+      newJob: () => this.setState({ jobView: 'new', jobEdit: false, jobError: '', addEng: '', jobForm: { job: '', operator: '', contractor: '', rig: rigsShown[0], well: '', field: '', lease: '', region: '', country: '', spud: '' } })
+    };
+  }
+
+  jobDetailVals(s, scope) {
+    const isNew = s.jobView === 'new';
+    const job = s.jobs.find((j) => j.id === s.jobId) || s.jobs[0];
+    const editing = isNew || s.jobEdit;
+    const active = isNew || job.status === 'Active';
+    const form = s.jobForm || job.hq;
+    const rigOpts = scope.map((r) => ({ v: r, label: r }));
+    const hqDefs = [['job', 'Job number'], ['operator', 'Operator'], ['contractor', 'Contractor'], ['rig', 'Rig'], ['well', 'Well name'], ['field', 'Field / block'], ['lease', 'Lease / area'], ['region', 'State / region'], ['country', 'Country'], ['spud', 'Spud date']];
+    const hqFields = hqDefs.map((h) => {
+      const k = h[0];
+      const input = editing && k !== 'job';
+      let value = (editing ? form[k] : job.hq[k]) || '';
+      if (isNew && k === 'job') value = 'Given when the job is saved';
+      return {
+        label: h[1], value: input ? value : (value || '–'),
+        isInput: input && k !== 'rig', isRigSelect: input && k === 'rig', isText: !input,
+        options: rigOpts,
+        onChange: (e) => this.setJobForm(k, e.target.value)
+      };
+    });
+
+    const onJobs = {};
+    s.jobs.forEach((j) => { if (j.status === 'Active') j.engineers.forEach((n) => { (onJobs[n] = onJobs[n] || []).push(j); }); });
+    const tag = (j) => j.id + ' (' + j.hq.rig + ')';
+    const engs = isNew ? [] : job.engineers;
+    const engineers = engs.map((n) => {
+      const others = (onJobs[n] || []).filter((j) => j.id !== job.id).map(tag);
+      return { name: n, note: others.length ? 'Also on ' + others.join(', ') : '', canRemove: active && !isNew, remove: () => this.removeEngineer(n) };
+    });
+    const pool = {};
+    s.jobs.forEach((j) => j.engineers.forEach((n) => { pool[n] = true; }));
+    this.freeEngineers().forEach((n) => { pool[n] = true; });
+    const addOptions = Object.keys(pool).filter((n) => engs.indexOf(n) < 0).sort().map((n) => ({
+      v: n, label: n + ' · ' + (onJobs[n] ? 'on ' + onJobs[n].map(tag).join(', ') : 'not on an active job')
+    }));
+    const canAdd = !!s.addEng && engs.indexOf(s.addEng) < 0;
+
+    const rigName = isNew ? (form.rig || scope[0]) : job.hq.rig;
+    const sy = this.syncInfo(rigName);
+    let syncNote;
+    if (isNew) syncNote = 'A job opened here reaches ' + rigName + ' at its next sync.';
+    else if (!active) syncNote = 'Closed job. Read only.';
+    else syncNote = rigName + ' last synced ' + sy.text + ' (' + sy.ago + '). Changes made here reach the rig at its next sync. What the engineers entered since then is not here yet.';
+    const late = !isNew && active && sy.stale;
+
+    const rigDefs = [['mudType', 'Mud type'], ['mudSystem', 'Mud system'], ['section', 'Hole section'], ['activity', 'Present activity'], ['companyRep', 'Operator representative'], ['contractorRep', 'Contractor representative']];
+    const rigFields = rigDefs.map((r) => ({ label: r[1], value: (!isNew && job.rig[r[0]]) || '–' }));
+    let sections = [];
+    if (!isNew) {
+      if (job.sections) sections = job.sections.map((x) => ({ name: x[0], when: x[1] }));
+      else if (job.rig.section) sections = [{ name: job.rig.section, when: active ? 'current' : 'last' }];
+    }
+    const checks16 = ((s.checks[job.id] || {})['16'] || []).length;
+
+    return {
+      title: isNew ? 'New job' : 'Job ' + job.id + ' · Well ' + (job.hq.well || '–'),
+      sub: isNew ? 'Opened at HQ' : job.hq.rig + ' · ' + (job.hq.operator || '–') + ' · ' + job.status,
+      canChecks: !isNew && active,
+      toChecks: () => this.setState({ module: 'qc', qcJob: job.id, qcDay: checks16 ? '16' : '15' }),
+      canEdit: !isNew && active && !s.jobEdit,
+      edit: () => this.setState({ jobEdit: true, jobForm: Object.assign({}, job.hq), jobError: '' }),
+      editing,
+      cancel: () => (isNew ? this.setState({ jobView: 'list', jobForm: null, jobError: '' }) : this.setState({ jobEdit: false, jobForm: null, jobError: '' })),
+      save: () => this.saveJob(),
+      saveLabel: isNew ? 'Open the job' : 'Save job',
+      hasError: !!s.jobError,
+      error: s.jobError,
+      syncNote,
+      syncBg: late ? '#FEF3E2' : '#E3EEF9',
+      syncFg: late ? '#8A3B00' : '#0A4D91',
+      hqFields,
+      engNote: isNew ? 'Assign engineers once the job is saved.' : (active ? 'Assigned per job. The rig gets a change at its next sync.' : 'Closed job.'),
+      engineers,
+      noEngineers: !isNew && engs.length === 0,
+      canAssign: !isNew && active,
+      addOptions,
+      addValue: s.addEng,
+      onAdd: (e) => this.setState({ addEng: e.target.value }),
+      add: () => this.addEngineer(),
+      addDisabled: !canAdd,
+      addBg: canAdd ? '#0B5CAD' : '#C3CCD5',
+      addFg: canAdd ? '#FFFFFF' : '#4A5866',
+      rigFields,
+      sections,
+      noSections: sections.length === 0
+    };
+  }
+
+  qcVals(s, set, rigsShown) {
+    const defs = this.defs();
+    const byId = {};
+    defs.forEach((d) => { byId[d.id] = d; });
+    const seedR = this.seed().ranges;
+    const rangeAt = (jobId, id) => {
+      const o = seedR.jobs[jobId] && seedR.jobs[jobId][id];
+      return o || seedR.def[id] || null;
+    };
+    const day = s.qcDay;
+    const isToday = day === '16';
+    const active = s.jobs.filter((j) => j.status === 'Active' && rigsShown.indexOf(j.hq.rig) >= 0);
+    active.sort((a, b) => (a.hq.rig === b.hq.rig ? (a.id < b.id ? -1 : 1) : (a.hq.rig < b.hq.rig ? -1 : 1)));
+    const data = active.map((j) => {
+      const cs = ((s.checks[j.id] || {})[day]) || [];
+      const nFlags = cs.reduce((a, c) => a + Object.keys(c.flags).length, 0);
+      return { j, cs, nFlags, sy: this.syncInfo(j.hq.rig) };
+    });
+    const sel = data.find((r) => r.j.id === s.qcJob) || data.find((r) => r.cs.length > 0) || data[0];
+    const rows = data.map((r) => {
+      const on = !!sel && r.j.id === sel.j.id;
+      let received = isToday ? r.cs.length + ' so far' : r.cs.length + ' of 4';
+      if (r.cs.length === 0 && r.sy.stale) received = 'None received';
+      return {
+        id: r.j.id, well: r.j.hq.well, rig: r.j.hq.rig, received,
+        flagged: r.nFlags ? r.nFlags + (r.nFlags === 1 ? ' value' : ' values') : 'None',
+        flagBg: r.nFlags ? '#FEF3E2' : '#E9EDF1', flagFg: r.nFlags ? '#8A3B00' : '#4A5866',
+        sync: r.sy.text, syncAgo: r.sy.ago,
+        syncFg: r.sy.stale ? '#8A3B00' : '#4A5866', syncFw: r.sy.stale ? '600' : '400',
+        bg: on ? '#E3EEF9' : '#FFFFFF',
+        on, btn: on ? 'Shown below' : 'View checks',
+        btnBg: on ? '#0B5CAD' : '#FFFFFF', btnFg: on ? '#FFFFFF' : '#0B5CAD', btnBorder: '#0B5CAD',
+        pick: () => this.setState({ qcJob: r.j.id })
+      };
+    });
+    const where = rigsShown.length === 1 ? 'on ' + rigsShown[0] : (s.role === 'supervisor' ? 'on your rigs' : 'on all rigs');
+    const dayTabs = [['15', '15 Oct'], ['16', '16 Oct · today']].map((t) => ({
+      label: t[1], on: day === t[0],
+      bg: day === t[0] ? '#17212B' : '#FFFFFF', fg: day === t[0] ? '#FFFFFF' : '#17212B',
+      pick: () => this.setState({ qcDay: t[0] })
+    }));
+    const out = {
+      dayTabs,
+      listTitle: 'Active jobs ' + where + ' · ' + (isToday ? '16 Oct 2026, today' : '15 Oct 2026'),
+      rows, noRows: rows.length === 0,
+      hasJob: !!sel,
+      jobTitle: '', jobSub: '', toJob: () => {}, hasNote: false, note: '', noteBg: '#E3EEF9', noteFg: '#0A4D91',
+      noChecks: false, hasChecks: false, cols: [], tableRows: [], methodLine: '', flags: [], noFlags: true
+    };
+    if (!sel) return out;
+    const j = sel.j;
+    const cs = sel.cs;
+    out.jobTitle = 'Job ' + j.id + ' · Well ' + j.hq.well + ' · ' + (isToday ? '16 Oct 2026' : '15 Oct 2026');
+    out.jobSub = j.hq.rig + ' · ' + j.hq.operator + ' · ' + (j.rig.mudSystem || '–') + ', ' + (j.rig.section || '–') + ' · engineers: ' + (j.engineers.join(', ') || 'none');
+    out.toJob = () => this.setState({ module: 'jobs', jobView: 'detail', jobId: j.id, jobEdit: false, jobForm: null, jobError: '', addEng: '' });
+    if (sel.sy.stale) {
+      out.hasNote = true;
+      out.note = j.hq.rig + ' last synced ' + sel.sy.text + ' (' + sel.sy.ago + '). Checks entered since then have not reached HQ.';
+      out.noteBg = '#FEF3E2';
+      out.noteFg = '#8A3B00';
+    } else if (isToday) {
+      out.hasNote = true;
+      out.note = j.hq.rig + ' last synced ' + sel.sy.text + ' (' + sel.sy.ago + '). Checks entered since then reach HQ at its next sync.';
+    }
+    out.noChecks = cs.length === 0;
+    out.hasChecks = cs.length > 0;
+    out.cols = [0, 1, 2, 3].map((i) => {
+      const c = cs[i];
+      if (!c) {
+        return { title: 'Check ' + (i + 1), time: '–', who: i < 2 ? 'Day shift' : 'Night shift', chip: isToday ? 'Not received yet' : 'Not received', chipBg: '#E9EDF1', chipFg: '#4A5866' };
+      }
+      const n = Object.keys(c.flags).length;
+      return {
+        title: 'Check ' + (i + 1), time: c.time, who: c.eng + ' · ' + c.sample,
+        chip: n ? n + ' flagged' : 'In range',
+        chipBg: n ? '#FEF3E2' : '#E6F4EC', chipFg: n ? '#8A3B00' : '#1E6B3E'
+      };
+    });
+    const titles = {};
+    this.groupDefs().forEach((g) => { titles[g.id] = g.title; });
+    const tableRows = [];
+    let lastG = '';
+    defs.forEach((d) => {
+      if (d.g !== lastG) { tableRows.push({ isHead: true, isRow: false, label: titles[d.g], unit: '', cells: [] }); lastG = d.g; }
+      tableRows.push({
+        isHead: false, isRow: true, label: d.label + (d.calc && !d.extra ? ' · calculated' : ''), unit: this.unit(d.q, set) || '–',
+        cells: [0, 1, 2, 3].map((i) => {
+          const c = cs[i];
+          if (!c) return { text: '', bg: '#FFFFFF', fg: '#17212B', fw: '400' };
+          const v = c.values[d.id];
+          const fl = Object.prototype.hasOwnProperty.call(c.flags, d.id);
+          let text = this.cellText(d, v, set);
+          if (fl) {
+            const r = rangeAt(j.id, d.id);
+            text = ((r && r.max !== undefined && v > r.max) ? '▲ ' : '▼ ') + text;
+          }
+          return { text, bg: fl ? '#FEF3E2' : '#FFFFFF', fg: fl ? '#8A3B00' : '#17212B', fw: fl ? '600' : '400' };
+        })
+      });
+    });
+    out.tableRows = tableRows;
+    out.methodLine = this.methodLine(set);
+    const flags = [];
+    cs.forEach((c, i) => {
+      Object.keys(c.flags).forEach((id) => {
+        const d = byId[id];
+        const u = this.unit(d.q, set);
+        flags.push({
+          where: 'Check ' + (i + 1) + ' · ' + c.time,
+          what: d.label + ' ' + this.cellText(d, c.values[id], set) + (u ? ' ' + u : ''),
+          range: 'Range when entered: ' + this.rangeText(d, rangeAt(j.id, id), set),
+          reason: c.flags[id],
+          who: c.eng
+        });
+      });
+    });
+    out.flags = flags;
+    out.noFlags = flags.length === 0;
+    return out;
+  }
+
+  rangesVals(s, set) {
+    const defs = this.defs().filter((d) => !d.extra);
+    const t = s.rangeTarget;
+    const isDef = t === 'default';
+    const tjob = s.jobs.find((j) => j.id === t);
+    const draft = s.rangeDraft || {};
+    const titles = {};
+    this.groupDefs().forEach((g) => { titles[g.id] = g.title; });
+    const eff = (id) => {
+      if (!isDef) {
+        const o = s.ranges.jobs[t] && s.ranges.jobs[t][id];
+        if (o) return { r: o, src: 'job' };
+      }
+      const d = s.ranges.def[id];
+      return d ? { r: d, src: 'default' } : { r: null, src: 'none' };
+    };
+    const rows = [];
+    let lastG = '';
+    let nErr = 0;
+    let nChanged = 0;
+    defs.forEach((d) => {
+      if (d.g !== lastG) { rows.push({ isHead: true, isRow: false, label: titles[d.g] }); lastG = d.g; }
+      const u = this.unit(d.q, set);
+      const dp = this.dpFor(d, set);
+      const possible = this.fmt(this.toDisp(d.q, d.lo, set), dp) + ' to ' + this.fmt(this.toDisp(d.q, d.hi, set), dp);
+      const row = { isHead: false, isRow: true, label: d.label + (d.calc ? ' · calculated' : ''), unit: u || '–', possible, bg: '#FFFFFF', editable: !d.fixed, fixed: !!d.fixed };
+      if (d.fixed) { rows.push(row); return; }
+      const e = eff(d.id);
+      const dr = draft[d.id] || {};
+      const shown = dr.reset ? { r: s.ranges.def[d.id] || null, src: 'default' } : e;
+      const val = (k) => {
+        if (!dr.reset && dr[k] !== undefined) return this.rawText(d, dr[k], set);
+        return this.inputText(d, shown.r ? shown.r[k] : undefined, set);
+      };
+      const minRaw = val('min');
+      const maxRaw = val('max');
+      const nmin = this.num(minRaw);
+      const nmax = this.num(maxRaw);
+      let err = '';
+      if ((nmin !== null && isNaN(nmin)) || (nmax !== null && isNaN(nmax))) err = 'Enter a number';
+      else {
+        const bmin = nmin === null ? null : this.toBase(d.q, nmin, set);
+        const bmax = nmax === null ? null : this.toBase(d.q, nmax, set);
+        const outside = (v) => v !== null && (v < d.lo - 1e-6 || v > d.hi + 1e-6);
+        if (outside(bmin) || outside(bmax)) err = 'Outside the possible values';
+        else if (bmin !== null && bmax !== null && bmin > bmax) err = 'Min is above max';
+      }
+      const changed = Object.keys(dr).length > 0;
+      if (err) nErr++;
+      if (changed) nChanged++;
+      let src;
+      let srcBg = '#E9EDF1';
+      let srcFg = '#4A5866';
+      if (isDef) {
+        src = changed ? 'Default · not saved' : (e.r ? 'Default' : 'No default');
+      } else if (dr.reset) {
+        src = s.ranges.def[d.id] ? 'Default · not saved' : 'No range · not saved';
+      } else if (changed) {
+        src = 'This job · not saved';
+      } else if (e.src === 'job') {
+        src = 'This job';
+      } else if (e.src === 'default') {
+        src = 'Default';
+      } else {
+        src = 'No range';
+      }
+      if (src.indexOf('This job') === 0) { srcBg = '#E3EEF9'; srcFg = '#0A4D91'; }
+      if (changed) { srcBg = '#FEF3E2'; srcFg = '#8A3B00'; }
+      Object.assign(row, {
+        min: minRaw, max: maxRaw,
+        onMin: (ev) => this.setRangeDraft(d.id, 'min', ev.target.value),
+        onMax: (ev) => this.setRangeDraft(d.id, 'max', ev.target.value),
+        inBorder: err ? '#C0362C' : (changed ? '#C2660A' : '#A9B4BF'),
+        bg: changed ? '#FFFBF3' : '#FFFFFF',
+        src, srcBg, srcFg,
+        canReset: !isDef && !dr.reset && (e.src === 'job' || changed),
+        resetLabel: s.ranges.def[d.id] ? 'Use default' : 'Remove range',
+        reset: () => this.resetRange(d.id),
+        hasErr: !!err, err
+      });
+      rows.push(row);
+    });
+    const jobOptions = s.jobs.filter((j) => j.status === 'Active')
+      .slice()
+      .sort((a, b) => (a.hq.rig === b.hq.rig ? (a.id < b.id ? -1 : 1) : (a.hq.rig < b.hq.rig ? -1 : 1)))
+      .map((j) => ({ v: j.id, label: j.id + ' · Well ' + j.hq.well + ' · ' + j.hq.rig }));
+    let note;
+    if (isDef) note = 'Used for every property a job has no range of its own for.';
+    else if (tjob) {
+      const sy = this.syncInfo(tjob.hq.rig);
+      note = tjob.hq.rig + ' · ' + (tjob.hq.operator || '–') + ' · ' + (tjob.rig.mudSystem || 'mud system not entered yet') + '. ' + tjob.hq.rig + ' last synced ' + sy.text + '; it gets saved changes at its next sync.';
+    } else note = '';
+    const cantSave = nChanged === 0 || nErr > 0;
+    return {
+      target: t,
+      onTarget: (e) => this.pickRangeTarget(e.target.value),
+      jobOptions,
+      rows,
+      note,
+      changed: nChanged ? nChanged + (nChanged === 1 ? ' property changed' : ' properties changed') + (nErr ? ' · ' + nErr + ' to fix' : '') : 'No unsaved changes',
+      clean: nChanged === 0,
+      discard: () => this.setState({ rangeDraft: {} }),
+      discardFg: nChanged === 0 ? '#8795A3' : '#17212B',
+      save: () => this.saveRanges(),
+      cantSave,
+      saveBg: cantSave ? '#C3CCD5' : '#0B5CAD',
+      saveFg: cantSave ? '#4A5866' : '#FFFFFF'
+    };
+  }
+
+  unitsVals(s, set) {
+    const rows = [
+      ['Depth', 'Measured depth, bit depth, true vertical depth', 'ft', 'm', 'm = ft × 0.3048'],
+      ['Density', 'Density', 'ppg', 'SG', 'SG = ppg ÷ 8.345'],
+      ['Temperature', 'Test and rheology temperature', '°F', '°C', '°C = (°F − 32) × 5/9'],
+      ['Rheometer reading', '600 to 3 RPM', 'dial', 'dial', 'Not converted'],
+      ['Viscosity', 'Plastic viscosity', 'cP', 'mPa·s', '1 cP = 1 mPa·s'],
+      ['Stress', 'Yield point, 10 s and 10 min gels', 'lbf/100ft²', 'Pa', 'Pa = lbf/100ft² × 0.4788'],
+      ['Filtrate', 'API filtrate', 'cc/30 min', 'mL/30 min', '1 cc = 1 mL'],
+      ['Filter cake', 'API filter cake', '1/32 in', 'mm', 'mm = 1/32 in × 0.794'],
+      ['Percent', 'Retort water and solids, sand', '%', '%', 'Not converted'],
+      ['Titration', 'Pm, Pf, Mf', 'cc', 'mL', '1 cc = 1 mL'],
+      ['Concentration', 'Excess lime, MBT', 'lb/bbl', 'kg/m³', 'kg/m³ = lb/bbl × 2.853'],
+      ['Ion concentration', 'Hardness, chlorides', 'mg/L', 'mg/L', 'Not converted']
+    ].map((r) => ({
+      q: r[0], used: r[1], o: r[2], m: r[3], conv: r[4],
+      oBg: set === 'oilfield' ? '#F3F8FD' : 'transparent',
+      mBg: set === 'metric' ? '#F3F8FD' : 'transparent'
+    }));
+    const label = { oilfield: 'Oilfield (US)', metric: 'Metric' };
+    return {
+      rows,
+      def: s.unitDefault,
+      onDef: (e) => {
+        this.setState({ unitDefault: e.target.value });
+        this.flash('Default unit set: ' + label[e.target.value] + '.' + (s.unitSwitch ? ' Users who chose their own set keep it.' : ' Everyone sees it.'));
+      },
+      sw: s.unitSwitch,
+      onSw: (e) => {
+        const on = e.target.checked;
+        this.setState({ unitSwitch: on, units: s.unitDefault });
+        this.flash(on ? 'Users can switch to another unit set in the header.' : 'Users can no longer switch: everyone sees ' + label[s.unitDefault] + '.');
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

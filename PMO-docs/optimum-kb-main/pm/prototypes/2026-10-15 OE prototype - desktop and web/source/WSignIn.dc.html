@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HQ sign in</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0">
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 900px; box-sizing: border-box; background: #FFF8F6; color: #241914; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; display: flex; flex-direction: column">
+<div style="height: 64px; background: #ED712E; border-bottom: 4px solid #F2A743; display: flex; align-items: center; gap: 12px; padding: 0 20px; color: #521D00">
+<span style="background: #FFFFFF; color: #B83830; font-weight: 800; letter-spacing: 0.06em; padding: 4px 10px; border-radius: 6px; font-size: 18px">OES</span>
+<span style="font-weight: 600">Mud Engineering · HQ</span>
+</div>
+<main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 16px; box-sizing: border-box">
+<div style="width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 20px; background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 16px; padding: 32px; box-sizing: border-box">
+<h1 style="margin: 0; font-size: 24px; font-weight: 400">Sign in</h1>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="em" style="font-size: 12px; color: #574238">Work email</label>
+<div style="display: flex; align-items: center; height: 56px; border: 1px solid #8B7267; border-radius: 4px; padding: 0 12px"><input id="em" type="email" value="{{email}}" onChange="{{setEmail}}" style="flex: 1; border: 0; outline: 0; font: inherit; font-size: 16px; min-width: 0"></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="pw" style="font-size: 12px; color: #574238">Password</label>
+<div style="display: flex; align-items: center; height: 56px; border: 1px solid #8B7267; border-radius: 4px; padding: 0 12px"><input id="pw" type="password" value="password1" readOnly style="flex: 1; border: 0; outline: 0; font: inherit; font-size: 16px; min-width: 0"><span class="ms" aria-hidden="true" style="color: #574238">visibility</span></div>
+</div>
+<a href="{{target}}" style="display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #A14000; color: #FFFFFF; font-weight: 600; text-decoration: none">Sign in</a>
+<div style="color: #574238; font-size: 13px; line-height: 1.5">Forgot your password? Ask the system admin. Accounts are created by the admin; there is no self-registration.</div>
+<div style="display: flex; flex-direction: column; gap: 6px; border-top: 1px solid #F4DED5; padding-top: 14px">
+<span style="font-size: 12px; color: #574238">Demo accounts (prototype only):</span>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<sc-for list="{{demo}}" as="d" hint-placeholder-count="3"><button type="button" onClick="{{d.pick}}" style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #8B7267; background: {{d.bg}}; color: #241914; font: inherit; font-size: 13px; cursor: pointer">{{d.label}}</button></sc-for>
+</div>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: 'khalid.nasser@oes.example' };
+  }
+  renderVals() {
+    const D = [['Supervisor', 'khalid.nasser@oes.example', 'WDashboard.dc.html'], ['Manager (all rigs)', 'faisal.qureshi@oes.example', 'WDashboard.dc.html'], ['Admin', 'sara.almutairi@oes.example', 'WUsers.dc.html']];
+    const cur = D.find((d) => d[1] === this.state.email);
+    return {
+      email: this.state.email, setEmail: (e) => this.setState({ email: e.target.value }),
+      target: cur ? cur[2] : 'WDashboard.dc.html',
+      demo: D.map(([label, email]) => ({ label, bg: email === this.state.email ? '#F6CD96' : 'transparent', pick: () => this.setState({ email }) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

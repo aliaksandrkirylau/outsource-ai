@@ -1,0 +1,18 @@
+#!/bin/sh
+# Refuse to commit conflict markers or a money amount. Active once per clone: git config
+# core.hooksPath tools/hooks (kb-sync.sh setup does it). Covers commits made outside kb-sync, such
+# as the Obsidian Git plugin's.
+if git diff --cached -U0 | grep -qE '^\+(<{7}|>{7}|={7}$)'; then
+  echo "kb: conflict markers in staged files - resolve them first (nothing committed)" >&2
+  exit 1
+fi
+if [ -f tools/kb-money.pl ] && [ -z "${KB_MONEY_CHECKED:-}" ]; then
+  money=$(perl tools/kb-money.pl --staged); rc=$?
+  [ -n "$money" ] && echo "$money" | sed -n 's/^MONEY? /kb: may be a money amount, check it is not a figure: /p' >&2
+  if [ $rc = 1 ]; then
+    echo "kb: a money amount in staged files - record the fact, not the figure (nothing committed):" >&2
+    echo "$money" | sed -n 's/^MONEY /  /p' >&2
+    exit 1
+  fi
+fi
+exit 0

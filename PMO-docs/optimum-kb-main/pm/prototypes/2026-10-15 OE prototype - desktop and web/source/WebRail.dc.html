@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OE Web - Navigation rail</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0">
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle}
+</style>
+</helmet>
+<nav aria-label="Main" style="width: 96px; min-height: 836px; height: 100%; background: #FFF1EC; padding: 16px 0; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 14px; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px">
+<sc-for list="{{items}}" as="item" hint-placeholder-count="5">
+<a href="{{item.href}}" style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 88px; min-height: 56px; text-decoration: none; color: #241914">
+<span style="width: 56px; height: 32px; border-radius: 16px; background: {{item.pill}}; color: {{item.iconColor}}; display: flex; align-items: center; justify-content: center"><span class="ms" aria-hidden="true">{{item.icon}}</span></span>
+<sc-if value="{{item.hasBadge}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -4px; left: 52px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 9px; background: #BA1A1A; color: #FFFFFF; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{item.badge}}</span></sc-if>
+<span style="font-size: 12px; font-weight: {{item.weight}}; color: {{item.textColor}}; text-align: center">{{item.label}}</span>
+</a>
+</sc-for>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"role":{"editor":"enum","options":["sup","admin"],"default":"sup"},"sel":{"editor":"enum","options":["none","dash","wells","appr","reports","stock","users","rigs","thresholds","audit","products"],"default":"none"},"$preview":{"width":96,"height":836}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sel = this.props.sel || 'none';
+    const sup = [
+      { key: 'dash', icon: 'dashboard', label: 'Dashboard', href: 'WDashboard.dc.html' },
+      { key: 'wells', icon: 'oil_barrel', label: 'Wells', href: 'WWells.dc.html' },
+      { key: 'appr', icon: 'task_alt', label: 'Approvals', href: 'WApprovals.dc.html', badge: '5' },
+      { key: 'reports', icon: 'description', label: 'Reports', href: 'WReports.dc.html' },
+      { key: 'stock', icon: 'inventory_2', label: 'Inventory', href: 'WStock.dc.html' }
+    ];
+    const admin = [
+      { key: 'users', icon: 'group', label: 'Users', href: 'WUsers.dc.html' },
+      { key: 'rigs', icon: 'precision_manufacturing', label: 'Rigs', href: 'WRigs.dc.html' },
+      { key: 'thresholds', icon: 'tune', label: 'Thresholds', href: 'WThresholds.dc.html' },
+      { key: 'products', icon: 'category', label: 'Products', href: 'WProducts.dc.html' },
+      { key: 'audit', icon: 'history', label: 'Audit log', href: 'WAudit.dc.html' }
+    ];
+    const list = this.props.role === 'admin' ? admin : sup;
+    const items = list.map((d) => {
+      const on = d.key === sel;
+      return { ...d, hasBadge: !!d.badge, pill: on ? '#F6CD96' : 'transparent', iconColor: on ? '#521D00' : '#574238', textColor: on ? '#241914' : '#574238', weight: on ? '700' : '400' };
+    });
+    return { items };
+  }
+}
+</script>
+</body>
+</html>

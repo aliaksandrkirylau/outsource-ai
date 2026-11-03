@@ -1,0 +1,1115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Rig app - prototype v0</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1024px; position: relative; overflow: hidden; background: #EEF1F4; color: #17212B; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.45;">
+
+<sc-if value="{{ isSignin }}" hint-placeholder-val="{{ true }}">
+<div style="height: 1024px; box-sizing: border-box; padding-top: 170px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 20px;">
+  <div style="width: 460px; background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 12px; padding: 36px 36px 30px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px;">
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <span style="font-size: 13px; font-weight: 500; color: #4A5866; letter-spacing: 0.02em;">[Product name] · Rig app · Rig 07 computer</span>
+      <h1 style="margin: 0; font-size: 28px; font-weight: 600; letter-spacing: -0.01em;">Sign in</h1>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 8px; background: {{ connBg }}; color: {{ connFg }}; font-size: 14px;">
+      <span style="width: 10px; height: 10px; border-radius: 50%; margin-top: 6px; flex: none; background: {{ connDot }};"></span>
+      <span>{{ signinConn }}</span>
+    </div>
+    <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500;">Username
+      <input type="text" value="{{ signinName }}" onChange="{{ onSigninName }}" placeholder="name.surname" style="height: 44px; box-sizing: border-box; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: #17212B; background: #FFFFFF;">
+    </label>
+    <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500;">Password
+      <input type="password" placeholder="Any password works in this prototype" style="height: 44px; box-sizing: border-box; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: #17212B; background: #FFFFFF;">
+    </label>
+    <sc-if value="{{ hasSigninError }}" hint-placeholder-val="{{ false }}">
+      <div style="padding: 10px 12px; border-radius: 8px; background: #FDECEA; color: #A1251B; font-size: 14px;">{{ signinError }}</div>
+    </sc-if>
+    <button type="button" onClick="{{ signIn }}" style="height: 46px; border: 0; border-radius: 8px; background: #0B5CAD; color: #FFFFFF; font-family: 'IBM Plex Sans', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer;">Sign in</button>
+    <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 6px; border-top: 1px solid #E3E8ED;">
+      <span style="font-size: 13px; color: #4A5866; padding-top: 10px;">Signed in on this computer before</span>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <sc-for list="{{ knownUsers }}" as="u" hint-placeholder-count="2">
+          <button type="button" onClick="{{ u.pick }}" style="height: 40px; padding: 0 14px; border: 1px solid #C3CCD5; border-radius: 20px; background: #F6F8FA; color: #17212B; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; cursor: pointer;">{{ u.name }}</button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  <button type="button" onClick="{{ toggleOnline }}" style="height: 40px; padding: 0 16px; border: 1px dashed #8795A3; border-radius: 8px; background: transparent; color: #4A5866; font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; cursor: pointer;">Prototype only: {{ toggleLabel }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; height: 1024px;">
+
+  <nav aria-label="Modules" style="width: 232px; flex: none; background: #1C2733; color: #E8EDF2; display: flex; flex-direction: column; gap: 4px; padding: 20px 12px; box-sizing: border-box;">
+    <div style="padding: 4px 12px 22px; display: flex; flex-direction: column; gap: 2px;">
+      <span style="font-size: 16px; font-weight: 600;">[Product name]</span>
+      <span style="font-size: 12px; color: #A9B6C3;">Rig app · prototype v0</span>
+    </div>
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
+      <button type="button" onClick="{{ n.go }}" style="display: flex; align-items: center; justify-content: space-between; height: 44px; padding: 0 12px; border: 0; border-radius: 8px; background: {{ n.bg }}; color: {{ n.fg }}; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 500; text-align: left; cursor: pointer;">
+        <span>{{ n.label }}</span>
+        <span style="font-size: 11px; font-weight: 500; color: #C9D3DD; text-transform: uppercase; letter-spacing: 0.06em;">{{ n.tag }}</span>
+      </button>
+    </sc-for>
+    <div style="margin-top: auto; padding: 12px; border-top: 1px solid #2F3D4C; font-size: 12px; color: #A9B6C3; display: flex; flex-direction: column; gap: 2px;">
+      <span>Rig 07 · rig computer</span>
+      <span>English · 1440 × 1024</span>
+    </div>
+  </nav>
+
+  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
+
+    <header style="height: 64px; flex: none; box-sizing: border-box; background: #FFFFFF; border-bottom: 1px solid #D5DCE3; display: flex; align-items: center; gap: 24px; padding: 0 20px 0 24px; white-space: nowrap;">
+      <div style="display: flex; flex-direction: column; flex: none;">
+        <span style="font-size: 11px; color: #4A5866; text-transform: uppercase; letter-spacing: 0.06em;">Rig</span>
+        <span style="font-size: 15px; font-weight: 600;">Rig 07</span>
+      </div>
+      <div style="display: flex; flex-direction: column; flex: none;">
+        <span style="font-size: 11px; color: #4A5866; text-transform: uppercase; letter-spacing: 0.06em;">Job</span>
+        <span style="font-size: 15px; font-weight: 600;">{{ headerJob }}</span>
+      </div>
+      <div style="display: flex; flex-direction: column; flex: none;">
+        <span style="font-size: 11px; color: #4A5866; text-transform: uppercase; letter-spacing: 0.06em;">Shift</span>
+        <span style="font-size: 15px; font-weight: 600;">Day 06:00–18:00 · 16 Oct</span>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 12px; flex: none;">
+        <select value="{{ units }}" onChange="{{ onUnits }}" aria-label="Units" style="height: 40px; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 8px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; color: #17212B; background: #FFFFFF;">
+          <option value="oilfield">Oilfield (US)</option>
+          <option value="metric">Metric</option>
+          <option value="third" disabled="{{ yes }}">Third set (to confirm)</option>
+        </select>
+        <button type="button" onClick="{{ toggleOnline }}" aria-label="Sync status. Prototype: click to change the connection" style="display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border: 1px solid {{ syncBorder }}; border-radius: 8px; background: {{ syncBg }}; color: {{ syncFg }}; font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;">
+          <span style="width: 9px; height: 9px; border-radius: 50%; background: {{ connDot }};"></span>
+          <span>{{ syncLabel }}</span>
+        </button>
+        <button type="button" onClick="{{ signOut }}" aria-label="Switch engineer" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; height: 44px; padding: 0 12px; border: 1px solid #A9B4BF; border-radius: 8px; background: #FFFFFF; font-family: 'IBM Plex Sans', sans-serif; cursor: pointer; white-space: nowrap;">
+          <span style="font-size: 14px; font-weight: 600; color: #17212B;">{{ userName }}</span>
+          <span style="font-size: 12px; font-weight: 500; color: #0B5CAD;">Switch engineer</span>
+        </button>
+      </div>
+    </header>
+
+    <main style="flex: 1; min-height: 0; overflow: auto; padding: 24px 28px 32px; box-sizing: border-box;">
+
+      <sc-if value="{{ showBanner }}" hint-placeholder-val="{{ false }}">
+        <div role="alert" style="margin-bottom: 16px; padding: 12px 16px; border-radius: 8px; background: #FDECEA; border: 1px solid #F2A39B; color: #A1251B; font-size: 14px; font-weight: 500;">{{ bannerText }}</div>
+      </sc-if>
+
+      <sc-if value="{{ isJobs }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 18px; max-width: 1100px;">
+          <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <h1 style="margin: 0; font-size: 26px; font-weight: 600;">Jobs on this rig</h1>
+              <p style="margin: 0; color: #4A5866;">HQ opens jobs and assigns the engineers. You can also open a new job here; HQ sees it after the next sync.</p>
+            </div>
+            <button type="button" onClick="{{ newJob }}" style="height: 44px; padding: 0 18px; border: 1px solid #0B5CAD; border-radius: 8px; background: #FFFFFF; color: #0B5CAD; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; flex: none;">New job</button>
+          </div>
+          <sc-for list="{{ jobs }}" as="j" hint-placeholder-count="2">
+            <div style="background: #FFFFFF; border: 1px solid {{ j.border }}; border-radius: 10px; padding: 18px 20px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) auto; gap: 16px; align-items: center;">
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #4A5866;">{{ j.id }}</span>
+                <span style="font-size: 17px; font-weight: 600;">Well {{ j.well }}</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <span style="font-size: 12px; color: #4A5866;">Operator</span>
+                <span>{{ j.operator }}</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <span style="font-size: 12px; color: #4A5866;">Hole section</span>
+                <span>{{ j.section }}</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <span style="font-size: 12px; color: #4A5866;">Engineers</span>
+                <span>{{ j.engineers }}</span>
+              </div>
+              <div>
+                <span style="display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: 500; background: {{ j.statusBg }}; color: {{ j.statusFg }};">{{ j.status }}</span>
+              </div>
+              <button type="button" onClick="{{ j.open }}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 8px; background: #0B5CAD; color: #FFFFFF; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;">Open</button>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isJob }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 18px; max-width: 1100px;">
+          <button type="button" onClick="{{ toJobs }}" style="align-self: flex-start; height: 36px; padding: 0; border: 0; background: transparent; color: #0B5CAD; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer;">← All jobs</button>
+          <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <h1 style="margin: 0; font-size: 26px; font-weight: 600;">{{ jobTitle }}</h1>
+              <p style="margin: 0; color: #4A5866;">{{ jobIntro }}</p>
+            </div>
+            <div style="display: flex; gap: 10px; flex: none;">
+              <sc-if value="{{ jobIsExisting }}" hint-placeholder-val="{{ true }}">
+                <button type="button" onClick="{{ toDayToday }}" style="height: 44px; padding: 0 16px; border: 1px solid #A9B4BF; border-radius: 8px; background: #FFFFFF; color: #17212B; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer;">Today's mud checks</button>
+              </sc-if>
+              <button type="button" onClick="{{ saveJob }}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 8px; background: #0B5CAD; color: #FFFFFF; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;">{{ saveJobLabel }}</button>
+            </div>
+          </div>
+          <sc-if value="{{ hasJobError }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 10px 14px; border-radius: 8px; background: #FDECEA; color: #A1251B; font-size: 14px;">{{ jobError }}</div>
+          </sc-if>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start;">
+            <section style="background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <h2 style="margin: 0; font-size: 16px; font-weight: 600;">Set at HQ</h2>
+                <span style="font-size: 13px; color: #4A5866;">{{ hqNote }}</span>
+              </div>
+              <sc-for list="{{ hqFields }}" as="f" hint-placeholder-count="8">
+                <div style="display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 12px; align-items: center; min-height: 40px;">
+                  <span style="font-size: 14px; color: #4A5866;">{{ f.label }}</span>
+                  <sc-if value="{{ f.editable }}" hint-placeholder-val="{{ false }}">
+                    <input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" aria-label="{{ f.label }}" style="height: 40px; box-sizing: border-box; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 10px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: #17212B; background: #FFFFFF;">
+                  </sc-if>
+                  <sc-if value="{{ f.readonly }}" hint-placeholder-val="{{ true }}">
+                    <span style="display: flex; align-items: center; gap: 8px; font-size: 15px;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A5866" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+                      <span>{{ f.value }}</span>
+                    </span>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </section>
+            <section style="background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <h2 style="margin: 0; font-size: 16px; font-weight: 600;">Entered at the rig</h2>
+                <span style="font-size: 13px; color: #4A5866;">Kept up to date by the engineers on shift.</span>
+              </div>
+              <sc-for list="{{ rigFields }}" as="f" hint-placeholder-count="6">
+                <label style="display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 12px; align-items: center; min-height: 40px;">
+                  <span style="font-size: 14px; color: #4A5866;">{{ f.label }}</span>
+                  <input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" style="height: 40px; box-sizing: border-box; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 10px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: #17212B; background: #FFFFFF;">
+                </label>
+              </sc-for>
+            </section>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCheck }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <button type="button" onClick="{{ toDayToday }}" style="align-self: flex-start; height: 30px; padding: 0; border: 0; background: transparent; color: #0B5CAD; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer;">← Today's mud checks</button>
+              <h1 style="margin: 0; font-size: 26px; font-weight: 600;">{{ checkTitle }}</h1>
+              <p style="margin: 0; color: #4A5866;">{{ checkSub }}</p>
+            </div>
+            <div style="display: flex; align-items: flex-end; gap: 14px; flex: none;">
+              <label style="display: flex; flex-direction: column; gap: 5px; font-size: 13px; font-weight: 500;">Check time
+                <input type="time" value="{{ metaTime }}" onChange="{{ onMetaTime }}" style="height: 42px; box-sizing: border-box; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 10px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; color: #17212B; background: #FFFFFF;">
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 5px; font-size: 13px; font-weight: 500;">Sample from
+                <select value="{{ metaSample }}" onChange="{{ onMetaSample }}" style="height: 42px; min-width: 160px; border: 1px solid #A9B4BF; border-radius: 8px; padding: 0 10px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: #17212B; background: #FFFFFF;">
+                  <option value="Flowline">Flowline</option>
+                  <option value="Active pit">Active pit</option>
+                  <option value="Suction pit">Suction pit</option>
+                  <option value="Reserve pit">Reserve pit</option>
+                </select>
+              </label>
+              <button type="button" onClick="{{ fillExample }}" style="height: 42px; padding: 0 14px; border: 1px dashed #8795A3; border-radius: 8px; background: transparent; color: #4A5866; font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; cursor: pointer;">Prototype: fill example values</button>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+            <sc-for list="{{ groups }}" as="g" hint-placeholder-count="6">
+              <section style="grid-column: span {{ g.span }}; background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0;">
+                <h2 style="margin: 0; font-size: 15px; font-weight: 600;">{{ g.title }}</h2>
+                <div style="display: grid; grid-template-columns: repeat({{ g.cols }}, minmax(0, 1fr)); gap: 12px 14px;">
+                  <sc-for list="{{ g.fields }}" as="f" hint-placeholder-count="3">
+                    <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+                      <span style="font-size: 13px; font-weight: 500;">{{ f.label }}<span style="color: #A1251B;">{{ f.req }}</span></span>
+                      <sc-if value="{{ f.isInput }}" hint-placeholder-val="{{ true }}">
+                        <span style="display: flex; align-items: center; gap: 6px; height: 42px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; border: {{ f.bw }} solid {{ f.border }}; background: {{ f.bg }};">
+                          <input type="text" value="{{ f.val }}" onChange="{{ f.onChange }}" aria-label="{{ f.aria }}" style="flex: 1; min-width: 0; width: 100%; border: 0; outline: none; padding: 0; background: transparent; font-family: 'IBM Plex Mono', monospace; font-size: 15px; color: #17212B;">
+                          <span style="font-size: 12px; color: #4A5866; white-space: nowrap;">{{ f.unit }}</span>
+                        </span>
+                      </sc-if>
+                      <sc-if value="{{ f.isCalc }}" hint-placeholder-val="{{ false }}">
+                        <span style="display: flex; align-items: center; gap: 6px; height: 42px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; border: {{ f.bw }} dashed {{ f.border }}; background: {{ f.calcBg }};">
+                          <span style="flex: 1; min-width: 0; font-family: 'IBM Plex Mono', monospace; font-size: 15px; color: #17212B;">{{ f.val }}</span>
+                          <span style="font-size: 12px; color: #4A5866; white-space: nowrap;">{{ f.unit }}</span>
+                        </span>
+                      </sc-if>
+                      <span style="font-size: 12px; line-height: 1.35; color: {{ f.msgColor }}; font-weight: {{ f.msgWeight }};">{{ f.msg }}</span>
+                    </label>
+                  </sc-for>
+                </div>
+              </section>
+            </sc-for>
+          </div>
+          <section aria-label="Calculated from this check" style="background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;">
+              <h2 style="margin: 0; font-size: 15px; font-weight: 600;">Calculated from this check</h2>
+              <span style="font-size: 12px; color: #4A5866;">Updates as you type · stored with the check when it is saved</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 14px;">
+              <sc-for list="{{ calcCards }}" as="k" hint-placeholder-count="8">
+                <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0; padding: 10px 12px; border-radius: 8px; background: #F6F8FA; border: 1px dashed #A9B4BF;">
+                  <span style="font-size: 13px; font-weight: 500;">{{ k.label }}</span>
+                  <span style="display: flex; align-items: baseline; gap: 6px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; color: #17212B;">{{ k.val }}</span><span style="font-size: 12px; color: #4A5866;">{{ k.unit }}</span></span>
+                  <span style="font-size: 12px; color: #4A5866;">{{ k.src }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <sc-if value="{{ calcWarn }}" hint-placeholder-val="{{ false }}">
+              <div role="status" style="padding: 10px 14px; border-radius: 8px; background: #FEF3E2; color: #8A3B00; font-size: 14px;">{{ calcWarnText }}</div>
+            </sc-if>
+            <p style="margin: 0; font-size: 12px; line-height: 1.5; color: #4A5866;">{{ methodLine }}</p>
+          </section>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isDay }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <h1 style="margin: 0; font-size: 26px; font-weight: 600;">Mud checks · {{ dayTitle }}</h1>
+              <p style="margin: 0; color: #4A5866;">Reporting day 06:00 to 06:00 · four checks a day, two per shift · Job {{ headerJob }}</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; flex: none;">
+              <div role="group" aria-label="Day" style="display: flex; border: 1px solid #A9B4BF; border-radius: 8px; overflow: hidden;">
+                <sc-for list="{{ dayTabs }}" as="t" hint-placeholder-count="2">
+                  <button type="button" onClick="{{ t.pick }}" style="height: 42px; padding: 0 16px; border: 0; background: {{ t.bg }}; color: {{ t.fg }}; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer;">{{ t.label }}</button>
+                </sc-for>
+              </div>
+              <button type="button" onClick="{{ newCheck }}" disabled="{{ noNewCheck }}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 8px; background: {{ newCheckBg }}; color: {{ newCheckFg }}; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;">{{ newCheckLabel }}</button>
+            </div>
+          </div>
+          <div style="background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; overflow: hidden; font-size: 14px;">
+            <div style="display: grid; grid-template-columns: 260px 110px repeat(4, minmax(0, 1fr)); background: #F6F8FA; border-bottom: 1px solid #D5DCE3;">
+              <div style="padding: 12px 16px; font-weight: 600;">Property</div>
+              <div style="padding: 12px 12px; font-weight: 600;">Unit</div>
+              <sc-for list="{{ dayCols }}" as="c" hint-placeholder-count="4">
+                <div style="padding: 10px 16px; border-left: 1px solid #E3E8ED; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
+                  <span style="font-weight: 600; font-size: 14px;">{{ c.title }}</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px;">{{ c.time }}</span>
+                  <span style="font-size: 12px; color: #4A5866;">{{ c.who }}</span>
+                  <span style="font-size: 12px; font-weight: 500; padding: 1px 8px; border-radius: 10px; background: {{ c.chipBg }}; color: {{ c.chipFg }};">{{ c.chip }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <sc-for list="{{ dayRows }}" as="r" hint-placeholder-count="12">
+              <sc-if value="{{ r.isHead }}" hint-placeholder-val="{{ false }}">
+                <div style="padding: 10px 16px 6px; font-size: 12px; font-weight: 600; color: #4A5866; text-transform: uppercase; letter-spacing: 0.06em; background: #FBFCFD; border-bottom: 1px solid #E3E8ED;">{{ r.label }}</div>
+              </sc-if>
+              <sc-if value="{{ r.isRow }}" hint-placeholder-val="{{ true }}">
+                <div style="display: grid; grid-template-columns: 260px 110px repeat(4, minmax(0, 1fr)); border-bottom: 1px solid #EEF1F4;">
+                  <div style="padding: 7px 16px; font-weight: 500;">{{ r.label }}</div>
+                  <div style="padding: 7px 12px; color: #4A5866; font-size: 13px;">{{ r.unit }}</div>
+                  <sc-for list="{{ r.cells }}" as="x" hint-placeholder-count="4">
+                    <div style="padding: 7px 16px; text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 14px; border-left: 1px solid #E3E8ED; background: {{ x.bg }}; color: {{ x.fg }}; font-weight: {{ x.fw }};">{{ x.text }}</div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </sc-for>
+          </div>
+          <p style="margin: 0; font-size: 12px; line-height: 1.5; color: #4A5866;">{{ methodLine }}</p>
+          <section style="background: #FFFFFF; border: 1px solid #D5DCE3; border-radius: 10px; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px;">
+            <h2 style="margin: 0; font-size: 15px; font-weight: 600;">Values outside the range, with the engineers' reasons</h2>
+            <sc-if value="{{ noFlags }}" hint-placeholder-val="{{ false }}">
+              <span style="color: #4A5866; font-size: 14px;">None on this day.</span>
+            </sc-if>
+            <sc-for list="{{ flagsList }}" as="fl" hint-placeholder-count="2">
+              <div style="display: grid; grid-template-columns: 200px 300px minmax(0, 1fr); gap: 16px; padding: 10px 0; border-top: 1px solid #EEF1F4; font-size: 14px;">
+                <span style="color: #4A5866;">{{ fl.where }}</span>
+                <span style="display: flex; flex-direction: column;"><span style="font-weight: 600; color: #8A3B00;">{{ fl.what }}</span><span style="font-size: 12px; color: #4A5866;">{{ fl.range }}</span></span>
+                <span style="display: flex; flex-direction: column;"><span>“{{ fl.reason }}”</span><span style="font-size: 12px; color: #4A5866;">{{ fl.who }}</span></span>
+              </div>
+            </sc-for>
+            <span style="font-size: 13px; color: #4A5866; padding-top: 4px;">A saved check is locked. A correction goes to HQ for approval.</span>
+          </section>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isModule }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 4px; max-width: 820px;">
+            <h1 style="margin: 0; font-size: 26px; font-weight: 600;">{{ moduleTitle }}</h1>
+            <p style="margin: 0; color: #4A5866;">{{ moduleWhat }}</p>
+          </div>
+          <div style="height: 640px; border: 2px dashed #A9B4BF; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #4A5866; font-size: 16px; background: #F6F8FA;">{{ moduleWhen }}</div>
+        </div>
+      </sc-if>
+
+    </main>
+
+    <sc-if value="{{ isCheck }}" hint-placeholder-val="{{ false }}">
+      <div style="height: 72px; flex: none; box-sizing: border-box; background: #FFFFFF; border-top: 1px solid #D5DCE3; display: flex; align-items: center; gap: 16px; padding: 0 28px;">
+        <span style="font-size: 14px; color: #4A5866;">{{ countEntered }}</span>
+        <span style="font-size: 14px; font-weight: 600; color: {{ flagCountColor }};">{{ countFlag }}</span>
+        <span style="font-size: 14px; font-weight: 600; color: {{ blockCountColor }};">{{ countBlock }}</span>
+        <div style="margin-left: auto; display: flex; gap: 10px;">
+          <button type="button" onClick="{{ clearDraft }}" style="height: 44px; padding: 0 16px; border: 1px solid #A9B4BF; border-radius: 8px; background: #FFFFFF; color: #17212B; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; cursor: pointer;">Clear</button>
+          <button type="button" onClick="{{ saveCheck }}" style="height: 44px; padding: 0 22px; border: 0; border-radius: 8px; background: #0B5CAD; color: #FFFFFF; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;">Save check</button>
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+
+<sc-if value="{{ showReasons }}" hint-placeholder-val="{{ false }}">
+  <div style="position: absolute; inset: 0; background: rgba(23, 33, 43, 0.5); display: flex; align-items: center; justify-content: center;">
+    <div role="dialog" aria-modal="true" aria-label="Reasons for values outside the range" style="width: 680px; max-height: 820px; overflow: auto; box-sizing: border-box; background: #FFFFFF; border-radius: 12px; padding: 28px 30px; display: flex; flex-direction: column; gap: 16px;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <h2 style="margin: 0; font-size: 21px; font-weight: 600;">{{ reasonsTitle }}</h2>
+        <p style="margin: 0; color: #4A5866;">{{ reasonsLead }}</p>
+      </div>
+      <sc-for list="{{ flaggedList }}" as="r" hint-placeholder-count="1">
+        <label style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: 10px; background: #FEF3E2; border: 1px solid #F0B35A;">
+          <span style="display: flex; justify-content: space-between; gap: 12px;">
+            <span style="font-weight: 600; color: #8A3B00;">{{ r.label }}: {{ r.value }}</span>
+            <span style="font-size: 13px; color: #6B3A0A;">{{ r.range }}</span>
+          </span>
+          <textarea value="{{ r.reason }}" onChange="{{ r.onChange }}" placeholder="Why, and what you are doing about it" style="min-height: 64px; box-sizing: border-box; border: 1px solid #C98A3A; border-radius: 8px; padding: 8px 10px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; color: #17212B; background: #FFFFFF; resize: vertical;"></textarea>
+        </label>
+      </sc-for>
+      <div style="display: flex; justify-content: flex-end; gap: 10px; padding-top: 4px;">
+        <button type="button" onClick="{{ closeReasons }}" style="height: 44px; padding: 0 16px; border: 1px solid #A9B4BF; border-radius: 8px; background: #FFFFFF; color: #17212B; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; cursor: pointer;">Back to the check</button>
+        <button type="button" onClick="{{ saveFlagged }}" disabled="{{ reasonsIncomplete }}" style="height: 44px; padding: 0 20px; border: 0; border-radius: 8px; background: {{ saveFlaggedBg }}; color: {{ saveFlaggedFg }}; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;">Save as flagged</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+  <div role="status" style="position: absolute; bottom: 88px; right: 28px; padding: 12px 18px; border-radius: 8px; background: #17212B; color: #FFFFFF; font-size: 14px; font-weight: 500;">{{ toast }}</div>
+</sc-if>
+
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"start":{"editor":"enum","options":["signin","jobs","check","day"],"default":"signin"},"$preview":{"width":1440,"height":1024}}'>
+class Component extends DCLogic {
+  defs() {
+    return [
+      { id: 'md', label: 'Measured depth', q: 'depth', dp: 0, dpm: 0, lo: 0, hi: 40000, req: true, g: 'depth' },
+      { id: 'bit', label: 'Bit depth', q: 'depth', dp: 0, dpm: 0, lo: 0, hi: 40000, g: 'depth' },
+      { id: 'tvd', label: 'True vertical depth', q: 'depth', dp: 0, dpm: 0, lo: 0, hi: 40000, g: 'depth' },
+      { id: 'dens', label: 'Density', q: 'dens', dp: 1, dpm: 2, lo: 6.5, hi: 22, min: 9.8, max: 10.8, req: true, g: 'dens' },
+      { id: 'fv', label: 'Funnel viscosity', q: 'fv', dp: 0, dpm: 0, lo: 26, hi: 300, g: 'dens' },
+      { id: 'ttemp', label: 'Test temperature', q: 'temp', dp: 0, dpm: 0, lo: 32, hi: 400, g: 'dens' },
+      { id: 'rtemp', label: 'Rheology temperature', q: 'temp', dp: 0, dpm: 0, lo: 32, hi: 250, g: 'dens' },
+      { id: 'r600', label: '600 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo' },
+      { id: 'r300', label: '300 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo' },
+      { id: 'r200', label: '200 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo' },
+      { id: 'r100', label: '100 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo' },
+      { id: 'r60', label: '60 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo' },
+      { id: 'r30', label: '30 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo' },
+      { id: 'r6', label: '6 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo' },
+      { id: 'r3', label: '3 RPM', q: 'dial', dp: 0, dpm: 0, lo: 0, hi: 300, g: 'rheo' },
+      { id: 'pv', label: 'Plastic viscosity', q: 'visc', dp: 0, dpm: 0, lo: 0, hi: 200, min: 12, max: 26, g: 'rheo', calc: true, how: 'Calculated: 600 RPM − 300 RPM', bad: 'Not possible: check the 600 and 300 RPM readings' },
+      { id: 'yp', label: 'Yield point', q: 'stress', dp: 0, dpm: 1, lo: 0, hi: 200, min: 12, max: 24, g: 'rheo', calc: true, how: 'Calculated: 300 RPM − plastic viscosity', bad: 'Not possible: check the 600 and 300 RPM readings' },
+      { id: 'g10s', label: '10 s gel', q: 'stress', dp: 0, dpm: 1, lo: 0, hi: 200, min: 3, max: 12, g: 'rheo' },
+      { id: 'g10m', label: '10 min gel', q: 'stress', dp: 0, dpm: 1, lo: 0, hi: 200, min: 6, max: 25, g: 'rheo' },
+      { id: 'fl', label: 'API filtrate', q: 'fl', dp: 1, dpm: 1, lo: 0, hi: 200, max: 5, g: 'filt' },
+      { id: 'cake', label: 'API filter cake', q: 'cake', dp: 0, dpm: 1, lo: 0, hi: 32, max: 2, g: 'filt' },
+      { id: 'water', label: 'Retort water', q: 'pct', dp: 1, dpm: 1, lo: 0, hi: 100, g: 'sol' },
+      { id: 'oil', label: 'Retort oil', q: 'pct', dp: 1, dpm: 1, lo: 0, hi: 100, g: 'sol' },
+      { id: 'solids', label: 'Retort solids', q: 'pct', dp: 1, dpm: 1, lo: 0, hi: 100, max: 14, g: 'sol', calc: true, how: 'Calculated: 100 − water − oil', bad: 'Not possible: check retort water and oil' },
+      { id: 'sand', label: 'Sand', q: 'pct', dp: 2, dpm: 2, lo: 0, hi: 100, max: 0.5, g: 'sol' },
+      { id: 'ph', label: 'pH', q: 'none', dp: 1, dpm: 1, lo: 0, hi: 14, min: 9.5, max: 11, g: 'chem' },
+      { id: 'pm', label: 'Pm', q: 'titr', dp: 2, dpm: 2, lo: 0, hi: 50, g: 'chem' },
+      { id: 'pf', label: 'Pf', q: 'titr', dp: 2, dpm: 2, lo: 0, hi: 50, g: 'chem' },
+      { id: 'mf', label: 'Mf', q: 'titr', dp: 2, dpm: 2, lo: 0, hi: 50, g: 'chem' },
+      { id: 'lime', label: 'Excess lime', q: 'conc', dp: 2, dpm: 1, lo: 0, hi: 50, g: 'chem', calc: true, how: 'Calculated: 0.26 × (Pm − water fraction × Pf)', bad: 'Not possible: below zero. Check Pm, Pf and retort water' },
+      { id: 'hard', label: 'Hardness', q: 'mgl', dp: 0, dpm: 0, lo: 0, hi: 100000, max: 400, g: 'chem' },
+      { id: 'cl', label: 'Chlorides', q: 'mgl', dp: 0, dpm: 0, lo: 0, hi: 200000, max: 30000, g: 'chem' },
+      { id: 'mbt', label: 'MBT', q: 'conc', dp: 1, dpm: 0, lo: 0, hi: 100, max: 22.5, g: 'chem' },
+      { id: 'np', label: 'n, pipe', q: 'none', dp: 2, dpm: 2, g: 'calc', calc: true, extra: true, src: 'Figure 2-3, from 600 and 300 RPM' },
+      { id: 'kp', label: 'K, pipe', q: 'cons', dp: 2, dpm: 2, g: 'calc', calc: true, extra: true, src: 'Figure 2-3' },
+      { id: 'na', label: 'n, annulus', q: 'none', dp: 2, dpm: 2, g: 'calc', calc: true, extra: true, src: 'Figure 2-1, from 300 and 3 RPM' },
+      { id: 'ka', label: 'K, annulus', q: 'cons', dp: 2, dpm: 2, g: 'calc', calc: true, extra: true, src: 'Figure 2-1' },
+      { id: 'vlg', label: 'Low-gravity solids by volume', q: 'pct', dp: 1, dpm: 1, g: 'calc', calc: true, extra: true, src: 'Equation 10-6' },
+      { id: 'clg', label: 'Low-gravity solids concentration', q: 'conc', dp: 1, dpm: 0, g: 'calc', calc: true, extra: true, src: 'Equation 10-8' },
+      { id: 'vb', label: 'Barite by volume', q: 'pct', dp: 1, dpm: 1, g: 'calc', calc: true, extra: true, src: 'Equation 10-7' },
+      { id: 'cb', label: 'Barite concentration', q: 'conc', dp: 1, dpm: 0, g: 'calc', calc: true, extra: true, src: 'Equation 10-8' }
+    ];
+  }
+
+  groupDefs() {
+    return [
+      { id: 'depth', title: 'Depth', cols: 3, span: 1 },
+      { id: 'dens', title: 'Density, funnel viscosity and temperature', cols: 2, span: 1 },
+      { id: 'rheo', title: 'Rheology', cols: 6, span: 2 },
+      { id: 'filt', title: 'Filtration', cols: 2, span: 1 },
+      { id: 'sol', title: 'Solids', cols: 2, span: 1 },
+      { id: 'chem', title: 'Chemistry', cols: 4, span: 2 },
+      { id: 'calc', title: 'Calculated: your procedures, power law', panel: true }
+    ];
+  }
+
+  // Values worked out from a check, in oilfield units. PV, YP and excess lime as API RP 13B-1 defines them;
+  // retort solids, n and K (power law) and the solids analysis from the client's samples: Equations 10-4 to
+  // 10-8, Figures 2-1 (annulus) and 2-3 (pipe). K is converted from dyne·s^n/cm² to lbf·s^n/100 ft².
+  calcs(v) {
+    const ok = (x) => typeof x === 'number' && !isNaN(x);
+    const pos = (x) => ok(x) && x > 0;
+    const lg = Math.log10;
+    const out = Object.assign({}, v);
+    out.pv = ok(v.r600) && ok(v.r300) ? v.r600 - v.r300 : null;
+    out.yp = out.pv !== null ? v.r300 - out.pv : null;
+    const oil = ok(v.oil) ? v.oil : 0;
+    out.solids = ok(v.water) ? 100 - v.water - oil : null;
+    out.lime = ok(v.pm) && ok(v.pf) && ok(v.water) ? 0.26 * (v.pm - v.water / 100 * v.pf) : null;
+    out.np = out.kp = out.na = out.ka = null;
+    if (pos(v.r600) && pos(v.r300)) { out.np = 3.32 * lg(v.r600 / v.r300); out.kp = 5.11 * v.r600 / Math.pow(1022, out.np) / 4.788; }
+    if (pos(v.r300) && pos(v.r3)) { out.na = 0.5 * lg(v.r300 / v.r3); out.ka = 5.11 * v.r300 / Math.pow(511, out.na) / 4.788; }
+    out.vlg = out.clg = out.vb = out.cb = null;
+    if (out.solids !== null && out.solids >= 0 && ok(v.dens) && ok(v.cl)) {
+      const rb = 4.2, rlg = 2.6, ro = 0.84;
+      const vss = out.solids - v.water * (v.cl / (1680000 - 1.21 * v.cl));
+      const rf = 1 + 0.00000109 * v.cl;
+      out.vlg = (100 * rf + (rb - rf) * vss - 12 * v.dens - (rf - ro) * oil) / (rb - rlg);
+      out.vb = vss - out.vlg;
+      out.clg = 3.5 * rlg * out.vlg;
+      out.cb = 3.5 * rb * out.vb;
+    }
+    return out;
+  }
+
+  methodLine(set) {
+    return 'How the calculated values are worked out, from your procedures, not yet verified against worked examples: plastic viscosity, yield point and excess lime as API RP 13B-1 defines them; retort solids by your Equation 10-4. Power law: n and K for the pipe from the 600 and 300 RPM readings (Figure 2-3), for the annulus from 300 and 3 RPM (Figure 2-1); K converted from dyne·sⁿ/cm² to lbf·sⁿ/100 ft², as on your daily report' + (set === 'metric' ? ', and shown here in Pa·sⁿ' : '') + '. Solids: Equations 10-5 to 10-8, with barite SG 4.2, low-gravity solids SG 2.6, oil SG 0.84, the constant 3.50, and the filtrate density from chlorides as sodium chloride.';
+  }
+
+  unit(q, set) {
+    const U = {
+      oilfield: { depth: 'ft', dens: 'ppg', temp: '°F', dial: 'dial', visc: 'cP', stress: 'lbf/100ft²', fl: 'cc/30 min', cake: '1/32 in', pct: '%', none: '', titr: 'cc', conc: 'lb/bbl', mgl: 'mg/L', fv: 's/qt', cons: 'lbf·sⁿ/100ft²' },
+      metric: { depth: 'm', dens: 'SG', temp: '°C', dial: 'dial', visc: 'mPa·s', stress: 'Pa', fl: 'mL/30 min', cake: 'mm', pct: '%', none: '', titr: 'mL', conc: 'kg/m³', mgl: 'mg/L', fv: 's/qt', cons: 'Pa·sⁿ' }
+    };
+    return (U[set] || U.oilfield)[q];
+  }
+
+  toDisp(q, v, set) {
+    if (set !== 'metric' || typeof v !== 'number') return v;
+    if (q === 'depth') return v * 0.3048;
+    if (q === 'dens') return v / 8.345;
+    if (q === 'temp') return (v - 32) * 5 / 9;
+    if (q === 'stress' || q === 'cons') return v * 0.4788;
+    if (q === 'conc') return v * 2.853;
+    if (q === 'cake') return v * 0.79375;
+    return v;
+  }
+
+  toBase(q, v, set) {
+    if (set !== 'metric' || typeof v !== 'number') return v;
+    if (q === 'depth') return v / 0.3048;
+    if (q === 'dens') return v * 8.345;
+    if (q === 'temp') return v * 9 / 5 + 32;
+    if (q === 'stress' || q === 'cons') return v / 0.4788;
+    if (q === 'conc') return v / 2.853;
+    if (q === 'cake') return v / 0.79375;
+    return v;
+  }
+
+  fmt(v, dp) {
+    return Number(v).toLocaleString('en-US', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+
+  dpFor(d, set) { return set === 'metric' ? d.dpm : d.dp; }
+
+  num(raw) {
+    if (raw === undefined || raw === null) return null;
+    const t = String(raw).replace(/,/g, '').trim();
+    if (t === '') return null;
+    const n = Number(t);
+    return isFinite(n) ? n : NaN;
+  }
+
+  known() {
+    return [
+      { username: 'faisal.rahman', name: 'Faisal Rahman' },
+      { username: 'daniel.okafor', name: 'Daniel Okafor' }
+    ];
+  }
+
+  userName(u) {
+    const k = this.known().find((x) => x.username === u);
+    return k ? k.name : (u || '');
+  }
+
+  seedJobs() {
+    return [
+      {
+        id: 'J-0142', status: 'Active',
+        hq: { job: 'J-0142', operator: 'Example Operator Co.', contractor: 'Example Drilling Co.', rig: 'Rig 07', well: 'EX-14', field: 'Block 9', lease: 'North Area', region: 'Eastern Province', country: 'Saudi Arabia', spud: '30 Sep 2026', engineers: 'Faisal Rahman, Daniel Okafor' },
+        rig: { mudType: 'Water-based', mudSystem: 'KCl polymer', section: '12-1/4 in hole', activity: 'Drilling ahead', companyRep: 'A. Karim', contractorRep: 'M. Novak' }
+      },
+      {
+        id: 'J-0127', status: 'Closed',
+        hq: { job: 'J-0127', operator: 'Example Operator Co.', contractor: 'Example Drilling Co.', rig: 'Rig 07', well: 'EX-09', field: 'Block 9', lease: 'North Area', region: 'Eastern Province', country: 'Saudi Arabia', spud: '02 Aug 2026', engineers: 'Faisal Rahman, Daniel Okafor' },
+        rig: { mudType: 'Water-based', mudSystem: 'KCl polymer', section: '8-1/2 in hole', activity: 'Rig released', companyRep: 'A. Karim', contractorRep: 'M. Novak' }
+      }
+    ];
+  }
+
+  seedDays() {
+    const c = (time, sample, eng, synced, values, flags) => ({ time, sample, eng, synced, values: this.calcs(values), flags: flags || {} });
+    return {
+      '15': [
+        c('06:30', 'Flowline', 'Faisal Rahman', true, { md: 7420, bit: 7420, tvd: 7105, dens: 10.2, fv: 45, ttemp: 110, rtemp: 120, r600: 52, r300: 34, r200: 27, r100: 19, r60: 15, r30: 11, r6: 6, r3: 5, g10s: 6, g10m: 12, fl: 4.6, cake: 1, water: 89, oil: 0, sand: 0.25, ph: 10.1, pm: 0.9, pf: 0.4, mf: 1.1, hard: 240, cl: 28000, mbt: 12.5 }),
+        c('12:30', 'Flowline', 'Faisal Rahman', true, { md: 7655, bit: 7655, tvd: 7320, dens: 10.3, fv: 46, ttemp: 115, rtemp: 120, r600: 54, r300: 35, r200: 28, r100: 20, r60: 16, r30: 12, r6: 6, r3: 5, g10s: 6, g10m: 13, fl: 4.8, cake: 1, water: 88, oil: 0, sand: 0.3, ph: 10.0, pm: 0.8, pf: 0.35, mf: 1.0, hard: 260, cl: 29000, mbt: 13 }),
+        c('18:30', 'Flowline', 'Daniel Okafor', true, { md: 7890, bit: 7890, tvd: 7535, dens: 10.4, fv: 48, ttemp: 118, rtemp: 120, r600: 58, r300: 37, r200: 30, r100: 21, r60: 17, r30: 12, r6: 7, r3: 6, g10s: 7, g10m: 15, fl: 5.4, cake: 2, water: 87.5, oil: 0, sand: 0.3, ph: 9.9, pm: 0.8, pf: 0.3, mf: 1.0, hard: 280, cl: 29500, mbt: 14 }, { fl: 'Filtrate rising in the new formation. Added fluid-loss polymer; re-test at the next check.' }),
+        c('00:30 (16 Oct)', 'Active pit', 'Daniel Okafor', true, { md: 8105, bit: 8105, tvd: 7730, dens: 10.4, fv: 47, ttemp: 120, rtemp: 120, r600: 56, r300: 36, r200: 29, r100: 20, r60: 16, r30: 11, r6: 6, r3: 5, g10s: 6, g10m: 14, fl: 4.9, cake: 1, water: 87.2, oil: 0, sand: 0.3, ph: 10.0, pm: 0.85, pf: 0.35, mf: 1.05, hard: 300, cl: 30500, mbt: 14 }, { cl: 'Chlorides up after a salt stringer at 8,060 ft. Dilution started.' })
+      ],
+      '16': [
+        c('06:40', 'Flowline', 'Faisal Rahman', false, { md: 8240, bit: 8240, tvd: 7855, dens: 10.4, fv: 47, ttemp: 118, rtemp: 120, r600: 55, r300: 35, r200: 28, r100: 20, r60: 15, r30: 11, r6: 6, r3: 5, g10s: 6, g10m: 14, fl: 4.7, cake: 1, water: 87.1, oil: 0, sand: 0.3, ph: 10.2, pm: 0.9, pf: 0.4, mf: 1.1, hard: 280, cl: 29800, mbt: 14.5 })
+      ]
+    };
+  }
+
+  example() {
+    return { md: '8460', bit: '8460', tvd: '8050', dens: '10.5', fv: '47', ttemp: '118', rtemp: '120', r600: '57', r300: '36', r200: '29', r100: '21', r60: '16', r30: '12', r6: '6', r3: '5', g10s: '6', g10m: '14', fl: '4.7', cake: '1', water: '87', oil: '0', sand: '0.3', ph: '11.4', pm: '1.4', pf: '0.7', mf: '1.3', hard: '220', cl: '29600', mbt: '14.5' };
+  }
+
+  exampleDraft() {
+    const ex = this.example();
+    const out = {};
+    Object.keys(ex).forEach((k) => { out[k] = { raw: ex[k], set: 'oilfield' }; });
+    return out;
+  }
+
+  defaults() {
+    const start = this.props.start || 'signin';
+    const inApp = start !== 'signin';
+    return {
+      screen: start,
+      user: inApp ? 'faisal.rahman' : null,
+      online: false,
+      lastSync: '16 Oct 00:50',
+      pending: 1,
+      units: 'oilfield',
+      jobs: this.seedJobs(),
+      jobId: 'J-0142',
+      jobForm: null,
+      jobMode: 'view',
+      jobError: '',
+      days: this.seedDays(),
+      viewDay: start === 'day' ? '15' : '16',
+      draft: start === 'check' ? this.exampleDraft() : {},
+      meta: { time: start === 'check' ? '12:40' : '', sample: 'Flowline' },
+      reasons: {},
+      tried: false,
+      showReasons: false,
+      module: 'dashboard',
+      signinName: '',
+      signinError: '',
+      toast: ''
+    };
+  }
+
+  S() { return Object.assign({}, this.defaults(), this.state || {}); }
+
+  componentWillUnmount() { clearTimeout(this._t); }
+
+  flash(msg) {
+    clearTimeout(this._t);
+    this.setState({ toast: msg });
+    this._t = setTimeout(() => this.setState({ toast: '' }), 3500);
+  }
+
+  baseValues(s) {
+    const out = {};
+    this.defs().forEach((d) => {
+      if (d.calc) return;
+      const e = s.draft[d.id];
+      if (!e) { out[d.id] = null; return; }
+      const n = this.num(e.raw);
+      out[d.id] = (n === null || isNaN(n)) ? n : this.toBase(d.q, n, e.set);
+    });
+    return this.calcs(out);
+  }
+
+  rangeText(d, set) {
+    const u = this.unit(d.q, set);
+    const us = u ? ' ' + u : '';
+    const dp = this.dpFor(d, set);
+    const f = (v) => this.fmt(this.toDisp(d.q, v, set), dp);
+    if (d.min !== undefined && d.max !== undefined) return f(d.min) + '–' + f(d.max) + us;
+    if (d.max !== undefined) return 'up to ' + f(d.max) + us;
+    if (d.min !== undefined) return 'at least ' + f(d.min) + us;
+    return '';
+  }
+
+  hintFor(d, set) {
+    const rt = this.rangeText(d, set);
+    if (rt) return 'Range for this job: ' + rt;
+    if (d.q === 'dial') return 'Dial reading, 0 to 300';
+    return 'No range set for this job';
+  }
+
+  validate(values, s) {
+    const set = s.units;
+    const defs = this.defs();
+    const byId = {};
+    defs.forEach((d) => { byId[d.id] = d; });
+    const res = {};
+    defs.forEach((d) => {
+      if (d.extra) return;
+      const v = values[d.id];
+      const u = this.unit(d.q, set);
+      const us = u ? ' ' + u : '';
+      const dp = this.dpFor(d, set);
+      if (v === null) {
+        if (d.calc) res[d.id] = { state: 'empty', msg: d.how };
+        else res[d.id] = (s.tried && d.req) ? { state: 'block', msg: 'Required' } : { state: 'empty', msg: this.hintFor(d, set) };
+      } else if (isNaN(v)) {
+        res[d.id] = { state: 'block', msg: 'Enter a number' };
+      } else if (v < d.lo || v > d.hi) {
+        res[d.id] = { state: 'block', msg: d.calc ? d.bad : 'Not possible: ' + this.fmt(this.toDisp(d.q, d.lo, set), dp) + ' to ' + this.fmt(this.toDisp(d.q, d.hi, set), dp) + us };
+      } else if ((d.min !== undefined && v < d.min) || (d.max !== undefined && v > d.max)) {
+        const above = d.max !== undefined && v > d.max;
+        res[d.id] = { state: 'flag', msg: (above ? 'Above' : 'Below') + ' the range for this job: ' + this.rangeText(d, set) };
+      } else {
+        const rt = this.rangeText(d, set);
+        res[d.id] = { state: 'ok', msg: d.calc ? d.how + (rt ? ' · range ' + rt : '') : this.hintFor(d, set) };
+      }
+    });
+    const ok = (id) => typeof values[id] === 'number' && !isNaN(values[id]);
+    const blockIf = (id, cond, msg) => { if (cond && res[id].state !== 'block') res[id] = { state: 'block', msg }; };
+    const speeds = ['r600', 'r300', 'r200', 'r100', 'r60', 'r30', 'r6', 'r3'];
+    for (let i = 1; i < speeds.length; i++) {
+      if (!ok(speeds[i])) continue;
+      for (let j = i - 1; j >= 0; j--) {
+        if (ok(speeds[j])) {
+          blockIf(speeds[i], values[speeds[i]] > values[speeds[j]], 'Not possible: higher than the ' + byId[speeds[j]].label + ' reading');
+          break;
+        }
+      }
+    }
+    if (ok('md')) {
+      blockIf('tvd', ok('tvd') && values.tvd > values.md + 0.01, 'Not possible: deeper than the measured depth');
+      blockIf('bit', ok('bit') && values.bit > values.md + 0.01, 'Not possible: deeper than the measured depth');
+    }
+    if (ok('water')) blockIf(ok('oil') ? 'oil' : 'water', values.water + (ok('oil') ? values.oil : 0) > 100.0001, 'Not possible: water and oil add up to more than 100%');
+    return res;
+  }
+
+  displayRaw(d, e, set) {
+    if (!e) return '';
+    if (e.set === set) return e.raw;
+    const n = this.num(e.raw);
+    if (n === null || isNaN(n)) return e.raw;
+    const base = this.toBase(d.q, n, e.set);
+    return this.toDisp(d.q, base, set).toFixed(this.dpFor(d, set));
+  }
+
+  cellText(d, v, set) {
+    if (v === null || v === undefined) return '–';
+    return this.fmt(this.toDisp(d.q, v, set), this.dpFor(d, set));
+  }
+
+  setDraft(id, raw) {
+    const s = this.S();
+    const draft = Object.assign({}, s.draft);
+    draft[id] = { raw, set: s.units };
+    this.setState({ draft });
+  }
+
+  setReason(id, text) {
+    const s = this.S();
+    const reasons = Object.assign({}, s.reasons);
+    reasons[id] = text;
+    this.setState({ reasons });
+  }
+
+  setJobField(part, key, value) {
+    const s = this.S();
+    const f = s.jobForm || { hq: {}, rig: {} };
+    const next = { hq: Object.assign({}, f.hq), rig: Object.assign({}, f.rig) };
+    next[part][key] = value;
+    this.setState({ jobForm: next });
+  }
+
+  go(id) {
+    if (id === 'jobs') this.setState({ screen: 'jobs' });
+    else if (id === 'checks') this.setState({ screen: 'day', viewDay: '16' });
+    else this.setState({ screen: 'module', module: id });
+  }
+
+  openJob(id) {
+    const s = this.S();
+    const j = s.jobs.find((x) => x.id === id);
+    this.setState({ screen: 'job', jobMode: 'view', jobId: id, jobError: '', jobForm: { hq: Object.assign({}, j.hq), rig: Object.assign({}, j.rig) } });
+  }
+
+  newJob() {
+    this.setState({
+      screen: 'job', jobMode: 'new', jobError: '',
+      jobForm: {
+        hq: { job: '', operator: '', contractor: '', rig: 'Rig 07', well: '', field: '', lease: '', region: '', country: '', spud: '', engineers: '' },
+        rig: { mudType: '', mudSystem: '', section: '', activity: '', companyRep: '', contractorRep: '' }
+      }
+    });
+  }
+
+  saveJob() {
+    const s = this.S();
+    const f = s.jobForm || { hq: {}, rig: {} };
+    const tail = s.online ? ' and synced' : ' · waiting to sync';
+    if (s.jobMode === 'new') {
+      if (!(f.hq.well || '').trim() || !(f.hq.operator || '').trim()) {
+        this.setState({ jobError: 'Enter at least the well name and the operator.' });
+        return;
+      }
+      const id = 'J-0' + (143 + s.jobs.filter((j) => j.isNew).length);
+      const hq = Object.assign({}, f.hq, { job: id, engineers: 'Assigned at HQ' });
+      const job = { id, isNew: true, status: s.online ? 'Active' : 'Active · waiting to sync', hq, rig: f.rig };
+      this.setState({ jobs: s.jobs.concat([job]), jobId: id, jobMode: 'view', jobForm: { hq, rig: f.rig }, jobError: '', pending: s.online ? s.pending : s.pending + 1 });
+      this.flash('Job ' + id + ' opened' + tail);
+    } else {
+      const jobs = s.jobs.map((j) => (j.id === s.jobId ? Object.assign({}, j, { rig: f.rig }) : j));
+      this.setState({ jobs, pending: s.online ? s.pending : s.pending + 1 });
+      this.flash('Job details saved' + tail);
+    }
+  }
+
+  toggleOnline() {
+    const s = this.S();
+    if (!s.online) {
+      const days = {};
+      Object.keys(s.days).forEach((k) => { days[k] = s.days[k].map((c) => Object.assign({}, c, { synced: true })); });
+      const jobs = s.jobs.map((j) => Object.assign({}, j, { status: j.status.replace(' · waiting to sync', '') }));
+      const n = s.pending;
+      this.setState({ online: true, pending: 0, days, jobs, lastSync: 'just now', signinError: '' });
+      if (s.screen !== 'signin') this.flash('Connection back · ' + n + (n === 1 ? ' change' : ' changes') + ' synced');
+    } else {
+      this.setState({ online: false, lastSync: 'today 12:45', signinError: '' });
+    }
+  }
+
+  signIn() {
+    const s = this.S();
+    const name = (s.signinName || '').trim().toLowerCase();
+    if (!name) { this.setState({ signinError: 'Enter your username.' }); return; }
+    const known = this.known().find((u) => u.username === name);
+    if (!known && !s.online) {
+      this.setState({ signinError: 'This account has not signed in on this computer before. The first sign-in needs a connection.' });
+      return;
+    }
+    this.setState({ user: name, screen: 'jobs', signinError: '', signinName: '' });
+  }
+
+  newCheck() {
+    const s = this.S();
+    const meta = Object.assign({}, s.meta);
+    if (!meta.time) meta.time = '12:40';
+    this.setState({ screen: 'check', meta, tried: false });
+  }
+
+  commitCheck(flaggedIds) {
+    const s = this.S();
+    const values = this.baseValues(s);
+    const flags = {};
+    flaggedIds.forEach((id) => { flags[id] = (s.reasons[id] || '').trim(); });
+    const check = { time: s.meta.time || '12:40', sample: s.meta.sample, eng: this.userName(s.user), synced: s.online, values, flags };
+    const days = Object.assign({}, s.days);
+    const today = (days['16'] || []).concat([check]);
+    days['16'] = today;
+    this.setState({
+      days, viewDay: '16', screen: 'day', draft: {}, reasons: {}, tried: false, showReasons: false,
+      meta: { time: '', sample: 'Flowline' }, pending: s.online ? s.pending : s.pending + 1
+    });
+    this.flash('Check ' + today.length + ' saved' + (flaggedIds.length ? ' as flagged' : '') + (s.online ? ' and synced' : ' · waiting to sync'));
+  }
+
+  saveCheck() {
+    const s = this.S();
+    const res = this.validate(this.baseValues(s), Object.assign({}, s, { tried: true }));
+    const ids = this.defs().filter((d) => !d.extra).map((d) => d.id);
+    const blocked = ids.filter((id) => res[id].state === 'block');
+    const flagged = ids.filter((id) => res[id].state === 'flag');
+    if (blocked.length) { this.setState({ tried: true }); return; }
+    if (flagged.length) { this.setState({ tried: true, showReasons: true }); return; }
+    this.commitCheck([]);
+  }
+
+  saveFlagged() {
+    const s = this.S();
+    const res = this.validate(this.baseValues(s), Object.assign({}, s, { tried: true }));
+    const flagged = this.defs().filter((d) => !d.extra).map((d) => d.id).filter((id) => res[id].state === 'flag');
+    if (flagged.some((id) => !(s.reasons[id] || '').trim())) return;
+    this.commitCheck(flagged);
+  }
+
+  renderVals() {
+    const s = this.S();
+    const set = s.units;
+    const defs = this.defs();
+    const byId = {};
+    defs.forEach((d) => { byId[d.id] = d; });
+    const values = this.baseValues(s);
+    const res = this.validate(values, s);
+    const job = s.jobs.find((j) => j.id === s.jobId) || s.jobs[0];
+    const today = s.days['16'] || [];
+    const hasDraft = Object.keys(s.draft).some((k) => s.draft[k] && String(s.draft[k].raw).trim() !== '');
+
+    const looks = {
+      empty: { border: '#A9B4BF', bw: '1px', bg: '#FFFFFF', msgColor: '#4A5866', msgWeight: '400' },
+      ok: { border: '#A9B4BF', bw: '1px', bg: '#FFFFFF', msgColor: '#4A5866', msgWeight: '400' },
+      flag: { border: '#C2660A', bw: '2px', bg: '#FEF3E2', msgColor: '#8A3B00', msgWeight: '600' },
+      block: { border: '#C0362C', bw: '2px', bg: '#FDECEA', msgColor: '#A1251B', msgWeight: '600' }
+    };
+
+    const groups = this.groupDefs().filter((g) => !g.panel).map((g) => ({
+      title: g.title, cols: g.cols, span: g.span,
+      fields: defs.filter((d) => d.g === g.id).map((d) => {
+        const r = res[d.id];
+        const look = looks[r.state];
+        return {
+          label: d.label, req: d.req ? ' *' : '', unit: this.unit(d.q, set),
+          aria: d.label + (this.unit(d.q, set) ? ' in ' + this.unit(d.q, set) : ''),
+          isInput: !d.calc, isCalc: !!d.calc,
+          val: d.calc ? this.cellText(d, values[d.id], set) : this.displayRaw(d, s.draft[d.id], set),
+          msg: r.msg, border: look.border, bw: look.bw, bg: look.bg, msgColor: look.msgColor, msgWeight: look.msgWeight,
+          calcBg: (r.state === 'flag' || r.state === 'block') ? look.bg : '#F1F4F7',
+          onChange: (e) => this.setDraft(d.id, e.target.value)
+        };
+      })
+    }));
+
+    const calcCards = defs.filter((d) => d.extra).map((d) => ({ label: d.label, val: this.cellText(d, values[d.id], set), unit: this.unit(d.q, set), src: d.src }));
+    const calcWarn = (typeof values.vlg === 'number' && values.vlg < 0) || (typeof values.vb === 'number' && values.vb < 0);
+
+    const ids = defs.filter((d) => !d.extra).map((d) => d.id);
+    const inputIds = defs.filter((d) => !d.calc).map((d) => d.id);
+    const nEntered = inputIds.filter((id) => values[id] !== null).length;
+    const flaggedIds = ids.filter((id) => res[id].state === 'flag');
+    const blockedIds = ids.filter((id) => res[id].state === 'block');
+
+    const flaggedList = flaggedIds.map((id) => {
+      const d = byId[id];
+      const u = this.unit(d.q, set);
+      return {
+        label: d.label,
+        value: this.cellText(d, values[id], set) + (u ? ' ' + u : ''),
+        range: 'Range for this job: ' + this.rangeText(d, set),
+        reason: s.reasons[id] || '',
+        onChange: (e) => this.setReason(id, e.target.value)
+      };
+    });
+    const reasonsIncomplete = flaggedList.some((f) => !f.reason.trim());
+
+    const activeNav = (s.screen === 'jobs' || s.screen === 'job') ? 'jobs' : ((s.screen === 'check' || s.screen === 'day') ? 'checks' : s.module);
+    const nav = [
+      { id: 'dashboard', label: 'Dashboard', later: true },
+      { id: 'jobs', label: 'Jobs' },
+      { id: 'checks', label: 'Mud checks' },
+      { id: 'calcs', label: 'Calculations', later: true },
+      { id: 'inventory', label: 'Inventory', later: true },
+      { id: 'reports', label: 'Reports', later: true }
+    ].map((n) => ({
+      label: n.label, tag: n.later ? 'Later' : '',
+      bg: n.id === activeNav ? '#0B5CAD' : 'transparent',
+      fg: n.id === activeNav ? '#FFFFFF' : '#E8EDF2',
+      go: () => this.go(n.id)
+    }));
+
+    const modules = {
+      dashboard: { t: 'Dashboard', w: 'The engineer’s view of this rig: status, key indicators and progress against targets.', when: 'Not drawn yet. Drawn after the session on dashboards.' },
+      calcs: { t: 'Calculations and hydraulics', w: 'Values worked out when a mud check is saved, a calculator for standard engineering calculations, and a fluid hydraulics simulation with tables and simple charts. All of it works without a connection.', when: 'Not drawn yet. Drawn after the session on calculations.' },
+      inventory: { t: 'Inventory', w: 'Daily consumption, stock movements and ending concentrations, with low-stock and expiry alerts.', when: 'Not drawn yet. Drawn after the session on inventory.' },
+      reports: { t: 'Reports', w: 'End-of-Day, End-of-Section, End-of-Well and inventory reports, exported to PDF, CSV and Excel.', when: 'Not drawn yet. Drawn after the session on reports.' }
+    };
+    const mod = modules[s.module] || modules.dashboard;
+
+    const jobs = s.jobs.map((j) => {
+      const active = j.status.indexOf('Active') === 0;
+      return {
+        id: j.id, well: j.hq.well || '–', operator: j.hq.operator || '–', section: j.rig.section || '–', engineers: j.hq.engineers || '–', status: j.status,
+        statusBg: active ? '#E6F4EC' : '#E9EDF1', statusFg: active ? '#1E6B3E' : '#4A5866',
+        border: j.id === s.jobId ? '#0B5CAD' : '#D5DCE3',
+        open: () => this.openJob(j.id)
+      };
+    });
+
+    const isNew = s.jobMode === 'new';
+    const form = s.jobForm || { hq: (job && job.hq) || {}, rig: (job && job.rig) || {} };
+    const hqDefs = [['job', 'Job number'], ['operator', 'Operator'], ['contractor', 'Contractor'], ['rig', 'Rig'], ['well', 'Well name'], ['field', 'Field / block'], ['lease', 'Lease / area'], ['region', 'State / region'], ['country', 'Country'], ['spud', 'Spud date'], ['engineers', 'Engineers assigned']];
+    const rigDefs = [['mudType', 'Mud type'], ['mudSystem', 'Mud system'], ['section', 'Hole section'], ['activity', 'Present activity'], ['companyRep', 'Operator representative'], ['contractorRep', 'Contractor representative']];
+    const hqFields = hqDefs.map(([k, label]) => {
+      const fixed = k === 'job' || k === 'engineers';
+      const editable = isNew && !fixed;
+      let value = form.hq[k] || '';
+      if (isNew && k === 'job') value = 'Given when the job is saved';
+      if (isNew && k === 'engineers') value = 'Assigned at HQ';
+      return { label, value, editable, readonly: !editable, onChange: (e) => this.setJobField('hq', k, e.target.value) };
+    });
+    const rigFields = rigDefs.map(([k, label]) => ({ label, value: form.rig[k] || '', onChange: (e) => this.setJobField('rig', k, e.target.value) }));
+
+    const dayChecks = s.days[s.viewDay] || [];
+    const isToday = s.viewDay === '16';
+    const dayCols = [0, 1, 2, 3].map((i) => {
+      const c = dayChecks[i];
+      if (!c) {
+        const due = i < 2 ? 'Due in the day shift' : 'Due in the night shift';
+        return { title: 'Check ' + (i + 1), time: '–', who: due, chip: 'Not done', chipBg: '#E9EDF1', chipFg: '#4A5866' };
+      }
+      const flagged = Object.keys(c.flags).length > 0;
+      return {
+        title: 'Check ' + (i + 1) + (flagged ? ' · flagged' : ''), time: c.time, who: c.eng + ' · ' + c.sample,
+        chip: c.synced ? 'Synced' : 'Waiting to sync',
+        chipBg: c.synced ? '#E6F4EC' : '#FEF3E2', chipFg: c.synced ? '#1E6B3E' : '#8A3B00'
+      };
+    });
+    const groupTitles = {};
+    this.groupDefs().forEach((g) => { groupTitles[g.id] = g.title; });
+    const dayRows = [];
+    let lastG = '';
+    defs.forEach((d) => {
+      if (d.g !== lastG) { dayRows.push({ isHead: true, isRow: false, label: groupTitles[d.g], unit: '', cells: [] }); lastG = d.g; }
+      dayRows.push({
+        isHead: false, isRow: true, label: d.label + (d.calc && !d.extra ? ' · calculated' : ''), unit: this.unit(d.q, set) || '–',
+        cells: [0, 1, 2, 3].map((i) => {
+          const c = dayChecks[i];
+          if (!c) return { text: '', bg: '#FFFFFF', fg: '#17212B', fw: '400' };
+          const v = c.values[d.id];
+          const fl = Object.prototype.hasOwnProperty.call(c.flags, d.id);
+          let text = this.cellText(d, v, set);
+          if (fl) text = ((d.max !== undefined && v > d.max) ? '▲ ' : '▼ ') + text;
+          return { text, bg: fl ? '#FEF3E2' : '#FFFFFF', fg: fl ? '#8A3B00' : '#17212B', fw: fl ? '600' : '400' };
+        })
+      });
+    });
+    const flagsList = [];
+    dayChecks.forEach((c, i) => {
+      Object.keys(c.flags).forEach((id) => {
+        const d = byId[id];
+        const u = this.unit(d.q, set);
+        flagsList.push({
+          where: 'Check ' + (i + 1) + ' · ' + c.time,
+          what: d.label + ' ' + this.cellText(d, c.values[id], set) + (u ? ' ' + u : ''),
+          range: 'Range for this job: ' + this.rangeText(d, set),
+          reason: c.flags[id], who: c.eng
+        });
+      });
+    });
+    const jobActive = job && job.status.indexOf('Active') === 0;
+    const noNewCheck = !isToday || today.length >= 4 || !jobActive;
+    let newCheckLabel = hasDraft ? 'Continue mud check ' + (today.length + 1) : 'New mud check';
+    if (!isToday) newCheckLabel = 'Past day: view only';
+    else if (today.length >= 4) newCheckLabel = 'Four checks done today';
+    else if (!jobActive) newCheckLabel = 'Job closed';
+
+    const dayTabs = [['15', '15 Oct'], ['16', '16 Oct · today']].map(([k, label]) => ({
+      label, bg: s.viewDay === k ? '#17212B' : '#FFFFFF', fg: s.viewDay === k ? '#FFFFFF' : '#17212B',
+      pick: () => this.setState({ viewDay: k })
+    }));
+
+    const syncLabel = s.online
+      ? 'Online · synced ' + s.lastSync
+      : 'Offline · synced ' + s.lastSync + (s.pending ? ' · ' + s.pending + ' waiting' : '');
+
+    const showBanner = s.screen === 'check' && s.tried && blockedIds.length > 0;
+    const bannerText = 'Fix ' + blockedIds.length + (blockedIds.length === 1 ? ' value' : ' values') + ' before saving: ' + blockedIds.map((id) => byId[id].label).join(', ') + '.';
+
+    return {
+      yes: true,
+      isSignin: s.screen === 'signin',
+      isApp: s.screen !== 'signin',
+      isJobs: s.screen === 'jobs',
+      isJob: s.screen === 'job',
+      isCheck: s.screen === 'check',
+      isDay: s.screen === 'day',
+      isModule: s.screen === 'module',
+
+      signinName: s.signinName,
+      onSigninName: (e) => this.setState({ signinName: e.target.value, signinError: '' }),
+      signIn: () => this.signIn(),
+      hasSigninError: !!s.signinError,
+      signinError: s.signinError,
+      signinConn: s.online ? 'Connected. Any engineer with an account can sign in.' : 'No connection. Engineers who have signed in on this computer before can sign in offline.',
+      knownUsers: this.known().map((u) => ({ name: u.name, pick: () => this.setState({ signinName: u.username, signinError: '' }) })),
+      toggleLabel: s.online ? 'go offline' : 'bring the connection back',
+      toggleOnline: () => this.toggleOnline(),
+      connBg: s.online ? '#E6F4EC' : '#FEF3E2',
+      connFg: s.online ? '#1E6B3E' : '#8A3B00',
+      connDot: s.online ? '#1E7A46' : '#C2660A',
+
+      nav,
+      headerJob: job ? job.id + ' · Well ' + (job.hq.well || '–') : '–',
+      units: set,
+      onUnits: (e) => this.setState({ units: e.target.value }),
+      syncLabel,
+      syncBorder: s.online ? '#9FD0B3' : '#F0B35A',
+      syncBg: s.online ? '#E6F4EC' : '#FEF3E2',
+      syncFg: s.online ? '#1E6B3E' : '#8A3B00',
+      userName: this.userName(s.user),
+      signOut: () => this.setState({ screen: 'signin', user: null, draft: {}, reasons: {}, tried: false, showReasons: false, toast: '' }),
+
+      jobs,
+      newJob: () => this.newJob(),
+      toJobs: () => this.setState({ screen: 'jobs' }),
+      jobTitle: isNew ? 'New job' : 'Job ' + (form.hq.job || '') + ' · Well ' + (form.hq.well || ''),
+      jobIntro: isNew ? 'Opened at the rig. HQ sees it, and assigns the engineers, after the next sync.' : 'What HQ set for this job, and what the engineers keep up to date at the rig.',
+      jobIsExisting: !isNew,
+      hqNote: isNew ? 'Typed here because the job is opened at the rig. HQ can correct them.' : 'Shown here, changed only at HQ.',
+      hqFields, rigFields,
+      saveJob: () => this.saveJob(),
+      saveJobLabel: isNew ? 'Open the job' : 'Save job details',
+      hasJobError: !!s.jobError,
+      jobError: s.jobError,
+      toDayToday: () => this.setState({ screen: 'day', viewDay: '16' }),
+
+      checkTitle: 'Mud check ' + (today.length + 1) + ' · 16 Oct 2026',
+      checkSub: 'Day shift · ' + this.userName(s.user) + ' · Job ' + (job ? job.id + ', well ' + job.hq.well : '') + ' · ' + ((job && job.rig.mudSystem) || '') + ', ' + ((job && job.rig.section) || ''),
+      metaTime: s.meta.time,
+      onMetaTime: (e) => this.setState({ meta: Object.assign({}, s.meta, { time: e.target.value }) }),
+      metaSample: s.meta.sample,
+      onMetaSample: (e) => this.setState({ meta: Object.assign({}, s.meta, { sample: e.target.value }) }),
+      fillExample: () => this.setState({ draft: this.exampleDraft(), meta: Object.assign({}, s.meta, { time: s.meta.time || '12:40' }) }),
+      groups,
+      calcCards, calcWarn,
+      calcWarnText: 'The solids balance does not close: a volume came out below zero. Check density, retort water and oil, and chlorides.',
+      methodLine: this.methodLine(set),
+      countEntered: nEntered + ' of ' + inputIds.length + ' entered',
+      countFlag: flaggedIds.length + ' outside the range',
+      countBlock: blockedIds.length + ' to fix',
+      flagCountColor: flaggedIds.length ? '#8A3B00' : '#4A5866',
+      blockCountColor: blockedIds.length ? '#A1251B' : '#4A5866',
+      clearDraft: () => this.setState({ draft: {}, reasons: {}, tried: false }),
+      saveCheck: () => this.saveCheck(),
+      showBanner, bannerText,
+
+      showReasons: s.showReasons && flaggedList.length > 0,
+      reasonsTitle: flaggedList.length + (flaggedList.length === 1 ? ' value is' : ' values are') + ' outside the range for this job',
+      reasonsLead: (flaggedList.length === 1 ? 'Give the reason.' : 'Give a reason for each.') + ' The check is saved as flagged, and HQ sees the ' + (flaggedList.length === 1 ? 'value and your reason.' : 'values and your reasons.'),
+      flaggedList,
+      reasonsIncomplete,
+      saveFlaggedBg: reasonsIncomplete ? '#C3CCD5' : '#C2660A',
+      saveFlaggedFg: reasonsIncomplete ? '#4A5866' : '#FFFFFF',
+      closeReasons: () => this.setState({ showReasons: false }),
+      saveFlagged: () => this.saveFlagged(),
+
+      dayTitle: isToday ? '16 Oct 2026 (today)' : '15 Oct 2026',
+      dayTabs, dayCols, dayRows, flagsList,
+      noFlags: flagsList.length === 0,
+      newCheck: () => this.newCheck(),
+      noNewCheck,
+      newCheckLabel,
+      newCheckBg: noNewCheck ? '#C3CCD5' : '#0B5CAD',
+      newCheckFg: noNewCheck ? '#4A5866' : '#FFFFFF',
+
+      moduleTitle: mod.t, moduleWhat: mod.w, moduleWhen: mod.when,
+
+      hasToast: !!s.toast,
+      toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

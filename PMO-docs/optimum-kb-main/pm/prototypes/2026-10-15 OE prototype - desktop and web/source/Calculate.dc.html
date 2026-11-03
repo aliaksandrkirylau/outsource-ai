@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Calculate</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0">
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 900px; box-sizing: border-box; background: #FFF8F6; color: #241914; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; display: flex; flex-direction: column">
+<dc-import name="TopBar" well-name="DW-217" well-sub="12¼ in section · Day shift" hint-size="100%,68px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; flex: 1; align-items: stretch">
+<div style="flex: 0 0 96px; display: flex"><dc-import name="Rail" sel="calc" hint-size="96px,836px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; padding: 24px 32px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; max-width: 1240px">
+
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<h1 style="margin: 0; font-size: 24px; font-weight: 400">Calculate</h1>
+<span style="color: #574238">Values are filled from the last mud check (14:00). Change any of them and the result updates.</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+
+<nav aria-label="Calculations" style="flex: 0 0 280px; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{calcs}}" as="c" hint-placeholder-count="2">
+<button type="button" onClick="{{c.pick}}" style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 0 16px; border-radius: 12px; border: 1px solid {{c.border}}; background: {{c.bg}}; color: #241914; font: inherit; text-align: left; cursor: pointer">
+<span class="ms" aria-hidden="true" style="color: #A14000">{{c.icon}}</span>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600">{{c.label}}</span><span style="font-size: 12px; color: #574238">{{c.sub}}</span></span>
+</button>
+</sc-for>
+<a href="Hydraulics.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 0 16px; border-radius: 12px; border: 1px solid #DFC0B3; background: #FFFFFF; color: #241914; text-decoration: none">
+<span class="ms" aria-hidden="true" style="color: #A14000">water_pump</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600">Hydraulics simulation</span><span style="font-size: 12px; color: #574238">Pressures and ECD across flow rates</span></span>
+<span class="ms" aria-hidden="true" style="color: #574238">chevron_right</span>
+</a>
+</nav>
+
+<section style="flex: 999 1 520px; min-width: 0; background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 style="margin: 0; font-size: 20px; font-weight: 400">{{cur.title}}</h2>
+<span style="color: #574238">{{cur.question}}</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+<sc-for list="{{cur.inputs}}" as="f" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="{{f.id}}" style="font-size: 12px; color: #574238">{{f.label}}</label>
+<div style="display: flex; align-items: center; gap: 8px; height: 56px; border: {{f.border}}; border-radius: 4px; padding: 0 {{f.pad}}; background: #FFFFFF"><input id="{{f.id}}" value="{{f.v}}" onChange="{{f.set}}" readOnly="{{f.ro}}" style="flex: 1; border: 0; outline: 0; font: inherit; font-size: 16px; background: transparent; min-width: 0"><span style="color: #574238">{{f.unit}}</span><span class="ms" aria-hidden="true" style="color: #574238">{{f.icon}}</span></div>
+<span style="font-size: 12px; color: {{f.hintColor}}; min-height: 16px">{{f.hint}}</span>
+</div>
+</sc-for>
+</div>
+
+<sc-if value="{{bad}}" hint-placeholder-val="{{ false }}"><div style="padding: 12px 16px; background: #FFDAD6; color: #93000A; border-radius: 8px">{{badMsg}}</div></sc-if>
+<sc-if value="{{shown}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFF1EC; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; gap: 8px; align-items: center"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: #574238">RESULT</span><span style="display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 8px; border: 1px solid #00658B; color: #00658B; font-size: 12px; font-weight: 600">Not verified - for discussion</span></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+<sc-for list="{{cur.results}}" as="r" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="color: #574238; font-size: 13px">{{r.k}}</span><span style="font-size: 28px; font-weight: 600">{{r.v}} <span style="font-size: 15px; font-weight: 400; color: #574238">{{r.unit}}</span></span></div>
+</sc-for>
+</div>
+<div style="color: #574238; font-size: 13px; line-height: 1.5">{{cur.formula}}</div>
+</div>
+</sc-if>
+</section>
+</div>
+<div style="color: #574238; font-size: 13px">Calculated live. Not verified against the client's worked examples yet.</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: 'weight', v: { w1: '10.4', w2: '11.0', vol: '820', mat: 'OES-BAR, SG 4.2', oil: '56', water: '24', target: '80 / 20', vol2: '820' } };
+  }
+  renderVals() {
+    const S = this.state, sel = S.sel, n = (x) => Number(String(x).replace(/,/g, ''));
+    const fmt = (x, d) => Number(x).toLocaleString('en-US', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+    const errs = {};
+    const i = (id, label, unit, hint, icon, ro) => ({ id, label, unit: unit || '', hint: hint || '', icon: icon || '', ro: !!ro, v: S.v[id], set: (e) => this.setState({ v: { ...this.state.v, [id]: e.target.value } }) });
+    let results = [], bad = false, badMsg = '';
+    if (sel === 'weight') {
+      const W1 = n(S.v.w1), W2 = n(S.v.w2), vol = n(S.v.vol);
+      if (!(W1 > 0 && W2 > 0 && vol > 0)) { bad = true; badMsg = 'Enter numbers for both mud weights and the volume.'; }
+      else if (W2 <= W1) { bad = true; badMsg = 'The target weight must be above the current weight. To lower the weight, dilute instead.'; errs.w2 = 1; }
+      else if (W2 >= 22) { bad = true; badMsg = 'OES-BAR raises mud weight up to about 22 ppg (product data sheet).'; errs.w2 = 1; }
+      else {
+        const per100 = 1472 * (W2 - W1) / (35.05 - W2), sacks = per100 * vol / 100, kg = sacks * 50;
+        results = [{ k: 'OES-BAR to add', v: fmt(Math.ceil(sacks)), unit: 'sacks of 50 kg' }, { k: 'Weight', v: fmt(kg / 1000, 1), unit: 't' }, { k: 'Volume increase', v: fmt(kg / 4200 * 6.2898, 1), unit: 'bbl' }];
+      }
+    } else {
+      const Vo = n(S.v.oil), Vw = n(S.v.water), vol = n(S.v.vol2), parts = String(S.v.target).split('/').map(n);
+      const t = parts.length === 2 && parts[0] > 0 && parts[1] > 0 ? parts[0] / (parts[0] + parts[1]) : NaN;
+      if (!(Vo > 0 && Vw > 0 && vol > 0 && Vo + Vw <= 100)) { bad = true; badMsg = 'Enter retort oil and water (%), and the volume.'; }
+      else if (!isFinite(t)) { bad = true; badMsg = 'Write the target ratio as oil / water, e.g. 80 / 20.'; errs.target = 1; }
+      else {
+        const cur = Vo / (Vo + Vw);
+        let add, bbl;
+        if (t >= cur) { const x = t * Vw / (1 - t) - Vo; add = 'Base oil to add'; bbl = x / 100 * vol; }
+        else { const y = Vo / t - Vo - Vw; add = 'Water to add'; bbl = y / 100 * vol; }
+        results = [{ k: 'Current ratio', v: fmt(cur * 100) + ' / ' + fmt(100 - cur * 100), unit: '' }, { k: add, v: fmt(bbl), unit: 'bbl' }, { k: 'New volume', v: fmt(vol + bbl), unit: 'bbl' }];
+      }
+    }
+    const style = (f) => ({ ...f, border: errs[f.id] ? '2px solid #BA1A1A' : '1px solid #8B7267', pad: errs[f.id] ? '11px' : '12px', hintColor: errs[f.id] ? '#BA1A1A' : '#574238' });
+    const defs = {
+      weight: {
+        label: 'Weight up', sub: 'Sacks of weighting material', icon: 'scale',
+        title: 'Weight up the mud', question: 'How many sacks of OES-BAR do I need to raise the mud weight?',
+        inputs: [i('w1', 'Current mud weight W1', 'ppg', 'From the 14:00 mud check'), i('w2', 'Target mud weight W2', 'ppg'), i('vol', 'Active system volume', 'bbl', 'From the volumes of the day'), i('mat', 'Weighting material', '', '50 kg sacks, SG 4.2', '', true)].map(style),
+        formula: 'Sacks of 50 kg OES-BAR per 100 bbl = 1472 (W2 - W1) / (35.05 - W2), from the OES-BAR product data sheet. Volume increase from SG 4.2.'
+      },
+      owr: {
+        label: 'Oil / water ratio', sub: 'Oil-based mud only', icon: 'opacity',
+        title: 'Change the oil / water ratio', question: 'How much base oil or water do I add to reach the target ratio?',
+        inputs: [i('oil', 'Retort oil', '%', 'From the mud check'), i('water', 'Retort water', '%', 'From the mud check'), i('target', 'Target oil / water ratio', '', 'e.g. 80 / 20'), i('vol2', 'Active system volume', 'bbl')].map(style),
+        formula: 'Our assumption, to confirm with the client: volume balance on the retort oil and water, adding only oil (higher ratio) or only water (lower ratio).'
+      }
+    };
+    const calcs = Object.keys(defs).map((k) => ({ ...defs[k], bg: k === sel ? '#F6CD96' : '#FFFFFF', border: k === sel ? '#F6CD96' : '#DFC0B3', pick: () => this.setState({ sel: k }) }));
+    return { calcs, cur: { ...defs[sel], results }, shown: !bad, bad, badMsg };
+  }
+}
+</script>
+</body>
+</html>

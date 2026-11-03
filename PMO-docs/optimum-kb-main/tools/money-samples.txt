@@ -1,0 +1,33 @@
+# Test lines for tools/money-patterns.txt. The figures are made up. Every line under a heading must
+# land in that group: perl tools/kb-money.pl --samples. A line starting "... " is the next line of
+# the sample above it (a figure split from its currency by a line break).
+## ERROR
+ставка 35/h для сеньора
+rate 32 per hour
+в час 40, итого
+зарплата 2500 в месяц
+payment of USD
+... 20,000 (see the plan)
+(Thirty-Three Thousand United States Dollars)
+150 тыс. долларов
+5 000 руб
+$ 12
+12 €
+150k$
+(١٦٥,٠٠٠) دولار أمريكي
+## WARN
+итого 150k за проект
+бюджет 150 тыс
+скидка 15% от цены
+margin 23%
+the advance payment is 20% of the total contract
+ставки: Jun 2, Jul 7
+## PASS
+99.9% of reports reach HQ intact
+stabilisation is 15% of development hours
+about 70 rigs, 4,238 max hours
+Figure 2-2: Critical Velocity and Pump Rate
+flow rate 450 gpm, 50 m3/h, ROP 60 ft/hr
+[doc](https://docs.google.com/spreadsheets/d/1K118jJZabVe8zwgxSLwmizwYQGrSPp5k)
+`spaces/AAQAMdfmWl4/messages/jas6xmAp450.H-Fjp1UH7I0`
+the warranty is unpriced; a large discount was given

@@ -1,0 +1,37 @@
+# .gitignore for the team KB.
+
+# Obsidian: per-person state. Opening a note rewrites these (runs/07-obsidian-config.txt).
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/workspaces.json
+.obsidian/graph.json
+.obsidian/appearance.json
+.obsidian/themes/
+# Core plugin on/off switches: personal, and Obsidian's defaults already turn Templates on.
+.obsidian/core-plugins.json
+# Plugins: code and per-person plugin state. Plugin data files can hold note text and conflict
+# (Zeppla, 27 Aug merge). The team plugin list lives in the onboarding note instead.
+.obsidian/plugins/
+.obsidian/community-plugins.json
+# Optional, if the team adopts a plugin: commit its SETTINGS but never its code (tested with
+# git ls-files). Only for plugins whose data.json holds settings, not per-person state, note text
+# or keys. To use: replace the two lines above with these four, uncommented, plugin id filled in.
+# .obsidian/plugins/*
+# !.obsidian/plugins/<plugin-id>/
+# .obsidian/plugins/<plugin-id>/*
+# !.obsidian/plugins/<plugin-id>/data.json
+# Committed on purpose: .obsidian/app.json (wikilinks, shortest names, update links on rename)
+# so a new clone starts with the team's link settings; kb-doctor checks it did not change.
+.trash/
+conflict-files-obsidian-git.md
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Agents: personal settings only. Shared ones (.claude/settings.json, AGENTS.md, CLAUDE.md,
+# .claude/skills/, .agents/skills/) are committed.
+.claude/settings.local.json
+CLAUDE.local.md
+AGENTS.override.md

@@ -1,0 +1,42 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-16T19:45:00Z" },
+  "title": "Optimum prototypes v0 - topics 1 and 2",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 1440, "h": 1024, "title": "Rig app - sign-in (D1)", "is_interactive": true },
+    "Desktop-check.dc.html": { "x": 1520, "y": 0, "w": 1440, "h": 1024, "title": "Rig app - a mud check being entered (D2)", "is_interactive": true },
+    "Desktop-day.dc.html": { "x": 3040, "y": 0, "w": 1440, "h": 1024, "title": "Rig app - the day's four mud checks (D2)", "is_interactive": true },
+    "Web.dc.html": { "x": 0, "y": 1444, "w": 1440, "h": 1024, "title": "HQ web app - sign-in (W1)", "is_interactive": true, "expand": "fill" },
+    "Web-supervisor.dc.html": { "x": 1520, "y": 1444, "w": 1440, "h": 1024, "title": "HQ web app - as a Supervisor (W1)", "is_interactive": true, "expand": "fill" },
+    "Web-admin.dc.html": { "x": 3040, "y": 1444, "w": 1440, "h": 1024, "title": "HQ web app - as an Admin (W1)", "is_interactive": true, "expand": "fill" },
+    "Web-jobs.dc.html": { "x": 0, "y": 2888, "w": 1440, "h": 1200, "title": "HQ web app - jobs, as a Manager (W3)", "is_interactive": true, "expand": "fill" },
+    "Web-job.dc.html": { "x": 1520, "y": 2888, "w": 1440, "h": 1100, "title": "HQ web app - a job and its engineers (W3)", "is_interactive": true, "expand": "fill" },
+    "Web-qc.dc.html": { "x": 3040, "y": 2888, "w": 1440, "h": 2250, "title": "HQ web app - mud checks and QC, as a Supervisor (W3)", "is_interactive": true, "expand": "fill" },
+    "Web-ranges.dc.html": { "x": 4560, "y": 2888, "w": 1440, "h": 1900, "title": "HQ web app - ranges for a job, as an Admin (W2)", "is_interactive": true, "expand": "fill" },
+    "Web-units.dc.html": { "x": 6080, "y": 2888, "w": 1440, "h": 1024, "title": "HQ web app - unit sets, as an Admin (W2)", "is_interactive": true, "expand": "fill" }
+  },
+  "order": [
+    "Main.dc.html",
+    "Desktop-check.dc.html",
+    "Desktop-day.dc.html",
+    "Web.dc.html",
+    "Web-supervisor.dc.html",
+    "Web-admin.dc.html",
+    "Web-jobs.dc.html",
+    "Web-job.dc.html",
+    "Web-qc.dc.html",
+    "Web-ranges.dc.html",
+    "Web-units.dc.html"
+  ],
+  "notes": {
+    "t-desktop": { "x": 0, "y": -300, "text": "Rig app - desktop, works offline", "kind": "title1", "maxW": 4480 },
+    "t-web": { "x": 0, "y": 1144, "text": "HQ web app", "kind": "title1", "maxW": 4480 },
+    "t-web-topic2": { "x": 0, "y": 2588, "text": "HQ web app - jobs, mud checks and QC, ranges, units", "kind": "title1", "maxW": 7520 },
+    "about": { "x": 4560, "y": -300, "w": 560, "maxH": 240, "fill": "gray", "size": "s", "text": "Prototype v0 for discovery, 16 October 2026. Updated 23 October: calculated values on the mud check, retort oil, funnel viscosity, 60 and 30 RPM.\nEvery name, rig, well, job and value is made up. The ranges are examples, not the client's.\nEach frame is live: press Play and click through. The rig app starts offline; click the sync status in its header to bring the connection back." },
+    "q-desktop": { "x": 4560, "y": 0, "w": 560, "maxH": 1024, "fill": "orange", "size": "s", "text": "What this v0 assumes - to check with the client\n\n1. Each engineer signs in with their own account. Without a connection, only engineers who have signed in on this computer before can sign in.\n2. At shift change the next engineer signs in and carries on the same day.\n3. The reporting day runs 06:00 to 06:00: four mud checks, two per shift.\n4. HQ opens the job and assigns the engineers; the engineer can also open one at the rig. Fields marked as set at HQ cannot be changed at the rig.\n5. A mud check holds the properties of today's Daily Drilling Fluids Report. Volumes, pits, pumps, bit, solids control and comments are not drawn yet: are they entered here too?\n6. Only measured depth and density are required.\n7. A value outside the range is kept, flagged, and needs a reason. A value that is not possible (pH above 14, a lower speed reading higher than a faster one) cannot be saved.\n8. Ranges are set per job at HQ.\n9. A saved check is locked; a correction goes to HQ for approval.\n10. Units: oilfield and metric. The third set is open.\n11. Plastic viscosity, yield point, retort solids and excess lime are calculated from the readings, as API RP 13B-1 and your Equation 10-4 define them, and cannot be typed. Do your engineers type them today? A calculated value outside the range is flagged like any other.\n12. Retort oil is entered next to retort water. Water and oil adding up to more than 100% cannot be saved.\n13. Your daily report also lists 60 and 30 RPM readings and three user-defined properties (weight, funnel viscosity, filtrate). We added the two readings and funnel viscosity. Are these fixed fields, or a list each job can extend?\n14. When a check is saved, the app also works out n and K by your power-law procedures (Figures 2-1 and 2-3), and the solids analysis by your Equations 10-5 to 10-8. The hydraulics program in your samples uses Herschel-Bulkley, as API RP 13D does today. Which one governs?\n15. Your daily report has one n and one k. Which pair: the pipe's (600 and 300 RPM) or the annulus's (300 and 3 RPM)?\n16. ECD needs the well's geometry and the flow rate, so it is drawn after the session on calculations." },
+    "q-web": { "x": 4560, "y": 1444, "w": 720, "maxH": 1100, "fill": "blue", "size": "s", "text": "What this v0 assumes - to check with the client\n\n1. Four roles: Engineer (rig app only), Supervisor, Manager, Admin. Are Supervisor and Manager one role or two? Where do project engineers and operations support fit?\n2. A supervisor sees only the rigs assigned to them; a manager sees every rig.\n3. Managers and admins approve corrections to saved mud checks.\n4. Admins manage users, ranges, units and the audit log, and do not see operations.\n5. Sign-in with email and password.\n6. Modules not drawn yet are empty frames; each is drawn after its own session.\n\nJobs, mud checks and QC, ranges, units\n\n7. Engineers are assigned to each job here. Or does HQ send them to a rig, where they stay from well to well? Does the assignment decide who can sign in on the rig computer?\n8. Which job details does HQ own: job number, operator, contractor, rig, well, location, spud date? Are order details or quality requirements needed too?\n9. Who opens and edits jobs at HQ: supervisors, managers, or both? Who closes a job? Can a job ever be deleted?\n10. If HQ and the rig change the same job, or both open the same well, before the rig syncs, which one stands?\n11. Mud checks reach HQ only when the rig syncs, so each rig shows when it last synced. Should someone be told when a rig has not synced for a day?\n12. QC here is read only: the supervisor sees every check, the flagged values and the engineers' reasons. Does QC need an outcome, such as reviewed or correction requested?\n13. How is a supervisor's list of rigs decided, and where does the list of rigs come from?\n14. Ranges are set per job here, with a default for properties a job has none for. Or are they global, per mud system, or from the customer's specification? Who sets them: IT admins or supervisors?\n15. A changed range reaches the rig at its next sync, and checks already saved keep their flag. Is that right?\n16. Each property has two limits: outside the range a value is saved as flagged, with a reason; outside the possible values it cannot be saved. Are these your two alert types? Who sets the possible values?\n17. Which three unit sets? Your samples give density in ppg, lb/ft³ and g/cm³.\n18. One default unit set, and each user may switch to another. Or are units fixed per job, or for the whole company?\n\nCalculated values\n\n19. HQ sees the calculated values with each check, as the rig worked them out when the check was saved. HQ does not recalculate them.\n20. Ranges can be set on plastic viscosity, yield point, retort solids and excess lime, as on measured values." }
+  },
+  "designSystems": []
+}

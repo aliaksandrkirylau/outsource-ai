@@ -1,0 +1,41 @@
+# A01 handover statuses - canned demo input.
+# Status options per item: gathered | partial | missing | na
+# (na = not applicable; only for conditional "if applicable" items, with a reason.)
+# The copilot fills this from the harvest; scripts/score_handover.py computes the metrics.
+# Demo scenario: a typical mid-maturity handover - contract still in signing,
+# requirements/scope/milestones only partially captured, assumptions and a
+# stakeholder matrix not yet provided by Sales.
+
+# --- Project artifacts ---
+contract:         partial    # contract in signing, draft shared in chat
+wbs:              gathered   # WBS sheet in the presale Drive folder
+requirements:     partial    # high-level spec + Figma; detailed Q&A missing
+
+# --- Project information (core) ---
+description:      gathered   # vision + goal in the presale deck
+scope:            partial    # scope outline present, boundaries fuzzy
+budget:           gathered   # hours budget in the estimate sheet
+duration:         gathered   # 6 months stated in the offer
+milestones:       partial    # phases named, no dated schedule
+contract_type:    gathered   # fixed price
+technologies:     gathered   # React + Node mandated by client
+hosting:          na         # client has no hosting constraint
+assumptions:      missing    # no assumptions/limitations list handed over
+deliverables:     gathered   # source + docs listed in the offer
+req_artifacts:    missing    # required artifact list not specified
+client_profile:   gathered   # client profile in the presale deck
+team_location:    gathered   # EU timezone overlap requested
+team_composition: na         # not stated in contract
+stakeholders:     missing    # no stakeholder matrix yet
+
+# --- Nice-to-have (tracked, excluded from the maturity metric) ---
+business_model:   missing
+call_recordings:  partial
+english_level:    gathered
+timezone:         gathered
+intermediary:     gathered
+responsibility:   partial
+involvement:      missing
+cicd_owner:       missing
+uat:              missing
+client_tech:      missing

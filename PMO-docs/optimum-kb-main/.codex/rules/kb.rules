@@ -1,0 +1,9 @@
+# Codex project rules for the team KB. UNTESTED: the first Codex user checks it with
+# `codex execpolicy check` and says "sync" once. Loaded only when the project is marked trusted.
+# Same caveat as Claude's deny rules: prefix matching, so the Git host's force-push block is the
+# real backstop. Background: tools/codex.md.
+prefix_rule(pattern=["bash", "tools/kb-sync.sh"], decision="allow")
+prefix_rule(pattern=["git", "push"], decision="forbidden")
+prefix_rule(pattern=["git", "commit"], decision="forbidden")
+prefix_rule(pattern=["git", "reset"], decision="forbidden")
+prefix_rule(pattern=["git", "rebase"], decision="forbidden")

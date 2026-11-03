@@ -1,0 +1,23 @@
+# .gitattributes for the team KB - commit it in the FIRST commit (runs/08-crlf.txt).
+
+# LF in the repo and on every disk, whatever the OS, editor or core.autocrlf.
+* text=auto eol=lf
+
+# Never treat these as text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.docx binary
+*.xlsx binary
+
+# Windows batch files: cmd.exe is known to misparse some LF-only scripts (labels, goto) - inference, not tested here.
+*.cmd text eol=crlf
+
+# Append-only log: keep both sides' new lines instead of a conflict (runs/06-index-log.txt).
+# Honoured by local git only - GitHub and GitLab.com merges ignore it (research/alternatives-and-hosts.md).
+log.md merge=union
+
+# Deliberately NOT here: "*.md merge=union". It hides contradictions and mangles notes created
+# twice, with no conflict reported (runs/04-frontmatter.txt, runs/10-add-add.txt).

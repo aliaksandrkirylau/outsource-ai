@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OE Web - Top bar</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0">
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle}
+</style>
+</helmet>
+<header style="position: relative; z-index: 20; width: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; min-height: 64px; padding: 8px 16px 8px 20px; box-sizing: border-box; background: #ED712E; color: #521D00; border-bottom: 4px solid #F2A743; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px">
+<a href="{{home}}" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: #521D00">
+<span style="background: #FFFFFF; color: #B83830; font-weight: 800; letter-spacing: 0.06em; padding: 4px 10px; border-radius: 6px; font-size: 18px">OES</span>
+<span style="font-weight: 600">Mud Engineering · HQ</span>
+</a>
+<span style="width: 1px; height: 32px; background: #521D00; opacity: 0.35"></span>
+<span style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border-radius: 20px; background: #FFFFFF; color: #241914"><span class="ms" aria-hidden="true" style="color: #A14000; font-size: 20px">{{scopeIcon}}</span>{{scope}}</span>
+<div style="flex: 1"></div>
+<span style="display: inline-flex; align-items: center; gap: 6px; color: #521D00"><span class="ms" aria-hidden="true" style="font-size: 18px">schedule</span>14 Oct 2026, 15:30</span>
+<div style="position: relative">
+<button type="button" onClick="{{toggle}}" aria-haspopup="menu" style="display: flex; align-items: center; gap: 10px; padding: 4px 8px; border: 0; border-radius: 24px; background: transparent; font: inherit; color: #521D00; cursor: pointer">
+<span style="width: 36px; height: 36px; border-radius: 18px; background: #FFF1EC; color: #521D00; display: flex; align-items: center; justify-content: center; font-weight: 700">{{u.ini}}</span>
+<span style="display: flex; flex-direction: column; line-height: 1.2; text-align: left"><span style="font-weight: 600">{{u.name}}</span><span style="font-size: 12px">{{u.role}}</span></span>
+<span class="ms" aria-hidden="true">arrow_drop_down</span>
+</button>
+<sc-if value="{{open}}" hint-placeholder-val="{{ false }}">
+<div role="menu" style="position: absolute; top: 52px; right: 0; width: 300px; background: #FFF1EC; color: #241914; border-radius: 8px; box-shadow: 0 4px 12px rgba(36,25,20,0.22); padding: 8px 0; display: flex; flex-direction: column">
+<div style="padding: 8px 16px; font-size: 12px; font-weight: 600; color: #574238">VIEW AS (DEMO ONLY)</div>
+<sc-for list="{{users}}" as="x" hint-placeholder-count="3">
+<a href="{{x.href}}" role="menuitem" style="display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; color: #241914; text-decoration: none; background: {{x.bg}}">
+<span class="ms" aria-hidden="true" style="color: #A14000; width: 22px">{{x.mark}}</span>
+<span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{x.name}}</span><span style="font-size: 12px; color: #574238">{{x.role}} · {{x.scope}}</span></span>
+</a>
+</sc-for>
+<div style="height: 1px; background: #DFC0B3; margin: 8px 0"></div>
+<a href="WSignIn.dc.html" role="menuitem" style="display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 16px; color: #241914; text-decoration: none"><span class="ms" aria-hidden="true" style="color: #574238">logout</span>Sign out</a>
+</div>
+</sc-if>
+</div>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"user":{"editor":"enum","options":["khalid","faisal","sara"],"default":"khalid"},"$preview":{"width":1440,"height":68}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { open: false };
+  }
+  renderVals() {
+    const U = {
+      khalid: { ini: 'KN', name: 'Khalid Nasser', role: 'Supervisor / Manager', scope: 'Rigs 07, 12, 21', scopeIcon: 'precision_manufacturing', href: 'WDashboard.dc.html' },
+      faisal: { ini: 'FQ', name: 'Faisal Qureshi', role: 'Supervisor / Manager', scope: 'All rigs', scopeIcon: 'public', href: 'WDashboard.dc.html' },
+      sara: { ini: 'SM', name: 'Sara Al-Mutairi', role: 'Admin', scope: 'System administration', scopeIcon: 'admin_panel_settings', href: 'WUsers.dc.html' }
+    };
+    const key = this.props.user || 'khalid', u = U[key];
+    const users = Object.keys(U).map((k) => ({ ...U[k], mark: k === key ? 'check' : '', bg: k === key ? '#F6CD96' : 'transparent' }));
+    return { u, users, scope: u.scope, scopeIcon: u.scopeIcon, home: u.href, open: this.state.open, toggle: () => this.setState({ open: !this.state.open }) };
+  }
+}
+</script>
+</body>
+</html>

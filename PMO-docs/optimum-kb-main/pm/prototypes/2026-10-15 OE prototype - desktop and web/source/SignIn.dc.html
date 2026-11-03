@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sign in - pick user</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0">
+<style>
+body{margin:0}
+a{color:#A14000}a:hover{color:#521D00}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 900px; box-sizing: border-box; background: #FFF8F6; color: #241914; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; display: flex; flex-direction: column">
+<div style="height: 64px; background: #ED712E; border-bottom: 4px solid #F2A743; display: flex; align-items: center; gap: 12px; padding: 0 20px; color: #521D00">
+<span style="background: #FFFFFF; color: #B83830; font-weight: 800; letter-spacing: 0.06em; padding: 4px 10px; border-radius: 6px; font-size: 18px">OES</span>
+<span style="font-weight: 600">Mud Engineering</span>
+</div>
+<main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 16px; box-sizing: border-box">
+<div style="width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: inline-flex; align-items: center; gap: 6px; color: #574238"><span class="ms" aria-hidden="true" style="font-size: 20px">precision_manufacturing</span>This computer belongs to OES Rig 07</div>
+<h1 style="margin: 0; font-size: 28px; font-weight: 400">Who is signing in?</h1>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<a href="SignInPassword.dc.html" style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; text-decoration: none; color: #241914">
+<span style="width: 48px; height: 48px; border-radius: 24px; background: #F6CD96; color: #521D00; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px">AH</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">Ali Hassan</span><span style="color: #574238">Mud engineer · last signed in today 05:52</span></span>
+<span class="ms" aria-hidden="true" style="color: #574238">chevron_right</span>
+</a>
+<a href="SignInPassword.dc.html" style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: #FFFFFF; border: 1px solid #DFC0B3; border-radius: 12px; text-decoration: none; color: #241914">
+<span style="width: 48px; height: 48px; border-radius: 24px; background: #F6CD96; color: #521D00; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px">OS</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">Omar Saleh</span><span style="color: #574238">Mud engineer · last signed in yesterday 17:48</span></span>
+<span class="ms" aria-hidden="true" style="color: #574238">chevron_right</span>
+</a>
+</div>
+<div style="display: flex; gap: 12px; padding: 12px 16px; background: #FFF1EC; border-radius: 8px; color: #574238; line-height: 1.5"><span class="ms" aria-hidden="true" style="color: #574238">info</span><span>Not on the list? Ask HQ to add you to this rig. The list updates with the next sync.</span></div>
+<div style="display: flex; align-items: center; gap: 8px; color: #00658B; font-weight: 600"><span class="ms" aria-hidden="true" style="font-size: 18px">cloud_off</span>Offline. You can still sign in and work.</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

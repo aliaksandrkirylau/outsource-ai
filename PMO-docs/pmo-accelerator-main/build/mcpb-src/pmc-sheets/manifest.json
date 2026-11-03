@@ -1,0 +1,49 @@
+{
+  "manifest_version": "0.4",
+  "name": "pmc-sheets",
+  "display_name": "PM Copilot - Google Sheets",
+  "version": "1.1.0",
+  "description": "Deep Google Sheets read and write for the PM Copilot - P&L, resource plans, trackers. Runs upstream mcp-google-sheets with its OAuth client file shipped inside the bundle.",
+  "author": {
+    "name": "Innowise"
+  },
+  "server": {
+    "type": "uv",
+    "entry_point": "mcp-google-sheets",
+    "mcp_config": {
+      "command": "uv",
+      "args": [
+        "tool",
+        "run",
+        "--python",
+        "3.12",
+        "--from",
+        "mcp-google-sheets==0.6.3",
+        "--with",
+        "pip-system-certs",
+        "--with",
+        "mcp<2.0.0",
+        "mcp-google-sheets"
+      ],
+      "env": {
+        "UV_NO_MODIFY_PATH": "1",
+        "CREDENTIALS_PATH": "${__dirname}/client_secret.json",
+        "UV_PYTHON_PREFERENCE": "only-managed",
+        "TOKEN_PATH": "${HOME}/.pmc-sheets-token.json",
+        "UV_SYSTEM_CERTS": "1",
+        "UV_PYTHON_INSTALL_DIR": "${HOME}/.uv/python"
+      }
+    }
+  },
+  "compatibility": {
+    "platforms": [
+      "win32",
+      "darwin"
+    ],
+    "runtimes": {
+      "python": ">=3.11"
+    }
+  },
+  "tools_generated": true,
+  "license": "MIT"
+}

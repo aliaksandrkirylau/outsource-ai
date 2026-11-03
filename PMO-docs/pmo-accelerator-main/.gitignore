@@ -1,0 +1,18 @@
+.DS_Store
+Thumbs.db
+*.backup-*
+__pycache__/
+
+# Builds and extension bundles. The .mcpb files embed a live Google OAuth
+# client secret, and git history is permanent. Ship these as Release assets,
+# never as commits.
+*.zip
+*.mcpb
+
+# real project work, never plugin content - must not enter this repo
+Claude outputs/
+
+# The Google OAuth client secret. The packer reads it at build time and injects it into the
+# built .mcpb bundles; the tracked manifests carry a placeholder. Never commit it.
+build/mcpb-src/pmc-sheets/client_secret.json
+client_secret*.json

@@ -1,0 +1,45 @@
+{
+  "manifest_version": "0.4",
+  "name": "pmc-nlm",
+  "display_name": "PM Copilot - NotebookLM",
+  "version": "1.2.0",
+  "description": "NotebookLM access for the PM Copilot project brain, pinned to 0.15.4 to stay in step with the nlm CLI. Requires a one-time nlm login from a terminal - packaging cannot remove that step.",
+  "author": {
+    "name": "Innowise"
+  },
+  "server": {
+    "type": "uv",
+    "entry_point": "notebooklm-mcp",
+    "mcp_config": {
+      "command": "uv",
+      "args": [
+        "tool",
+        "run",
+        "--python",
+        "3.12",
+        "--from",
+        "notebooklm-mcp-cli==0.15.4",
+        "--with",
+        "pip-system-certs",
+        "notebooklm-mcp"
+      ],
+      "env": {
+        "UV_PYTHON_PREFERENCE": "only-managed",
+        "UV_NO_MODIFY_PATH": "1",
+        "UV_SYSTEM_CERTS": "1",
+        "UV_PYTHON_INSTALL_DIR": "${HOME}/.uv/python"
+      }
+    }
+  },
+  "compatibility": {
+    "platforms": [
+      "win32",
+      "darwin"
+    ],
+    "runtimes": {
+      "python": ">=3.11"
+    }
+  },
+  "tools_generated": true,
+  "license": "MIT"
+}
